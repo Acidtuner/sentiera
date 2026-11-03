@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface NavItem {
@@ -19,9 +20,9 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activePath, setActivePath] = useState<string>("");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,9 +31,6 @@ export default function Navbar() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-
-    // Simple active path detection
-    setActivePath(window.location.pathname);
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -82,7 +80,7 @@ export default function Navbar() {
         {/* Desktop Navigation Links */}
         <nav className="hidden md:flex items-center gap-8">
           {NAV_ITEMS.map((item) => {
-            const isActive = activePath === item.href;
+            const isActive = pathname === item.href;
             return (
               <Link
                 key={item.id}
@@ -172,21 +170,26 @@ export default function Navbar() {
                   Navigation
                 </span>
               </div>
-              {NAV_ITEMS.map((item) => (
-                <Link
-                  key={item.id}
-                  href={item.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-between py-2 border-b border-hairline/30 text-sm"
-                >
-                  <span className="font-mono text-xs font-semibold uppercase tracking-wider text-slate-900 hover:text-tech-blue">
-                    {item.label}
-                  </span>
-                  <span className="font-mono text-xs text-slate-400">
-                    {item.id}
-                  </span>
-                </Link>
-              ))}
+              {NAV_ITEMS.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center justify-between py-2 border-b border-hairline/30 text-sm ${
+                      isActive ? "text-tech-blue" : "text-slate-900"
+                    }`}
+                  >
+                    <span className="font-mono text-xs font-semibold uppercase tracking-wider hover:text-tech-blue">
+                      {item.label}
+                    </span>
+                    <span className="font-mono text-xs text-slate-400">
+                      {item.id}
+                    </span>
+                  </Link>
+                );
+              })}
               <div className="pt-3 flex items-center justify-between">
                 <span className="font-mono text-[10px] uppercase text-slate-500">
                   Masdar City, Abu Dhabi, UAE

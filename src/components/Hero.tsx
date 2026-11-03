@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
 
 export default function Hero() {
@@ -29,7 +30,6 @@ export default function Hero() {
 
   return (
     <section className="relative overflow-hidden bg-white pt-24 pb-20 sm:pt-32 sm:pb-28 lg:pt-36 lg:pb-32 border-b border-hairline">
-      {/* Background Micro-Grid & Subtle Radial Glow */}
       <div
         className="pointer-events-none absolute inset-0 z-0 opacity-40 [background-image:radial-gradient(#0066FF_0.75px,transparent_0.75px)] [background-size:32px_32px]"
         aria-hidden="true"
@@ -46,7 +46,6 @@ export default function Hero() {
           animate="visible"
           className="flex flex-col items-center text-center"
         >
-          {/* Clinical Telemetry / Origin Tag */}
           <motion.div
             variants={itemVariants}
             className="inline-flex items-center gap-2.5 rounded-none border border-hairline bg-slate-50/80 px-3.5 py-1.5 backdrop-blur-xs mb-8"
@@ -56,73 +55,44 @@ export default function Hero() {
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-tech-blue" />
             </span>
             <span className="font-mono text-[10px] font-medium uppercase tracking-widest-tag text-slate-700">
-              VENTURE STUDIO // MASDAR CITY, UAE · 24.4283° N, 54.6186° E
+              MASDAR CITY, ABU DHABI · UAE
             </span>
           </motion.div>
 
-          {/* Massive Headline: Geist Bold, tight tracking */}
           <motion.h1
             variants={itemVariants}
             className="font-sans text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight-heading text-slate-950 leading-[0.92] max-w-5xl"
           >
-            The intelligence{" "}
-            <span className="inline-block">
-              pathway
-              <span className="text-tech-blue">.</span>
-            </span>
+            Be the business AI recommends<span className="text-tech-blue">.</span>
           </motion.h1>
 
-          {/* Sub-headline: Geist Mono, muted color */}
           <motion.p
             variants={itemVariants}
-            className="mt-8 max-w-2xl font-mono text-xs sm:text-sm md:text-base font-normal uppercase tracking-wider text-slate-500 leading-relaxed"
+            className="mt-8 max-w-2xl font-sans text-base sm:text-lg text-slate-600 leading-relaxed"
           >
-            Architecting AI infrastructure and digital growth for the GCC enterprise.
+            When your customers ask Google or ChatGPT who to call, we help make sure your name comes up. SEO, AEO, content and AI tools for UAE small and medium businesses.
           </motion.p>
 
-          {/* Square-Cornered Primary CTA Button */}
           <motion.div
             variants={itemVariants}
             className="mt-10 sm:mt-12 flex flex-col sm:flex-row items-center gap-4"
           >
-            <a
-              href="#contact"
+            <Link
+              href="/contact"
               className="group relative inline-flex items-center justify-center gap-3 rounded-none bg-tech-blue px-9 py-4 font-mono text-xs font-semibold uppercase tracking-widest text-white shadow-tech-button transition-all duration-200 hover:bg-tech-blue-600 active:scale-[0.99]"
             >
-              <span>Initialize</span>
+              <span>Get a free visibility check</span>
               <span className="font-sans text-sm transition-transform duration-200 group-hover:translate-x-1">
                 →
               </span>
-            </a>
+            </Link>
 
-            <a
-              href="#pedigree"
+            <Link
+              href="/contact"
               className="inline-flex items-center justify-center gap-2 rounded-none border border-hairline bg-white/80 px-7 py-4 font-mono text-xs font-medium uppercase tracking-widest text-slate-600 transition-colors hover:border-slate-400 hover:text-slate-950 backdrop-blur-xs"
             >
-              <span>Technical Pedigree</span>
-              <span className="text-slate-400">↓</span>
-            </a>
-          </motion.div>
-
-          {/* Micro-Telemetry Bottom Metadata */}
-          <motion.div
-            variants={itemVariants}
-            className="mt-16 pt-8 border-t border-hairline/60 w-full max-w-3xl flex flex-wrap items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-wide-tag text-slate-400"
-          >
-            <div className="flex items-center gap-2">
-              <span className="text-slate-900 font-semibold">FOUNDRY:</span>
-              <span>Autonomous Systems</span>
-            </div>
-            <div className="hidden sm:inline text-slate-300">/</div>
-            <div className="flex items-center gap-2">
-              <span className="text-slate-900 font-semibold">DEPLOYMENT:</span>
-              <span>Enterprise Scale</span>
-            </div>
-            <div className="hidden sm:inline text-slate-300">/</div>
-            <div className="flex items-center gap-2">
-              <span className="text-slate-900 font-semibold">PROTOCOL:</span>
-              <span className="text-tech-blue">01-VERIFIED</span>
-            </div>
+              <span>Book a call</span>
+            </Link>
           </motion.div>
         </motion.div>
       </div>

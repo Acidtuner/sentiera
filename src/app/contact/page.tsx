@@ -16,7 +16,7 @@ export default function Contact() {
           <span>Contact</span>
         </div>
         <h1 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">
-          Let's talk
+          Let&apos;s talk
         </h1>
         <p className="mt-4 font-sans text-lg text-slate-700">
           Tell us about your business. We reply within one working day.

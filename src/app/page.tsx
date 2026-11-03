@@ -19,7 +19,7 @@ export default function Home() {
           </h2>
           <div className="mt-8 space-y-4 font-sans text-base sm:text-lg text-slate-700 leading-relaxed">
             <p>
-              More people now ask AI tools for answers instead of scrolling a page of links. They ask, "Which logistics software firm in Abu Dhabi does this?" or "Who supplies this in Dubai?" They get a short answer with a few names.
+              More people now ask AI tools for answers instead of scrolling a page of links. They ask, &quot;Which logistics software firm in Abu Dhabi does this?&quot; or &quot;Who supplies this in Dubai?&quot; They get a short answer with a few names.
             </p>
             <p>
               AEO (answer engine optimisation) is the work of making your business one of those names. It builds on good SEO. Clear pages. Real answers to real questions. Consistent details about who you are and where you are.

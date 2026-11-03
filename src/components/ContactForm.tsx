@@ -30,7 +30,7 @@ export default function ContactForm() {
   if (status === "success") {
     return (
       <div className="mt-12 p-8 border border-emerald-500/30 bg-emerald-50 text-emerald-800">
-        <p className="font-semibold">Thank you. We'll be in touch soon.</p>
+        <p className="font-semibold">Thank you. We&apos;ll be in touch soon.</p>
       </div>
     );
   }

@@ -27,34 +27,35 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sentiera.ai"),
+  metadataBase: new URL("https://www.sentieratech.com"),
   title: {
-    default: "sentiera — AI Venture Studio & Digital Agency | Masdar City",
-    template: "%s | sentiera",
+    default: "Sentiera Technologies | SEO, AEO, Content and AI for UAE Businesses",
+    template: "%s | Sentiera Technologies",
   },
   description:
-    "Sentiera is a frontier AI venture studio and digital agency based in Masdar City. Architecting autonomous systems, venture-scale intelligence, and high-impact digital experiences.",
+    "Get found in Google and in AI answers like ChatGPT. SEO, AEO, photo and video, events marketing, social and AI builds for UAE small and medium businesses. Based in Masdar City.",
   keywords: [
     "Sentiera",
-    "AI Venture Studio",
-    "Masdar City AI",
-    "Digital Agency Abu Dhabi",
-    "Autonomous Systems",
-    "Frontier Intelligence",
-    "Boutique Engineering Firm",
+    "SEO UAE",
+    "AEO",
+    "Answer Engine Optimisation",
+    "Digital Marketing Abu Dhabi",
+    "AI for SMBs",
+    "Masdar City",
+    "UAE small business marketing",
   ],
-  authors: [{ name: "Sentiera Technologies LLC", url: "https://sentiera.ai" }],
+  authors: [{ name: "Sentiera Technologies LLC", url: "https://www.sentieratech.com" }],
   creator: "Sentiera Technologies LLC",
   icons: {
     icon: "/favicon.ico",
     apple: "/sentiera-logo.png",
   },
   openGraph: {
-    title: "sentiera — AI Venture Studio & Digital Agency",
+    title: "Sentiera Technologies | SEO, AEO, Content and AI for UAE Businesses",
     description:
-      "A clinical, high-end engineering firm architecting next-generation AI ventures from Masdar City.",
-    url: "https://sentiera.ai",
-    siteName: "sentiera",
+      "Get found in Google and in AI answers like ChatGPT. SEO, AEO, photo and video, events marketing, social and AI builds for UAE small and medium businesses.",
+    url: "https://www.sentieratech.com",
+    siteName: "Sentiera Technologies",
     locale: "en_US",
     type: "website",
     images: [
@@ -62,15 +63,15 @@ export const metadata: Metadata = {
         url: "/sentiera-logo.png",
         width: 1200,
         height: 630,
-        alt: "sentiera — AI Venture Studio",
+        alt: "Sentiera Technologies",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "sentiera — AI Venture Studio & Digital Agency",
+    title: "Sentiera Technologies | SEO, AEO, Content and AI for UAE Businesses",
     description:
-      "A clinical, high-end engineering firm architecting next-generation AI ventures from Masdar City.",
+      "Get found in Google and in AI answers like ChatGPT. SEO, AEO, photo and video, events marketing, social and AI builds for UAE small and medium businesses.",
     images: ["/sentiera-logo.png"],
   },
 };

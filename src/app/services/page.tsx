@@ -1,178 +1,106 @@
 import React from "react";
 import type { Metadata } from "next";
-import Link from "next/link";
+import ServicesAccordion, { type ServiceItem } from "@/components/ServicesAccordion";
 
 export const metadata: Metadata = {
-  title: "Services | SEO, AEO, Photo, Video, Events and AI",
-  description: "SEO and AEO, photography and videography, events marketing, social media management, and AI chatbots and automations for UAE businesses.",
+  title: "Services | SEO, AEO, Web & Creative | Sentiera",
+  description: "SEO, AEO, digital strategy, websites, social creatives, video, brochures, events graphics and internal communications for businesses in Abu Dhabi and Dubai.",
 };
 
-const services = [
+const services: ServiceItem[] = [
   {
-    tag: "01",
+    id: "seo-aeo",
     title: "SEO and AEO",
-    summary: "Get found in Google and in AI answers like ChatGPT.",
-    why: "More buyers now ask AI tools for a shortlist before they ever search. We make sure your business is one of the names that comes up, with clear, accurate pages that both Google and answer engines can use.",
-    items: [
-      "Website and search audit",
-      "Pages written around the questions customers ask",
-      "Google Business Profile and local listings",
-      "Structured data and technical fixes",
-      "Monthly reporting in plain language",
-    ],
+    summary: "SEO and AEO make your business easier to find on Google and more likely to be named in AI answers. We work on your pages, listings and technical set-up so search engines and AI tools understand who you are, what you do and where you work.",
+    detail: "Clear pages, real answers to real questions, and consistent business details form the base. We plan both SEO and AEO together so your visibility work compounds.",
+    items: ["Website and search audit", "Pages written around the questions your customers ask", "Google Business Profile and local listings", "Structured data and technical fixes"],
+    cta: "Review your visibility",
+    ctaHref: "/contact?intent=visibility-review",
   },
   {
-    tag: "02",
-    title: "Photography and videography",
-    summary: "Content that shows what you do.",
-    why: "Buyers want to see the real thing. Planned shoots give you photos and short videos that work on your website, Google Business Profile and social channels, so the same assets support both search and AI answers.",
-    items: [
-      "Planned shoots at your premises",
-      "Short videos for social and your website",
-      "Product, team and location photography",
-      "Edited and delivered in the formats each channel needs",
-    ],
+    id: "digital-marketing-strategy",
+    title: "Digital marketing strategy",
+    summary: "A digital marketing strategy sets out where to focus, what to say and in what order. You get one clear plan that ties search, social, content and events together, agreed with your Abu Dhabi lead.",
+    detail: "We review current channels, set audience and message priorities, and turn that into a practical plan by channel and quarter, with regular reviews as it runs.",
+    items: ["Review of your current channels and content", "Audience and message priorities", "A practical plan by channel and quarter", "Regular reviews as the plan runs"],
+    cta: "Discuss your strategy",
+    ctaHref: "/contact",
   },
   {
-    tag: "03",
-    title: "Events marketing",
-    summary: "Help before, during and after an event you run or attend.",
-    why: "An event is only as useful as the content it produces. We promote it in advance, cover it on the day, and turn the photos and clips into lasting material for search, social and your website.",
-    items: [
-      "Pre-event promotion across social, email and your website",
-      "Photo and video coverage on the day",
-      "Same-day social posts and short highlight clips",
-      "Follow-up content after the event, reused across search and social",
-    ],
+    id: "social-media-creatives",
+    title: "Social media creatives",
+    summary: "Social media creatives are the posts, graphics and short videos that keep your brand visible and consistent. We plan, design and write them to your brand guidelines, month by month.",
+    detail: "Steady posting supports both brand presence and the signals search engines and AI tools use to understand what you do.",
+    items: ["Monthly content calendar", "Post designs, carousels and short videos", "Captions written for each platform", "Scheduling and publishing support"],
+    cta: "Plan your social content",
+    ctaHref: "/contact",
   },
   {
-    tag: "04",
-    title: "Social media management",
-    summary: "Steady, on-brand posting.",
-    why: "Consistent posting keeps your brand present and gives search engines and AI tools fresh, accurate signals about what you do and where you are. We plan, write and schedule so it happens every month without you chasing it.",
-    items: [
-      "Monthly content calendar",
-      "Captions, design and scheduling",
-      "Content reused across search and social",
-    ],
+    id: "website-design",
+    title: "Website design and management",
+    summary: "Website design and management covers building your site and keeping it current. You get clear, fast pages written for customers, search engines and AI tools, with ongoing updates handled by us.",
+    detail: "Structure, design, build and technical SEO are set from the start, with hosting and maintenance support afterwards.",
+    items: ["Site structure, design and build", "Page copy written around customer questions", "Hosting, updates and maintenance support", "Technical SEO set-up from the start"],
+    cta: "Discuss your website",
+    ctaHref: "/contact",
   },
   {
-    tag: "05",
-    title: "AI builds",
-    summary: "Practical tools that save your team time.",
-    why: "An AI assistant on your site or WhatsApp answers common questions instantly. Automations handle enquiry routing and follow-ups. Both are scoped to the tools you already use and included at a set level in every package.",
-    items: [
-      "Website and WhatsApp chatbots that answer common questions",
-      "Automations for enquiries, bookings and follow-ups",
-      "Built to fit the tools you already use",
-    ],
-    note: "Included at a set scope in every package, from a website assistant in Visibility to larger builds in the Build package.",
+    id: "video-photography",
+    title: "Brand video and photography",
+    summary: "Brand video and photography show your people, products and premises as they are. We plan each shoot around where the content will be used, then edit and deliver it ready for each channel.",
+    detail: "Assets are produced for website, social and search use so the same shoot supports multiple channels.",
+    items: ["Shoot planning and scripting", "Brand, product, team and location photography", "Brand films and short videos for social and web", "Editing and delivery in each channel's formats"],
+    cta: "Plan a shoot",
+    ctaHref: "/contact",
+  },
+  {
+    id: "brochures-print",
+    title: "Brochures and printed collateral",
+    summary: "Brochures and printed collateral give clients and partners something clear to take away. We write and design them to match your brand and your digital content.",
+    detail: "Company and product materials are produced as print-ready files that stay consistent with your online presence.",
+    items: ["Company and product brochures", "Profiles, flyers and leave-behinds", "Copywriting and layout", "Print-ready files"],
+    cta: "Discuss your brochure",
+    ctaHref: "/contact",
+  },
+  {
+    id: "events-graphics",
+    title: "Events graphics",
+    summary: "Events graphics give your stand, stage and screens a consistent look. We design the full set for your event, from pre-event promotion to on-site displays and follow-up posts.",
+    detail: "Stand, backdrop, presentation and social creatives are designed as one system for the event.",
+    items: ["Stand, backdrop and banner designs", "Presentation and screen graphics", "Pre-event and follow-up social creatives", "Print-ready and screen-ready files"],
+    cta: "Plan your next event",
+    ctaHref: "/contact",
+  },
+  {
+    id: "internal-communications",
+    title: "Internal communications",
+    summary: "Internal communications keep your teams informed and connected. We write and design the newsletters, announcements and campaigns your people actually read.",
+    detail: "Newsletters, internal campaign creatives, presentations and reusable templates are produced for your teams.",
+    items: ["Newsletters and announcements", "Internal campaign creatives", "Presentations and town-hall materials", "Templates your team can reuse"],
+    cta: "Discuss internal comms",
+    ctaHref: "/contact",
   },
 ];
 
 export default function Services() {
   return (
     <div className="relative bg-white">
-      {/* Header */}
-      <section className="relative overflow-hidden border-b border-hairline pt-24 pb-16 sm:pt-32 sm:pb-20">
-        <div
-          className="pointer-events-none absolute inset-0 z-0 opacity-40 [background-image:radial-gradient(#0066FF_0.75px,transparent_0.75px)] [background-size:32px_32px]"
-          aria-hidden="true"
-        />
-        <div
-          className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[640px] h-[360px] bg-tech-blue/5 blur-[120px] rounded-full"
-          aria-hidden="true"
-        />
-
+      <section className="relative overflow-hidden border-b border-hairline pt-24 pb-12 sm:pt-32 sm:pb-16">
+        <div className="pointer-events-none absolute inset-0 z-0 opacity-40 [background-image:radial-gradient(#0066FF_0.75px,transparent_0.75px)] [background-size:32px_32px]" aria-hidden="true" />
+        <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[640px] h-[360px] bg-tech-blue/5 blur-[120px] rounded-full" aria-hidden="true" />
         <div className="relative z-10 mx-auto max-w-4xl px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest-tag text-tech-blue font-semibold mb-4">
             <span className="h-1.5 w-1.5 rounded-full bg-tech-blue" />
             <span>Services</span>
           </div>
-          <h1 className="font-sans text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight-heading text-slate-950">
-            What we do
-          </h1>
-          <p className="mt-6 font-sans text-lg text-slate-700 leading-relaxed max-w-2xl mx-auto">
-            Five services that work as one system. Every package includes some AI integration, scaled to the package.
-          </p>
+          <h1 className="font-sans text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight-heading text-slate-950">Our services</h1>
+          <p className="mt-6 font-sans text-lg text-slate-700 leading-relaxed max-w-2xl mx-auto">Strategy and client leadership from Masdar City, Abu Dhabi. Delivery by our full production team.</p>
         </div>
       </section>
 
-      {/* Stacked service sections */}
-      {services.map((service, index) => {
-        const isEven = index % 2 === 0;
-        return (
-          <section
-            key={service.tag}
-            className={`relative py-16 sm:py-24 border-b border-hairline ${
-              isEven ? "bg-white" : "bg-slate-50"
-            }`}
-          >
-            <div className="mx-auto max-w-4xl px-6 lg:px-8">
-              <div className="flex items-center gap-3 mb-4">
-                <span className="font-mono text-xs uppercase tracking-widest text-tech-blue font-semibold">
-                  {service.tag}
-                </span>
-                <span className="h-1.5 w-1.5 rounded-full bg-tech-blue" />
-              </div>
-
-              <h2 className="font-sans text-3xl sm:text-4xl font-bold tracking-tight-heading text-slate-950">
-                {service.title}
-              </h2>
-
-              <p className="mt-3 font-sans text-lg text-slate-700">
-                {service.summary}
-              </p>
-
-              <p className="mt-6 font-sans text-base text-slate-600 leading-relaxed max-w-3xl">
-                {service.why}
-              </p>
-
-              <ul className="mt-8 space-y-3">
-                {service.items.map((item) => (
-                  <li key={item} className="flex items-start gap-3 font-sans text-sm sm:text-base text-slate-700">
-                    <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-tech-blue" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-
-              {service.note && (
-                <p className="mt-6 font-sans text-sm text-slate-500 leading-relaxed max-w-2xl">
-                  {service.note}
-                </p>
-              )}
-
-              <div className="mt-10">
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wider text-tech-blue hover:text-tech-blue-600 transition-colors"
-                >
-                  Talk to us about {service.title.toLowerCase()} →
-                </Link>
-              </div>
-            </div>
-          </section>
-        );
-      })}
-
-      {/* Closing CTA */}
-      <section className="relative bg-white py-20 sm:py-28">
-        <div className="mx-auto max-w-3xl px-6 lg:px-8 text-center">
-          <h2 className="font-sans text-3xl sm:text-4xl font-bold tracking-tight-heading text-slate-950">
-            Ready to get started?
-          </h2>
-          <p className="mt-4 font-sans text-base text-slate-700">
-            Tell us about your business and we&apos;ll recommend the right mix.
-          </p>
-          <div className="mt-10">
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 rounded-sm bg-tech-blue px-8 py-4 font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-tech-button transition-all duration-200 hover:bg-tech-blue-600"
-            >
-              Talk to us about your business →
-            </Link>
-          </div>
+      <section className="relative bg-slate-50">
+        <div className="mx-auto max-w-5xl">
+          <ServicesAccordion services={services} />
         </div>
       </section>
     </div>

@@ -1,134 +1,139 @@
 import React from "react";
 import Link from "next/link";
+import type { Metadata } from "next";
 import Hero from "@/components/Hero";
+
+export const metadata: Metadata = {
+  title: "SEO & AEO Agency in Abu Dhabi | Sentiera Technologies",
+  description: "Be found on Google and named in AI answers. SEO, AEO, web, content and creative from Masdar City, Abu Dhabi. Apply for a Complimentary Visibility Review.",
+};
+
+const whatWeDo = [
+  { label: "SEO and AEO", href: "/services#seo-aeo" },
+  { label: "Digital marketing strategy", href: "/services#digital-marketing-strategy" },
+  { label: "Social media creatives", href: "/services#social-media-creatives" },
+  { label: "Website design and management", href: "/services#website-design" },
+  { label: "Brand video and photography", href: "/services#video-photography" },
+  { label: "Brochures and printed collateral", href: "/services#brochures-print" },
+  { label: "Events graphics", href: "/services#events-graphics" },
+  { label: "Internal communications", href: "/services#internal-communications" },
+];
+
+const proof = [
+  { name: "Nidec", detail: "Ongoing social media creatives, events graphics and internal communications." },
+  { name: "TD Power Systems", detail: "Ongoing social media creatives, events graphics and internal communications." },
+  { name: "Murata", detail: "Events and internal communications for its India and Singapore offices." },
+  { name: "TSI Power", detail: "Events, creative communications, brochures and graphics." },
+  { name: "Azzurro", detail: "Website design and management, plus two brand videos." },
+];
+
+const faqs = [
+  { q: "What is AEO?", a: "Answer engine optimisation is the work of making your business one of the names AI assistants like ChatGPT, Gemini and Google's AI Overviews give when customers ask for a recommendation." },
+  { q: "How is AEO different from SEO?", a: "SEO helps your pages rank in search results. AEO helps AI tools understand and cite your business. Both depend on clear pages, real answers and consistent business details, so we plan them together." },
+  { q: "What's included in the Complimentary Visibility Review?", a: "A 45-minute session looking at how your business shows up in Google and AI answers, followed by a written summary of what we'd address first." },
+  { q: "Do you work with businesses in Dubai as well as Abu Dhabi?", a: "Yes. We're based in Masdar City, Abu Dhabi, and work with businesses across Abu Dhabi and Dubai." },
+  { q: "Who does the work?", a: "Strategy and client leadership are in Abu Dhabi. Design, writing, video and development are handled by our delivery team in Bangalore." },
+  { q: "How much does it cost?", a: "Each engagement is scoped with you, and pricing is shared after a consultation." },
+];
 
 export default function Home() {
   return (
     <div className="relative">
       <Hero />
 
-      {/* Why AEO */}
+      {/* Positioning */}
       <section className="relative bg-white py-20 sm:py-28 border-b border-hairline">
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
           <div className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest-tag text-tech-blue font-semibold mb-4">
             <span className="h-1.5 w-1.5 rounded-full bg-tech-blue" />
-            <span>Why AEO</span>
+            <span>Positioning</span>
           </div>
           <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">
-            Search has changed. Your marketing should too.
+            Led in Abu Dhabi. Delivered by a dedicated team.
           </h2>
           <div className="mt-8 space-y-4 font-sans text-base sm:text-lg text-slate-700 leading-relaxed">
-            <p>
-              More people now ask AI tools for answers instead of scrolling a page of links. They ask, &quot;Which logistics software firm in Abu Dhabi does this?&quot; or &quot;Who supplies this in Dubai?&quot; They get a short answer with a few names.
-            </p>
-            <p>
-              AEO (answer engine optimisation) is the work of making your business one of those names. It builds on good SEO. Clear pages. Real answers to real questions. Consistent details about who you are and where you are.
-            </p>
-            <p className="font-semibold text-slate-900">
-              We do both, together, as one plan.
-            </p>
+            <p>Sentiera Technologies sets strategy and leads every client relationship from Masdar City, Abu Dhabi. You work with us directly, in your time zone, from the first conversation to every monthly review.</p>
+            <p>Delivery is handled by our team in Bangalore: designers, writers, video editors and developers who work on our engagements day to day.</p>
+            <p className="font-semibold text-slate-900">One point of contact here. A full production team behind it.</p>
           </div>
         </div>
       </section>
 
-      {/* How we work */}
+      {/* Why it matters */}
       <section className="relative bg-slate-50 py-20 sm:py-28 border-b border-hairline">
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
           <div className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest-tag text-tech-blue font-semibold mb-4">
             <span className="h-1.5 w-1.5 rounded-full bg-tech-blue" />
-            <span>How we work</span>
+            <span>Why it matters now</span>
           </div>
-          <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">
-            A small expert team, with AI doing the heavy lifting.
-          </h2>
-          <p className="mt-6 font-sans text-base sm:text-lg text-slate-700 leading-relaxed">
-            Our creative and coding team plans the work, sets the standard and checks every piece. AI agents handle much of the production: research, first drafts, edits, reporting.
-          </p>
-          <p className="mt-4 font-sans text-base sm:text-lg text-slate-700 leading-relaxed">
-            That is how we keep agency-quality work within reach of smaller budgets.
-          </p>
-          <ol className="mt-10 space-y-6 list-decimal list-inside font-sans text-base text-slate-700">
-            <li><strong>Understand.</strong> We learn your business, customers and goals.</li>
-            <li><strong>Plan.</strong> One clear monthly plan for search, AI answers and content.</li>
-            <li><strong>Produce.</strong> Our team and our AI tools make the work. People review all of it.</li>
-            <li><strong>Report.</strong> Plain monthly updates on what we did and what comes next.</li>
-          </ol>
+          <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">Search has changed.</h2>
+          <div className="mt-8 space-y-4 font-sans text-base sm:text-lg text-slate-700 leading-relaxed">
+            <p>Buyers now ask AI tools for answers, not just scroll a page of links. They get a short answer with a few names. AEO (answer engine optimisation) is the work of making your business one of those names. It builds on good SEO: clear pages, real answers to real questions, and consistent details about who you are.</p>
+            <p className="font-semibold text-slate-900">We plan both together, as one programme.</p>
+          </div>
         </div>
       </section>
 
-      {/* Packages teaser */}
+      {/* What we do */}
       <section className="relative bg-white py-20 sm:py-28 border-b border-hairline">
-        <div className="mx-auto max-w-4xl px-6 lg:px-8 text-center">
-          <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">
-            Three packages. No menu to decode.
-          </h2>
-          <ul className="mt-8 space-y-3 font-sans text-base text-slate-700 text-left max-w-2xl mx-auto">
-            <li><strong>Visibility</strong> — SEO, AEO and social media every month, plus an AI assistant on your website.</li>
-            <li><strong>Growth</strong> — everything in Visibility, plus monthly photo and video shoots and one automated workflow.</li>
-            <li><strong>Build</strong> — larger AI projects: custom assistants and automations across your tools.</li>
+        <div className="mx-auto max-w-4xl px-6 lg:px-8">
+          <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">SEO, AEO and creative services in Abu Dhabi and Dubai</h2>
+          <ul className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {whatWeDo.map((item) => (
+              <li key={item.href}>
+                <Link href={item.href} className="group flex items-center justify-between border border-hairline bg-white px-5 py-4 font-sans text-sm text-slate-800 hover:border-tech-blue/40 hover:text-tech-blue transition-colors">
+                  <span>{item.label}</span>
+                  <span className="font-mono text-xs text-slate-400 group-hover:text-tech-blue transition-colors">→</span>
+                </Link>
+              </li>
+            ))}
           </ul>
-          <p className="mt-6 font-sans text-sm text-slate-600">
-            Events marketing can be added to the Visibility package. No lock-in contracts.
-          </p>
-          <div className="mt-8">
-            <Link
-              href="/packages"
-              className="inline-flex items-center gap-2 rounded-sm bg-tech-blue px-6 py-3 font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-tech-button transition-all duration-200 hover:bg-tech-blue-600"
-            >
-              Compare packages →
-            </Link>
+          <div className="mt-10">
+            <Link href="/services" className="inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wider text-tech-blue hover:text-tech-blue-600">See all services →</Link>
           </div>
-          <p className="mt-4 font-mono text-[11px] text-slate-500 uppercase tracking-wide">
-            Pricing on request.
-          </p>
         </div>
       </section>
 
-      {/* Who we work with */}
+      {/* Proof */}
       <section className="relative bg-slate-50 py-20 sm:py-28 border-b border-hairline">
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
-          <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">
-            Focused on three kinds of business.
-          </h2>
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="font-sans text-xl font-bold text-slate-950">IT and supply-chain tech.</h3>
-              <p className="mt-3 font-sans text-sm text-slate-600 leading-relaxed">
-                Buyers research vendors, compare options and ask AI tools for a shortlist before they ever book a demo. We help your company be on that list, with clear answers about what you do.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-sans text-xl font-bold text-slate-950">Retail.</h3>
-              <p className="mt-3 font-sans text-sm text-slate-600 leading-relaxed">
-                Shoppers search for products, stores and opening hours near them. We help them find you, and see your range at its best.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-sans text-xl font-bold text-slate-950">FMCG.</h3>
-              <p className="mt-3 font-sans text-sm text-slate-600 leading-relaxed">
-                Distributors, retailers and consumers look up brands and products online. We help your brand show up with consistent, accurate details wherever they look.
-              </p>
-            </div>
+          <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">The team behind the work.</h2>
+          <p className="mt-4 font-sans text-base text-slate-600">Our delivery team in Bangalore has worked with these organisations.</p>
+          <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 font-mono text-sm text-slate-500 uppercase tracking-wide">
+            <span>Nidec</span><span>TSI Power</span><span>Murata</span><span>TD Power Systems</span>
           </div>
+          <ul className="mt-10 space-y-4">
+            {proof.map((p) => (
+              <li key={p.name} className="font-sans text-sm text-slate-700">
+                <strong className="text-slate-950">{p.name}</strong> — {p.detail}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="relative bg-white py-20 sm:py-28 border-b border-hairline">
+        <div className="mx-auto max-w-3xl px-6 lg:px-8">
+          <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">FAQ</h2>
+          <dl className="mt-10 space-y-8">
+            {faqs.map((faq) => (
+              <div key={faq.q}>
+                <dt className="font-sans text-lg font-semibold text-slate-950">{faq.q}</dt>
+                <dd className="mt-2 font-sans text-base text-slate-600 leading-relaxed">{faq.a}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
 
       {/* Closing CTA */}
       <section className="relative bg-white py-20 sm:py-28">
         <div className="mx-auto max-w-3xl px-6 lg:px-8 text-center">
-          <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">
-            Find out how visible you are.
-          </h2>
-          <p className="mt-6 font-sans text-base sm:text-lg text-slate-700 leading-relaxed">
-            We will check how your business shows up in Google and in AI answers, and tell you plainly what we would fix first.
-          </p>
+          <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">Start with a conversation.</h2>
+          <p className="mt-6 font-sans text-base sm:text-lg text-slate-700 leading-relaxed">Tell us where your business stands and what you want next. We will tell you plainly how we would approach it.</p>
           <div className="mt-10">
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 rounded-sm bg-tech-blue px-8 py-4 font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-tech-button transition-all duration-200 hover:bg-tech-blue-600"
-            >
-              Book a free visibility check →
-            </Link>
+            <Link href="/contact" className="inline-flex items-center gap-2 rounded-sm bg-tech-blue px-8 py-4 font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-tech-button transition-all duration-200 hover:bg-tech-blue-600">Request a consultation →</Link>
           </div>
         </div>
       </section>

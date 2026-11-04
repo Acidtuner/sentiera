@@ -12,6 +12,7 @@ const services = [
     tag: "01",
     title: "SEO and AEO",
     summary: "Get found in Google and in AI answers like ChatGPT.",
+    why: "More buyers now ask AI tools for a shortlist before they ever search. We make sure your business is one of the names that comes up, with clear, accurate pages that both Google and answer engines can use.",
     items: [
       "Website and search audit",
       "Pages written around the questions customers ask",
@@ -24,6 +25,7 @@ const services = [
     tag: "02",
     title: "Photography and videography",
     summary: "Content that shows what you do.",
+    why: "Buyers want to see the real thing. Planned shoots give you photos and short videos that work on your website, Google Business Profile and social channels, so the same assets support both search and AI answers.",
     items: [
       "Planned shoots at your premises",
       "Short videos for social and your website",
@@ -35,6 +37,7 @@ const services = [
     tag: "03",
     title: "Events marketing",
     summary: "Help before, during and after an event you run or attend.",
+    why: "An event is only as useful as the content it produces. We promote it in advance, cover it on the day, and turn the photos and clips into lasting material for search, social and your website.",
     items: [
       "Pre-event promotion across social, email and your website",
       "Photo and video coverage on the day",
@@ -46,6 +49,7 @@ const services = [
     tag: "04",
     title: "Social media management",
     summary: "Steady, on-brand posting.",
+    why: "Consistent posting keeps your brand present and gives search engines and AI tools fresh, accurate signals about what you do and where you are. We plan, write and schedule so it happens every month without you chasing it.",
     items: [
       "Monthly content calendar",
       "Captions, design and scheduling",
@@ -56,6 +60,7 @@ const services = [
     tag: "05",
     title: "AI builds",
     summary: "Practical tools that save your team time.",
+    why: "An AI assistant on your site or WhatsApp answers common questions instantly. Automations handle enquiry routing and follow-ups. Both are scoped to the tools you already use and included at a set level in every package.",
     items: [
       "Website and WhatsApp chatbots that answer common questions",
       "Automations for enquiries, bookings and follow-ups",
@@ -68,7 +73,7 @@ const services = [
 export default function Services() {
   return (
     <div className="relative bg-white">
-      {/* Header with subtle grid like homepage Hero */}
+      {/* Header */}
       <section className="relative overflow-hidden border-b border-hairline pt-24 pb-16 sm:pt-32 sm:pb-20">
         <div
           className="pointer-events-none absolute inset-0 z-0 opacity-40 [background-image:radial-gradient(#0066FF_0.75px,transparent_0.75px)] [background-size:32px_32px]"
@@ -88,55 +93,70 @@ export default function Services() {
             What we do
           </h1>
           <p className="mt-6 font-sans text-lg text-slate-700 leading-relaxed max-w-2xl mx-auto">
-            Five services, combined into packages so they work together. Every package includes some AI integration, scaled to the package.
+            Five services that work as one system. Every package includes some AI integration, scaled to the package.
           </p>
         </div>
       </section>
 
-      {/* Service tiles */}
-      <section className="relative bg-slate-50 py-16 sm:py-24 border-b border-hairline">
-        <div className="mx-auto max-w-6xl px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-            {services.map((service) => (
-              <div
-                key={service.tag}
-                className="group relative bg-white border border-hairline p-8 hover:border-tech-blue/40 transition-colors duration-200"
-              >
-                <div className="flex items-start justify-between gap-4 mb-4">
-                  <div className="font-mono text-xs uppercase tracking-widest text-tech-blue font-semibold">
-                    {service.tag}
-                  </div>
-                  <div className="h-1.5 w-1.5 rounded-full bg-tech-blue opacity-60 group-hover:opacity-100 transition-opacity" />
-                </div>
-
-                <h2 className="font-sans text-2xl font-bold text-slate-950">
-                  {service.title}
-                </h2>
-                <p className="mt-2 font-sans text-base text-slate-700">
-                  {service.summary}
-                </p>
-
-                <ul className="mt-6 space-y-2.5">
-                  {service.items.map((item) => (
-                    <li key={item} className="flex items-start gap-2.5 font-sans text-sm text-slate-600">
-                      <span className="mt-1.5 h-1 w-1 flex-shrink-0 rounded-full bg-tech-blue" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {service.note && (
-                  <p className="mt-6 pt-4 border-t border-hairline font-sans text-xs text-slate-500 leading-relaxed">
-                    {service.note}
-                  </p>
-                )}
+      {/* Stacked service sections */}
+      {services.map((service, index) => {
+        const isEven = index % 2 === 0;
+        return (
+          <section
+            key={service.tag}
+            className={`relative py-16 sm:py-24 border-b border-hairline ${
+              isEven ? "bg-white" : "bg-slate-50"
+            }`}
+          >
+            <div className="mx-auto max-w-4xl px-6 lg:px-8">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="font-mono text-xs uppercase tracking-widest text-tech-blue font-semibold">
+                  {service.tag}
+                </span>
+                <span className="h-1.5 w-1.5 rounded-full bg-tech-blue" />
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* CTA */}
+              <h2 className="font-sans text-3xl sm:text-4xl font-bold tracking-tight-heading text-slate-950">
+                {service.title}
+              </h2>
+
+              <p className="mt-3 font-sans text-lg text-slate-700">
+                {service.summary}
+              </p>
+
+              <p className="mt-6 font-sans text-base text-slate-600 leading-relaxed max-w-3xl">
+                {service.why}
+              </p>
+
+              <ul className="mt-8 space-y-3">
+                {service.items.map((item) => (
+                  <li key={item} className="flex items-start gap-3 font-sans text-sm sm:text-base text-slate-700">
+                    <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-tech-blue" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {service.note && (
+                <p className="mt-6 font-sans text-sm text-slate-500 leading-relaxed max-w-2xl">
+                  {service.note}
+                </p>
+              )}
+
+              <div className="mt-10">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wider text-tech-blue hover:text-tech-blue-600 transition-colors"
+                >
+                  Talk to us about {service.title.toLowerCase()} →
+                </Link>
+              </div>
+            </div>
+          </section>
+        );
+      })}
+
+      {/* Closing CTA */}
       <section className="relative bg-white py-20 sm:py-28">
         <div className="mx-auto max-w-3xl px-6 lg:px-8 text-center">
           <h2 className="font-sans text-3xl sm:text-4xl font-bold tracking-tight-heading text-slate-950">

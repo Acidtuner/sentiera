@@ -3,7 +3,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 
-// Geist Sans for authoritative, tight-tracking primary headings & body
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -11,7 +10,6 @@ const geistSans = localFont({
   display: "swap",
 });
 
-// Geist Mono for clinical subtext, coordinate metadata, tags, and secondary UI
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
@@ -29,20 +27,19 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.sentieratech.com"),
   title: {
-    default: "Sentiera Technologies | SEO, AEO, Content and AI for UAE Businesses",
+    default: "SEO & AEO Agency in Abu Dhabi | Sentiera Technologies",
     template: "%s | Sentiera Technologies",
   },
   description:
-    "Get found in Google and in AI answers like ChatGPT. SEO, AEO, photo and video, events marketing, social and AI builds for UAE small and medium businesses. Based in Masdar City.",
+    "Be found on Google and named in AI answers. SEO, AEO, web, content and creative from Masdar City, Abu Dhabi.",
   keywords: [
     "Sentiera",
-    "SEO UAE",
+    "SEO Abu Dhabi",
     "AEO",
     "Answer Engine Optimisation",
     "Digital Marketing Abu Dhabi",
-    "AI for SMBs",
     "Masdar City",
-    "UAE small business marketing",
+    "UAE business marketing",
   ],
   authors: [{ name: "Sentiera Technologies LLC", url: "https://www.sentieratech.com" }],
   creator: "Sentiera Technologies LLC",
@@ -51,27 +48,18 @@ export const metadata: Metadata = {
     apple: "/sentiera-logo.png",
   },
   openGraph: {
-    title: "Sentiera Technologies | SEO, AEO, Content and AI for UAE Businesses",
-    description:
-      "Get found in Google and in AI answers like ChatGPT. SEO, AEO, photo and video, events marketing, social and AI builds for UAE small and medium businesses.",
+    title: "SEO & AEO Agency in Abu Dhabi | Sentiera Technologies",
+    description: "Be found on Google and named in AI answers. SEO, AEO, web, content and creative from Masdar City, Abu Dhabi.",
     url: "https://www.sentieratech.com",
     siteName: "Sentiera Technologies",
     locale: "en_US",
     type: "website",
-    images: [
-      {
-        url: "/sentiera-logo.png",
-        width: 1200,
-        height: 630,
-        alt: "Sentiera Technologies",
-      },
-    ],
+    images: [{ url: "/sentiera-logo.png", width: 1200, height: 630, alt: "Sentiera Technologies" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sentiera Technologies | SEO, AEO, Content and AI for UAE Businesses",
-    description:
-      "Get found in Google and in AI answers like ChatGPT. SEO, AEO, photo and video, events marketing, social and AI builds for UAE small and medium businesses.",
+    title: "SEO & AEO Agency in Abu Dhabi | Sentiera Technologies",
+    description: "Be found on Google and named in AI answers. SEO, AEO, web, content and creative from Masdar City, Abu Dhabi.",
     images: ["/sentiera-logo.png"],
   },
 };
@@ -81,21 +69,43 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    name: "Sentiera Technologies LLC",
+    url: "https://sentieratech.com",
+    email: "jay@sentieratech.com",
+    telephone: "+971585737464",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Masdar City, Abu Dhabi",
+      addressCountry: "AE",
+    },
+    areaServed: ["Abu Dhabi", "Dubai"],
+    knowsAbout: [
+      "SEO",
+      "AEO",
+      "Digital marketing strategy",
+      "Social media creatives",
+      "Website design and management",
+      "Brand video and photography",
+      "Brochures",
+      "Events graphics",
+      "Internal communications",
+    ],
+  };
+
   return (
     <html lang="en" className="scroll-smooth bg-white text-slate-950">
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans min-h-screen bg-white text-slate-950 antialiased selection:bg-tech-blue selection:text-white flex flex-col`}
       >
-        {/* Architectural hairline grid lines for subtle high-end studio depth */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <div
           className="pointer-events-none fixed inset-0 z-0 opacity-40 [background-image:linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] [background-size:64px_64px]"
           aria-hidden="true"
         />
-
-        {/* Minimalist Sticky Navigation Bar */}
         <Navbar />
-
-        {/* Overarching Main Canvas */}
         <main className="relative z-10 flex-1">{children}</main>
       </body>
     </html>

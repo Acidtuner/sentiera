@@ -9,14 +9,10 @@ export const metadata: Metadata = {
 };
 
 const whatWeDo = [
-  { label: "SEO and AEO", href: "/services#seo-aeo" },
-  { label: "Digital marketing strategy", href: "/services#digital-marketing-strategy" },
-  { label: "Social media creatives", href: "/services#social-media-creatives" },
-  { label: "Website design and management", href: "/services#website-design" },
-  { label: "Brand video and photography", href: "/services#video-photography" },
-  { label: "Brochures and printed collateral", href: "/services#brochures-print" },
-  { label: "Events graphics", href: "/services#events-graphics" },
-  { label: "Internal communications", href: "/services#internal-communications" },
+  { label: "AI Agents", href: "/services#ai-agents" },
+  { label: "360° Brand Management", href: "/services#brand-management" },
+  { label: "Digital Marketing", href: "/services#digital-marketing" },
+  { label: "Events and PR", href: "/services#events-pr" },
 ];
 
 const proof = [
@@ -41,7 +37,6 @@ export default function Home() {
     <div className="relative">
       <Hero />
 
-      {/* Positioning */}
       <section className="relative bg-white py-20 sm:py-28 border-b border-hairline">
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
           <div className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest-tag text-tech-blue font-semibold mb-4">
@@ -59,7 +54,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why it matters */}
       <section className="relative bg-slate-50 py-20 sm:py-28 border-b border-hairline">
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
           <div className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest-tag text-tech-blue font-semibold mb-4">
@@ -74,10 +68,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* What we do */}
       <section className="relative bg-white py-20 sm:py-28 border-b border-hairline">
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
-          <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">SEO, AEO and creative services in Abu Dhabi and Dubai</h2>
+          <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">AI, brand, digital and events services in Abu Dhabi and Dubai</h2>
           <ul className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
             {whatWeDo.map((item) => (
               <li key={item.href}>
@@ -94,7 +87,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Proof */}
       <section className="relative bg-slate-50 py-20 sm:py-28 border-b border-hairline">
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
           <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">The team behind the work.</h2>
@@ -112,7 +104,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FAQ */}
       <section className="relative bg-white py-20 sm:py-28 border-b border-hairline">
         <div className="mx-auto max-w-3xl px-6 lg:px-8">
           <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">FAQ</h2>
@@ -127,7 +118,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Closing CTA */}
       <section className="relative bg-white py-20 sm:py-28">
         <div className="mx-auto max-w-3xl px-6 lg:px-8 text-center">
           <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">Start with a conversation.</h2>

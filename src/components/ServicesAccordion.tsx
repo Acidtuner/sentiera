@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 
 export interface ServiceItem {
   id: string;
@@ -36,10 +35,11 @@ export default function ServicesAccordion({ services }: { services: ServiceItem[
               </h2>
             </button>
 
-            {/* Content always in DOM for SEO / AI crawlers */}
+            {/* Always in the DOM so crawlers and AI tools can read it */}
             <div
               id={`panel-${service.id}`}
-              className={isOpen ? "block" : "sr-only"}
+              className={isOpen ? "block" : "hidden"}
+              // hidden removes from visual layout but content remains in HTML source
             >
               <div className="px-6 pb-8 sm:pb-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
@@ -49,52 +49,25 @@ export default function ServicesAccordion({ services }: { services: ServiceItem[
 
                 <ul className="mt-8 flex flex-wrap gap-2 list-none p-0">
                   {service.items.map((item) => (
-                    <li key={item} className="inline-flex items-center rounded-full border border-hairline bg-white px-3.5 py-1.5 font-sans text-xs text-slate-700">
+                    <li
+                      key={item}
+                      className="inline-flex items-center rounded-full border border-hairline bg-white px-3.5 py-1.5 font-sans text-xs text-slate-700"
+                    >
                       {item}
                     </li>
                   ))}
                 </ul>
 
                 <div className="mt-8">
-                  <Link href={service.ctaHref} className="inline-flex items-center gap-2 rounded-full border border-tech-blue px-5 py-2 font-mono text-xs font-semibold uppercase tracking-wider text-tech-blue hover:bg-tech-blue hover:text-white transition-colors">
+                  <Link
+                    href={service.ctaHref}
+                    className="inline-flex items-center gap-2 rounded-full border border-tech-blue px-5 py-2 font-mono text-xs font-semibold uppercase tracking-wider text-tech-blue hover:bg-tech-blue hover:text-white transition-colors"
+                  >
                     {service.cta}
                   </Link>
                 </div>
               </div>
             </div>
-
-            {/* Visual expand/collapse only when open */}
-            <AnimatePresence initial={false}>
-              {isOpen && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                  className="overflow-hidden"
-                  aria-hidden="true"
-                >
-                  <div className="px-6 pb-8 sm:pb-10">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-                      <p className="font-sans text-base text-slate-700 leading-relaxed">{service.summary}</p>
-                      <p className="font-sans text-base text-slate-600 leading-relaxed">{service.detail}</p>
-                    </div>
-                    <div className="mt-8 flex flex-wrap gap-2">
-                      {service.items.map((item) => (
-                        <span key={item} className="inline-flex items-center rounded-full border border-hairline bg-white px-3.5 py-1.5 font-sans text-xs text-slate-700">
-                          {item}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="mt-8">
-                      <Link href={service.ctaHref} className="inline-flex items-center gap-2 rounded-full border border-tech-blue px-5 py-2 font-mono text-xs font-semibold uppercase tracking-wider text-tech-blue hover:bg-tech-blue hover:text-white transition-colors">
-                        {service.cta}
-                      </Link>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
         );
       })}

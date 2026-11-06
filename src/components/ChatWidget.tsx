@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -13,8 +13,11 @@ const STARTER = [
   "I'd like a visibility review",
 ];
 
+const IDLE_MS = 30_000;
+
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
+  const [showNudge, setShowNudge] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: "assistant",
@@ -25,6 +28,36 @@ export default function ChatWidget() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hasNudged = useRef(false);
+
+  const resetIdle = useCallback(() => {
+    if (hasNudged.current || open) return;
+    if (idleTimer.current) clearTimeout(idleTimer.current);
+    idleTimer.current = setTimeout(() => {
+      if (!open && !hasNudged.current) {
+        setShowNudge(true);
+        hasNudged.current = true;
+      }
+    }, IDLE_MS);
+  }, [open]);
+
+  useEffect(() => {
+    const events = ["mousemove", "mousedown", "keydown", "scroll", "touchstart"] as const;
+    const onActivity = () => resetIdle();
+
+    events.forEach((e) => window.addEventListener(e, onActivity, { passive: true }));
+    resetIdle();
+
+    return () => {
+      events.forEach((e) => window.removeEventListener(e, onActivity));
+      if (idleTimer.current) clearTimeout(idleTimer.current);
+    };
+  }, [resetIdle]);
+
+  useEffect(() => {
+    if (open) setShowNudge(false);
+  }, [open]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -70,8 +103,38 @@ export default function ChatWidget() {
     send(input);
   }
 
+  function dismissNudge() {
+    setShowNudge(false);
+  }
+
   return (
     <>
+      {showNudge && !open && (
+        <div className="fixed bottom-24 right-6 z-50 max-w-[260px] border border-hairline bg-white px-4 py-3 shadow-lg">
+          <button
+            type="button"
+            onClick={dismissNudge}
+            className="absolute top-1.5 right-2 text-slate-400 hover:text-slate-700 text-sm leading-none"
+            aria-label="Dismiss"
+          >
+            ×
+          </button>
+          <p className="font-sans text-sm text-slate-800 pr-4">
+            Questions about SEO, AEO or how we work? I can help.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              setShowNudge(false);
+              setOpen(true);
+            }}
+            className="mt-2 font-mono text-[11px] font-semibold uppercase tracking-wider text-tech-blue hover:text-tech-blue-600"
+          >
+            Open chat →
+          </button>
+        </div>
+      )}
+
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}

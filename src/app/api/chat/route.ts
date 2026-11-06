@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { SENTIERA_SYSTEM_PROMPT } from "@/lib/chat-system-prompt";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 const XAI_API_URL = "https://api.x.ai/v1/chat/completions";
-const MODEL = process.env.XAI_MODEL || "grok-3";
+const MODEL = process.env.XAI_MODEL || "grok-4.3";
 
 interface Message {
   role: "user" | "assistant" | "system";
@@ -15,7 +16,7 @@ export async function POST(req: NextRequest) {
   const apiKey = process.env.XAI_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
-      { error: "Chat is not configured." },
+      { error: "Chat is not configured. XAI_API_KEY is missing on the server." },
       { status: 500 }
     );
   }
@@ -56,11 +57,25 @@ export async function POST(req: NextRequest) {
 
     if (!res.ok) {
       const errText = await res.text().catch(() => "");
-      console.error("xAI error", res.status, errText.slice(0, 500));
-      return NextResponse.json(
-        { error: "The assistant is temporarily unavailable." },
-        { status: 502 }
-      );
+      console.error("xAI error", res.status, errText.slice(0, 800));
+
+      let detail = "The assistant is temporarily unavailable.";
+      if (res.status === 401 || res.status === 403) {
+        detail = "The API key was rejected. Check XAI_API_KEY on the host and redeploy.";
+      } else if (res.status === 404) {
+        detail = `Model \"${MODEL}\" was not found. Set XAI_MODEL to a current id such as grok-4.3.`;
+      } else if (res.status === 429) {
+        detail = "Rate limit reached. Try again in a moment.";
+      } else if (errText) {
+        try {
+          const parsed = JSON.parse(errText);
+          detail = parsed?.error?.message || parsed?.error || detail;
+        } catch {
+          detail = errText.slice(0, 180);
+        }
+      }
+
+      return NextResponse.json({ error: detail }, { status: 502 });
     }
 
     const data = await res.json();
@@ -68,7 +83,7 @@ export async function POST(req: NextRequest) {
 
     if (!reply) {
       return NextResponse.json(
-        { error: "No reply received." },
+        { error: "No reply received from the model." },
         { status: 502 }
       );
     }

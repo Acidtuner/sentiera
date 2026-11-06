@@ -92,12 +92,18 @@ export default function ChatWidget() {
         body: JSON.stringify({ messages: next }),
       });
 
-      const data = await res.json();
-      const reply =
-        data.reply ||
-        "Sorry, I couldn’t get a reply just now. You can email hello@sentieratech.com or message us on WhatsApp.";
+      const data = await res.json().catch(() => ({}));
 
-      setMessages((prev) => [...prev, { role: "assistant", content: reply }]);
+      if (!res.ok || !data.reply) {
+        const detail =
+          typeof data.error === "string"
+            ? data.error
+            : "Sorry, I couldn’t get a reply just now. You can email hello@sentieratech.com or message us on WhatsApp.";
+        setMessages((prev) => [...prev, { role: "assistant", content: detail }]);
+        return;
+      }
+
+      setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
     } catch {
       setMessages((prev) => [
         ...prev,

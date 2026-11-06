@@ -122,23 +122,6 @@ export default function ChatWidget() {
 
   return (
     <>
-      <style jsx global>{`
-        @keyframes bot-float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-3px); }
-        }
-        @keyframes bot-nudge-pulse {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.06); }
-        }
-        .bot-idle {
-          animation: bot-float 3.2s ease-in-out infinite;
-        }
-        .bot-nudge {
-          animation: bot-nudge-pulse 1.8s ease-in-out infinite;
-        }
-      `}</style>
-
       {showNudge && !open && (
         <div className="fixed bottom-24 right-6 z-50 max-w-[260px] border border-hairline bg-white px-4 py-3 shadow-lg">
           <button

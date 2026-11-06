@@ -52,3 +52,21 @@ body {
     text-wrap: balance;
   }
 }
+
+@keyframes bot-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes bot-nudge-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+.bot-idle {
+  animation: bot-float 3.2s ease-in-out infinite;
+}
+
+.bot-nudge {
+  animation: bot-nudge-pulse 1.8s ease-in-out infinite;
+}

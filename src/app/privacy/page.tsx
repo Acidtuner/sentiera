@@ -15,7 +15,7 @@ export default function Privacy() {
           <span>Legal</span>
         </div>
         <h1 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">Privacy Policy</h1>
-        <p className="mt-4 font-sans text-sm text-slate-500">Last updated: 4 November 2026</p>
+        <p className="mt-4 font-sans text-sm text-slate-500">Last updated: 6 November 2026</p>
 
         <div className="mt-10 space-y-8 font-sans text-base text-slate-700 leading-relaxed">
           <section>
@@ -56,7 +56,7 @@ export default function Privacy() {
           <section>
             <h2 className="font-sans text-xl font-semibold text-slate-950">Your rights</h2>
             <p className="mt-3">
-              You may request access to, correction of, or deletion of the personal data we hold about you by emailing jay@sentieratech.com. We will respond within a reasonable time.
+              You may request access to, correction of, or deletion of the personal data we hold about you by emailing hello@sentieratech.com. We will respond within a reasonable time.
             </p>
           </section>
 
@@ -65,7 +65,7 @@ export default function Privacy() {
             <p className="mt-3">
               Sentiera Technologies LLC<br />
               Masdar City, Abu Dhabi, United Arab Emirates<br />
-              Email: <a href="mailto:jay@sentieratech.com" className="text-tech-blue hover:underline">jay@sentieratech.com</a>
+              Email: <a href="mailto:hello@sentieratech.com" className="text-tech-blue hover:underline">hello@sentieratech.com</a>
             </p>
           </section>
 

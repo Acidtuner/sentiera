@@ -4,7 +4,7 @@ import ContactForm from "@/components/ContactForm";
 
 export const metadata: Metadata = {
   title: "Contact Sentiera Technologies | Masdar City, Abu Dhabi",
-  description: "Request a consultation with Sentiera Technologies in Masdar City, Abu Dhabi. SEO, AEO, websites and creative for businesses in Abu Dhabi and Dubai.",
+  description: "Arrange a meeting with Sentiera Technologies in Masdar City, Abu Dhabi. SEO, AEO, websites and creative for businesses in Abu Dhabi and Dubai.",
 };
 
 export default function Contact() {
@@ -18,8 +18,8 @@ export default function Contact() {
             <span className="h-1.5 w-1.5 rounded-full bg-tech-blue" />
             <span>Contact</span>
           </div>
-          <h1 className="font-sans text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight-heading text-slate-950">Request a consultation</h1>
-          <p className="mt-4 font-sans text-lg text-slate-700 max-w-xl mx-auto">Tell us a little about your business and we&apos;ll be in touch.</p>
+          <h1 className="font-sans text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight-heading text-slate-950">Arrange a meeting</h1>
+          <p className="mt-4 font-sans text-lg text-slate-700 max-w-xl mx-auto">Share a few details about your business and we&apos;ll be in touch to find a time that suits you, in person or online.</p>
         </div>
       </section>
 
@@ -30,7 +30,7 @@ export default function Contact() {
             <p className="font-semibold text-slate-900">Sentiera Technologies LLC</p>
             <p>Masdar City, Abu Dhabi</p>
             <p>Email: <a href="mailto:jay@sentieratech.com" className="text-tech-blue hover:underline">jay@sentieratech.com</a></p>
-            <p>Phone / WhatsApp: <a href="tel:+971585737464" className="text-tech-blue hover:underline">+971 58 573 7464</a></p>
+            <p>Phone / WhatsApp: <a href="https://wa.me/971585737464" className="text-tech-blue hover:underline">+971 58 573 7464</a></p>
           </div>
         </div>
       </section>

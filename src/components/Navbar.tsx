@@ -78,13 +78,13 @@ export default function Navbar() {
 
         <div className="hidden sm:flex items-center gap-5">
           <Link href="/contact" className="group relative inline-flex items-center gap-2 overflow-hidden rounded-sm bg-tech-blue px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-tech-button transition-all duration-200 hover:bg-tech-blue-600 active:scale-[0.98]">
-            <span>Request a consultation</span>
+            <span>Arrange a meeting</span>
             <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
           </Link>
         </div>
 
         <div className="flex md:hidden items-center gap-3">
-          <Link href="/contact" className="rounded-sm bg-tech-blue px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-white">Consult</Link>
+          <Link href="/contact" className="rounded-sm bg-tech-blue px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-white">Meet</Link>
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="flex h-9 w-9 flex-col items-center justify-center gap-1.5 rounded-sm border border-hairline p-1 text-slate-900 focus:outline-none" aria-label="Toggle navigation menu" aria-expanded={mobileMenuOpen}>
             <motion.span animate={mobileMenuOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }} className="h-[1.5px] w-5 bg-slate-900 origin-center transition-transform" />
             <motion.span animate={mobileMenuOpen ? { opacity: 0 } : { opacity: 1 }} className="h-[1.5px] w-5 bg-slate-900 transition-opacity" />

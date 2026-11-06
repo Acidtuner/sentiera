@@ -4,54 +4,54 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Ways to Work With Us | SEO, AEO & Creative | Sentiera",
-  description: "Four ways to work with Sentiera Technologies: a Complimentary Visibility Review, a Partnership Retainer, an AI Integration Programme, and Events and Campaigns quoted per project.",
+  description: "Four ways to work with Sentiera Technologies: a Complimentary Visibility Review, a Partnership Retainer, an AI Integration Programme, and Events and Campaigns.",
 };
 
 const engagements = [
   {
     title: "Complimentary Visibility Review",
-    summary: "A starting point, by application.",
+    summary: "A good first conversation.",
     items: [
-      "A 45-minute session reviewing how your business shows up in Google and in AI answers",
-      "A written summary afterwards, setting out what we would address first",
-      "Offered for a limited number of UAE businesses each month",
+      "A 45-minute session looking at how your business appears on Google and in AI answers",
+      "A short written summary afterwards, with what we would focus on first",
+      "Offered to a limited number of UAE businesses each month",
     ],
-    cta: "Apply for a review",
+    cta: "Book your review",
     href: "/contact?intent=visibility-review",
   },
   {
     title: "Partnership Retainer",
-    summary: "An ongoing monthly partnership, run as one plan.",
+    summary: "One monthly partnership, run as a single plan.",
     items: [
       "SEO and AEO",
       "Social media management",
       "Content: writing, design, photography and video",
-      "An AI assistant on your website, answering common questions from your own content",
-      "Automated workflows, such as enquiry routing or follow-ups, scoped with you",
+      "An AI assistant on your website that answers common questions from your own content",
+      "Automated workflows, such as routing enquiries or sending follow-ups",
       "A monthly review with your Abu Dhabi lead",
     ],
-    cta: "Request a consultation",
+    cta: "Arrange a meeting",
     href: "/contact",
   },
   {
     title: "AI Integration Programme",
-    summary: "For organisations planning larger AI work.",
+    summary: "For organisations planning larger AI projects.",
     items: [
       "Custom AI assistants for your website, WhatsApp or internal teams",
       "Workflows connected to the tools you already use",
-      "Scoping, set-up, testing, handover and ongoing support",
+      "Planning, set-up, testing and handover",
     ],
-    cta: "Request a consultation",
+    cta: "Arrange a meeting",
     href: "/contact",
   },
   {
     title: "Events and Campaigns",
-    summary: "Quoted per project.",
+    summary: "Quoted for each project.",
     items: [
-      "Pre-event promotion across social, email and your website",
-      "Event graphics and printed collateral",
-      "Photo and video coverage on the day",
-      "Follow-up content after the event or campaign",
+      "Promotion before the event, across social, email and your website",
+      "Event graphics and printed material",
+      "Photography and video on the day",
+      "Follow-up content afterwards",
     ],
     cta: "Request a quote",
     href: "/contact",
@@ -70,7 +70,7 @@ export default function Engagements() {
             <span>Engagements</span>
           </div>
           <h1 className="font-sans text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight-heading text-slate-950">Four ways to work with us.</h1>
-          <p className="mt-6 font-sans text-lg text-slate-700 leading-relaxed max-w-2xl mx-auto">Each engagement is scoped with you before it starts.</p>
+          <p className="mt-6 font-sans text-lg text-slate-700 leading-relaxed max-w-2xl mx-auto">We agree the scope with you before any work begins.</p>
         </div>
       </section>
 
@@ -95,7 +95,7 @@ export default function Engagements() {
               </div>
             ))}
           </div>
-          <p className="mt-12 text-center font-sans text-sm text-slate-500">Pricing for all engagements is shared after a consultation.</p>
+          <p className="mt-12 text-center font-sans text-sm text-slate-500">We share pricing once we&apos;ve understood what you need.</p>
         </div>
       </section>
     </div>

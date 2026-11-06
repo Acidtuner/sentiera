@@ -5,7 +5,7 @@ import Hero from "@/components/Hero";
 
 export const metadata: Metadata = {
   title: "SEO & AEO Agency in Abu Dhabi | Sentiera Technologies",
-  description: "Be found on Google and named in AI answers. SEO, AEO, web, content and creative from Masdar City, Abu Dhabi. Apply for a Complimentary Visibility Review.",
+  description: "Help customers find and choose your business on Google and in AI answers. SEO, AEO, web, content and creative from Masdar City, Abu Dhabi.",
 };
 
 const whatWeDo = [
@@ -16,20 +16,20 @@ const whatWeDo = [
 ];
 
 const proof = [
-  { name: "Nidec", detail: "Ongoing social media creatives, events graphics and internal communications." },
-  { name: "TD Power Systems", detail: "Ongoing social media creatives, events graphics and internal communications." },
+  { name: "Nidec", detail: "Ongoing social media creatives, event graphics and internal communications." },
+  { name: "TD Power Systems", detail: "Ongoing social media creatives, event graphics and internal communications." },
   { name: "Murata", detail: "Events and internal communications for its India and Singapore offices." },
   { name: "TSI Power", detail: "Events, creative communications, brochures and graphics." },
   { name: "Azzurro", detail: "Website design and management, plus two brand videos." },
 ];
 
 const faqs = [
-  { q: "What is AEO?", a: "Answer engine optimisation is the work of making your business one of the names AI assistants like ChatGPT, Gemini and Google's AI Overviews give when customers ask for a recommendation." },
-  { q: "How is AEO different from SEO?", a: "SEO helps your pages rank in search results. AEO helps AI tools understand and cite your business. Both depend on clear pages, real answers and consistent business details, so we plan them together." },
-  { q: "What's included in the Complimentary Visibility Review?", a: "A 45-minute session looking at how your business shows up in Google and AI answers, followed by a written summary of what we'd address first." },
-  { q: "Do you work with businesses in Dubai as well as Abu Dhabi?", a: "Yes. We're based in Masdar City, Abu Dhabi, and work with businesses across Abu Dhabi and Dubai." },
-  { q: "Who does the work?", a: "Strategy and client leadership are in Abu Dhabi. Design, writing, video and development are handled by our delivery team in Bangalore." },
-  { q: "How much does it cost?", a: "Each engagement is scoped with you, and pricing is shared after a consultation." },
+  { q: "What is AEO?", a: "Answer engine optimisation is the work of helping AI assistants such as ChatGPT, Gemini and Google's AI Overviews understand your business, so it has a fair chance of being named when customers ask for a recommendation." },
+  { q: "How is AEO different from SEO?", a: "SEO helps your pages rank in search results. AEO helps AI tools understand and cite your business. Both rely on clear pages, honest answers and consistent business details, so we plan them together." },
+  { q: "What's included in the Complimentary Visibility Review?", a: "A 45-minute session on how your business appears on Google and in AI answers, followed by a short written summary of what we would focus on first." },
+  { q: "Do you work with businesses in Dubai as well as Abu Dhabi?", a: "Yes. We're based in Masdar City, Abu Dhabi, and work with businesses across Abu Dhabi and Dubai. We're happy to meet in either city." },
+  { q: "Who does the work?", a: "Strategy and client relationships are led from Abu Dhabi. Design, writing, video and development are handled by our delivery team in Bangalore." },
+  { q: "How much does it cost?", a: "Every engagement is shaped around what you need, so we share pricing after our first conversation." },
 ];
 
 export default function Home() {
@@ -47,9 +47,9 @@ export default function Home() {
             Led in Abu Dhabi. Delivered by a dedicated team.
           </h2>
           <div className="mt-8 space-y-4 font-sans text-base sm:text-lg text-slate-700 leading-relaxed">
-            <p>Sentiera Technologies sets strategy and leads every client relationship from Masdar City, Abu Dhabi. You work with us directly, in your time zone, from the first conversation to every monthly review.</p>
-            <p>Delivery is handled by our team in Bangalore: designers, writers, video editors and developers who work on our engagements day to day.</p>
-            <p className="font-semibold text-slate-900">One point of contact here. A full production team behind it.</p>
+            <p>We set strategy and look after every client relationship from Masdar City, Abu Dhabi. You deal with us directly, in your time zone, from the first meeting to each monthly review.</p>
+            <p>Behind us is our delivery team in Bangalore: the designers, writers, video editors and developers who work on your account every day.</p>
+            <p className="font-semibold text-slate-900">You have one person here who knows your business, with a full production team behind them.</p>
           </div>
         </div>
       </section>
@@ -60,10 +60,10 @@ export default function Home() {
             <span className="h-1.5 w-1.5 rounded-full bg-tech-blue" />
             <span>Why it matters now</span>
           </div>
-          <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">Search has changed.</h2>
+          <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">How customers search is changing.</h2>
           <div className="mt-8 space-y-4 font-sans text-base sm:text-lg text-slate-700 leading-relaxed">
-            <p>Buyers now ask AI tools for answers, not just scroll a page of links. They get a short answer with a few names. AEO (answer engine optimisation) is the work of making your business one of those names. It builds on good SEO: clear pages, real answers to real questions, and consistent details about who you are.</p>
-            <p className="font-semibold text-slate-900">We plan both together, as one programme.</p>
+            <p>More people now ask an AI assistant for a recommendation before they visit a website. The answer usually names only a few businesses. We help improve how your business appears in those answers, building on the same foundations as good SEO: clear pages, honest answers to real questions, and consistent details about who you are.</p>
+            <p className="font-semibold text-slate-900">We plan search and AI visibility together, as one piece of work.</p>
           </div>
         </div>
       </section>
@@ -97,7 +97,7 @@ export default function Home() {
           <ul className="mt-10 space-y-4">
             {proof.map((p) => (
               <li key={p.name} className="font-sans text-sm text-slate-700">
-                <strong className="text-slate-950">{p.name}</strong> — {p.detail}
+                <strong className="text-slate-950">{p.name}:</strong> {p.detail}
               </li>
             ))}
           </ul>
@@ -120,10 +120,10 @@ export default function Home() {
 
       <section className="relative bg-white py-20 sm:py-28">
         <div className="mx-auto max-w-3xl px-6 lg:px-8 text-center">
-          <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">Start with a conversation.</h2>
-          <p className="mt-6 font-sans text-base sm:text-lg text-slate-700 leading-relaxed">Tell us where your business stands and what you want next. We will tell you plainly how we would approach it.</p>
+          <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">Let&apos;s start with a conversation.</h2>
+          <p className="mt-6 font-sans text-base sm:text-lg text-slate-700 leading-relaxed">Tell us where your business is today and where you&apos;d like it to be. We&apos;ll give you an honest view of where to begin.</p>
           <div className="mt-10">
-            <Link href="/contact" className="inline-flex items-center gap-2 rounded-sm bg-tech-blue px-8 py-4 font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-tech-button transition-all duration-200 hover:bg-tech-blue-600">Request a consultation →</Link>
+            <Link href="/contact" className="inline-flex items-center gap-2 rounded-sm bg-tech-blue px-8 py-4 font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-tech-button transition-all duration-200 hover:bg-tech-blue-600">Arrange a meeting →</Link>
           </div>
         </div>
       </section>

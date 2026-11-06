@@ -81,7 +81,7 @@ export default function ContactForm() {
         <textarea name="message" rows={5} value={form.message} onChange={handleChange} className="w-full border border-hairline px-4 py-3 font-sans text-sm focus:border-tech-blue focus:outline-none" />
       </div>
       <button type="submit" disabled={status === "submitting"} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-sm bg-tech-blue px-8 py-4 font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-tech-button transition-all duration-200 hover:bg-tech-blue-600 disabled:opacity-50">
-        {status === "submitting" ? "Sending..." : "Request a consultation"}
+        {status === "submitting" ? "Sending..." : "Send your details"}
       </button>
     </form>
   );

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import ServicesAccordion, { type ServiceItem } from "@/components/ServicesAccordion";
 
 export const metadata: Metadata = {
-  title: "AI Agents, Brand, Digital & Events | Sentiera Abu Dhabi",
+  title: "AI Agents, SEO & AEO, Brand & Events | Sentiera Abu Dhabi",
   description: "Four ways we work with UAE businesses: AI agents, 360° brand management, SEO and AEO, and events and PR. Led from Masdar City, Abu Dhabi.",
 };
 
@@ -11,7 +11,7 @@ const services: ServiceItem[] = [
   {
     id: "ai-agents",
     title: "AI Agents for Sales, Support and Social",
-    summary: "AI Agents are assistants built from your own content and connected to the tools you already use. We scope, build, test and hand over each one, then support it.",
+    summary: "Assistants that answer your customers' questions from your own content, connected to the tools you already use. We plan, build and test each one with you before it goes live.",
     detail: "From website and WhatsApp chatbots that answer from your content, to custom sales and support agents, and social listening that monitors and summarises what people say about your brand.",
     items: [
       "Website and WhatsApp chatbots that answer from your own content",
@@ -24,14 +24,13 @@ const services: ServiceItem[] = [
   {
     id: "brand-management",
     title: "360° Brand Management in Abu Dhabi",
-    summary: "360° Brand Management is one monthly partnership that keeps your brand clear and consistent everywhere it appears. Your Abu Dhabi lead runs it as a single plan, reviewed with you each month.",
+    summary: "One monthly partnership that keeps your brand clear and consistent wherever it appears. Your Abu Dhabi lead runs it as a single plan and reviews it with you each month.",
     detail: "Strategy, guidelines, brochures, internal communications and photography sit under one relationship so the brand stays consistent across channels.",
     items: [
       "Brand strategy and brand guidelines",
       "Company and product brochures",
       "Internal communications: newsletters, announcements and town-hall materials",
       "Brand photography",
-      "A monthly review with your Abu Dhabi lead",
     ],
     cta: "Discuss a brand partnership",
     ctaHref: "/contact",
@@ -39,13 +38,13 @@ const services: ServiceItem[] = [
   {
     id: "digital-marketing",
     title: "Digital Marketing: SEO, AEO and Web",
-    summary: "Digital Marketing makes your business easier to find on Google, more likely to be named in AI answers, and present where your customers spend time online.",
+    summary: "Help customers find you on Google, understand you in AI answers, and see you where they spend time online.",
     detail: "SEO and AEO, social content, email and website design are planned together so search, AI answers and presence reinforce each other.",
     items: [
-      "SEO and AEO: audits, pages written around customer questions, local listings and structured data",
-      "Social media: content calendars, post designs and short videos, captions for each platform",
+      "SEO and AEO: audits, pages written around your customers' questions, local listings and structured data",
+      "Social media: content calendars, post designs, short videos and captions for each platform",
       "Email marketing",
-      "Website design and development, with technical SEO set up from the start",
+      "Website design and development, with technical SEO built in from the start",
     ],
     cta: "Review your visibility",
     ctaHref: "/contact?intent=visibility-review",
@@ -53,7 +52,7 @@ const services: ServiceItem[] = [
   {
     id: "events-pr",
     title: "Events and PR for UAE Brands",
-    summary: "Events and PR covers an event or campaign from the first announcement to the follow-up. Each project is quoted on its own.",
+    summary: "From the first announcement to the follow-up, we look after the creative side of your event or campaign. Each project is quoted on its own.",
     detail: "Graphics, on-the-day photography and video, pre-event promotion and follow-up content are delivered as one project.",
     items: [
       "Event graphics: stand, stage, screen and print",
@@ -78,7 +77,7 @@ export default function Services() {
             <span>Services</span>
           </div>
           <h1 className="font-sans text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight-heading text-slate-950">Our services</h1>
-          <p className="mt-6 font-sans text-lg text-slate-700 leading-relaxed max-w-2xl mx-auto">Strategy and client leadership from Masdar City, Abu Dhabi. Delivery by our full production team.</p>
+          <p className="mt-6 font-sans text-lg text-slate-700 leading-relaxed max-w-2xl mx-auto">Led from Masdar City, Abu Dhabi, and delivered by our full production team.</p>
         </div>
       </section>
 

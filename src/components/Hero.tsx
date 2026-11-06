@@ -35,17 +35,23 @@ export default function Hero() {
           </motion.h1>
 
           <motion.p variants={itemVariants} className="mt-8 max-w-2xl font-sans text-base sm:text-lg text-slate-600 leading-relaxed">
-            When your customers ask Google or an AI assistant who to call, your name should come up. We plan and run the search, AI and content work that helps it happen, for businesses in Abu Dhabi and Dubai.
+            When customers ask Google or an AI assistant who to call, your name should be on the list. We help businesses in Abu Dhabi and Dubai show up clearly in search and in AI answers.
           </motion.p>
 
           <motion.div variants={itemVariants} className="mt-10 sm:mt-12 flex flex-col sm:flex-row items-center gap-4">
             <Link href="/contact" className="group relative inline-flex items-center justify-center gap-3 rounded-none bg-tech-blue px-9 py-4 font-mono text-xs font-semibold uppercase tracking-widest text-white shadow-tech-button transition-all duration-200 hover:bg-tech-blue-600 active:scale-[0.99]">
-              <span>Request a consultation</span>
+              <span>Arrange a meeting</span>
               <span className="font-sans text-sm transition-transform duration-200 group-hover:translate-x-1">→</span>
             </Link>
             <Link href="/contact?intent=visibility-review" className="inline-flex items-center justify-center gap-2 rounded-none border border-hairline bg-white/80 px-7 py-4 font-mono text-xs font-medium uppercase tracking-widest text-slate-600 transition-colors hover:border-slate-400 hover:text-slate-950 backdrop-blur-xs">
-              <span>Apply for a Complimentary Visibility Review</span>
+              <span>Book your Complimentary Visibility Review</span>
             </Link>
+          </motion.div>
+
+          <motion.div variants={itemVariants} className="mt-6">
+            <a href="https://wa.me/971585737464" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-wider text-slate-600 hover:text-tech-blue transition-colors">
+              Message us on WhatsApp →
+            </a>
           </motion.div>
         </motion.div>
       </div>

@@ -28,7 +28,7 @@ const engagements = [
       "Content: writing, design, photography and video",
       "An AI assistant on your website that answers common questions from your own content",
       "Automated workflows, such as routing enquiries or sending follow-ups",
-      "A monthly review with your Abu Dhabi lead",
+      "A monthly review with your Abu Dhabi team",
     ],
     cta: "Arrange a meeting",
     href: "/contact",

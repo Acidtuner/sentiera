@@ -29,7 +29,7 @@ export default function Contact() {
           <div className="mt-16 pt-8 border-t border-hairline font-sans text-sm text-slate-600 space-y-1">
             <p className="font-semibold text-slate-900">Sentiera Technologies LLC</p>
             <p>Masdar City, Abu Dhabi</p>
-            <p>Email: <a href="mailto:jay@sentieratech.com" className="text-tech-blue hover:underline">jay@sentieratech.com</a></p>
+            <p>Email: <a href="mailto:hello@sentieratech.com" className="text-tech-blue hover:underline">hello@sentieratech.com</a></p>
             <p>Phone / WhatsApp: <a href="https://wa.me/971585737464" className="text-tech-blue hover:underline">+971 58 573 7464</a></p>
           </div>
         </div>

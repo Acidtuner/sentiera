@@ -24,7 +24,7 @@ const services: ServiceItem[] = [
   {
     id: "brand-management",
     title: "360° Brand Management in Abu Dhabi",
-    summary: "One monthly partnership that keeps your brand clear and consistent wherever it appears. Your Abu Dhabi lead runs it as a single plan and reviews it with you each month.",
+    summary: "One monthly partnership that keeps your brand clear and consistent wherever it appears. Our Abu Dhabi team runs it as a single plan and reviews it with you each month.",
     detail: "Strategy, guidelines, brochures, internal communications and photography sit under one relationship so the brand stays consistent across channels.",
     items: [
       "Brand strategy and brand guidelines",

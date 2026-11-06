@@ -47,9 +47,9 @@ export default function Home() {
             Led in Abu Dhabi. Delivered by a dedicated team.
           </h2>
           <div className="mt-8 space-y-4 font-sans text-base sm:text-lg text-slate-700 leading-relaxed">
-            <p>We set strategy and look after every client relationship from Masdar City, Abu Dhabi. You deal with us directly, in your time zone, from the first meeting to each monthly review.</p>
-            <p>Behind us is our delivery team in Bangalore: the designers, writers, video editors and developers who work on your account every day.</p>
-            <p className="font-semibold text-slate-900">You have one person here who knows your business, with a full production team behind them.</p>
+            <p>Our Abu Dhabi team sets strategy and looks after every client relationship from Masdar City. You work with us directly, in your time zone, from the first meeting to each monthly review.</p>
+            <p>Our delivery team in Bangalore brings designers, writers, video editors and developers to every engagement, working on your account every day.</p>
+            <p className="font-semibold text-slate-900">Strategy, creative and delivery, brought together as one team.</p>
           </div>
         </div>
       </section>

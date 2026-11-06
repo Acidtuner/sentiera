@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     template: "%s | Sentiera Technologies",
   },
   description:
-    "Be found on Google and named in AI answers. SEO, AEO, web, content and creative from Masdar City, Abu Dhabi.",
+    "Help customers find and choose your business on Google and in AI answers. SEO, AEO, web, content and creative from Masdar City, Abu Dhabi.",
   keywords: [
     "Sentiera",
     "SEO Abu Dhabi",
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "SEO & AEO Agency in Abu Dhabi | Sentiera Technologies",
-    description: "Be found on Google and named in AI answers. SEO, AEO, web, content and creative from Masdar City, Abu Dhabi.",
+    description: "Help customers find and choose your business on Google and in AI answers. SEO, AEO, web, content and creative from Masdar City, Abu Dhabi.",
     url: "https://www.sentieratech.com",
     siteName: "Sentiera Technologies",
     locale: "en_US",
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "SEO & AEO Agency in Abu Dhabi | Sentiera Technologies",
-    description: "Be found on Google and named in AI answers. SEO, AEO, web, content and creative from Masdar City, Abu Dhabi.",
+    description: "Help customers find and choose your business on Google and in AI answers. SEO, AEO, web, content and creative from Masdar City, Abu Dhabi.",
     images: ["/sentiera-logo.png"],
   },
 };
@@ -75,7 +75,7 @@ export default function RootLayout({
     "@type": "ProfessionalService",
     name: "Sentiera Technologies LLC",
     url: "https://sentieratech.com",
-    email: "jay@sentieratech.com",
+    email: "hello@sentieratech.com",
     telephone: "+971585737464",
     address: {
       "@type": "PostalAddress",
@@ -84,6 +84,8 @@ export default function RootLayout({
     },
     areaServed: ["Abu Dhabi", "Dubai"],
     knowsAbout: [
+      "AI agents",
+      "Chatbots",
       "SEO",
       "AEO",
       "Digital marketing strategy",

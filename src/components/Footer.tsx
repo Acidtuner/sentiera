@@ -6,7 +6,6 @@ export default function Footer() {
     <footer className="relative bg-slate-950 text-slate-300 border-t border-slate-800">
       <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 sm:py-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          {/* Company */}
           <div>
             <p className="font-sans text-lg font-semibold text-white">Sentiera Technologies LLC</p>
             <p className="mt-4 font-sans text-sm leading-relaxed">
@@ -15,18 +14,16 @@ export default function Footer() {
               United Arab Emirates
             </p>
             <p className="mt-4 font-mono text-[11px] text-slate-500 uppercase tracking-wide">
-              {/* Update with actual trade licence number and issuing authority when available */}
               Licensed in Masdar City, Abu Dhabi
             </p>
           </div>
 
-          {/* Contact */}
           <div>
             <p className="font-mono text-xs uppercase tracking-widest text-slate-500">Contact</p>
             <ul className="mt-4 space-y-2 font-sans text-sm">
               <li>
-                <a href="mailto:jay@sentieratech.com" className="hover:text-white transition-colors">
-                  jay@sentieratech.com
+                <a href="mailto:hello@sentieratech.com" className="hover:text-white transition-colors">
+                  hello@sentieratech.com
                 </a>
               </li>
               <li>
@@ -37,7 +34,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Legal */}
           <div>
             <p className="font-mono text-xs uppercase tracking-widest text-slate-500">Legal</p>
             <ul className="mt-4 space-y-2 font-sans text-sm">

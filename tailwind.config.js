@@ -8,11 +8,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Stark white canvas and deep clinical text
         background: "#FFFFFF",
         foreground: "#08090A",
 
-        // Primary Brand Accent: Tech Blue
         "tech-blue": {
           DEFAULT: "#0066FF",
           50: "#F0F5FF",
@@ -27,7 +25,20 @@ module.exports = {
           900: "#001A42",
         },
 
-        // Deep Slate & Clinical Monolithic Greys
+        accent: {
+          DEFAULT: "#FF2E9C",
+          50: "#FFF0F8",
+          100: "#FFE0F1",
+          200: "#FFB8DE",
+          300: "#FF8ACA",
+          400: "#FF5CB6",
+          500: "#FF2E9C",
+          600: "#E01484",
+          700: "#B30F69",
+          800: "#800A4B",
+          900: "#4D062D",
+        },
+
         slate: {
           50: "#F8F9FA",
           100: "#F1F3F5",
@@ -42,7 +53,6 @@ module.exports = {
           950: "#08090A",
         },
 
-        // Hairline micro-borders
         hairline: {
           DEFAULT: "#E5E7EB",
           subtle: "#F0F2F5",

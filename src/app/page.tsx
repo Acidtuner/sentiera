@@ -37,10 +37,10 @@ export default function Home() {
     <div className="relative">
       <Hero />
 
-      <section className="relative bg-white py-20 sm:py-28 border-b border-hairline">
+      <section className="relative bg-white/70 py-20 sm:py-28 border-b border-hairline">
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
           <div className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest-tag text-tech-blue font-semibold mb-4">
-            <span className="h-1.5 w-1.5 rounded-full bg-tech-blue" />
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
             <span>Positioning</span>
           </div>
           <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">
@@ -54,10 +54,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="relative bg-slate-50 py-20 sm:py-28 border-b border-hairline">
+      <section className="relative bg-slate-50/80 py-20 sm:py-28 border-b border-hairline">
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
           <div className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest-tag text-tech-blue font-semibold mb-4">
-            <span className="h-1.5 w-1.5 rounded-full bg-tech-blue" />
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
             <span>Why it matters now</span>
           </div>
           <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">How customers search is changing.</h2>
@@ -68,15 +68,15 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="relative bg-white py-20 sm:py-28 border-b border-hairline">
+      <section className="relative bg-white/70 py-20 sm:py-28 border-b border-hairline">
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
           <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">AI, brand, digital and events services in Abu Dhabi and Dubai</h2>
           <ul className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
             {whatWeDo.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="group flex items-center justify-between border border-hairline bg-white px-5 py-4 font-sans text-sm text-slate-800 hover:border-tech-blue/40 hover:text-tech-blue transition-colors">
+                <Link href={item.href} className="group flex items-center justify-between border border-hairline bg-white/90 px-5 py-4 font-sans text-sm text-slate-800 hover:border-accent/40 hover:text-tech-blue transition-colors">
                   <span>{item.label}</span>
-                  <span className="font-mono text-xs text-slate-400 group-hover:text-tech-blue transition-colors">→</span>
+                  <span className="font-mono text-xs text-slate-400 group-hover:text-accent transition-colors">→</span>
                 </Link>
               </li>
             ))}
@@ -87,7 +87,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="relative bg-slate-50 py-20 sm:py-28 border-b border-hairline">
+      <section className="relative bg-slate-50/80 py-20 sm:py-28 border-b border-hairline">
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
           <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">The team behind the work.</h2>
           <p className="mt-4 font-sans text-base text-slate-600">Our delivery team in Bangalore has worked with these organisations.</p>
@@ -104,7 +104,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="relative bg-white py-20 sm:py-28 border-b border-hairline">
+      <section className="relative bg-white/70 py-20 sm:py-28 border-b border-hairline">
         <div className="mx-auto max-w-3xl px-6 lg:px-8">
           <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">FAQ</h2>
           <dl className="mt-10 space-y-8">
@@ -118,7 +118,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="relative bg-white py-20 sm:py-28">
+      <section className="relative bg-white/70 py-20 sm:py-28">
         <div className="mx-auto max-w-3xl px-6 lg:px-8 text-center">
           <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">Let&apos;s start with a conversation.</h2>
           <p className="mt-6 font-sans text-base sm:text-lg text-slate-700 leading-relaxed">Tell us where your business is today and where you&apos;d like it to be. We&apos;ll give you an honest view of where to begin.</p>

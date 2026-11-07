@@ -106,6 +106,18 @@ export default function RootLayout({
       >
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <div
+          className="pointer-events-none fixed inset-0 z-0"
+          aria-hidden="true"
+          style={{
+            backgroundImage: [
+              "radial-gradient(ellipse 70% 50% at 8% -10%, rgba(255,46,156,0.10), transparent 55%)",
+              "radial-gradient(ellipse 55% 40% at 100% 8%, rgba(255,46,156,0.07), transparent 50%)",
+              "radial-gradient(ellipse 45% 35% at 90% 100%, rgba(255,46,156,0.06), transparent 55%)",
+              "radial-gradient(ellipse 40% 30% at 0% 70%, rgba(0,102,255,0.04), transparent 50%)",
+            ].join(", "),
+          }}
+        />
+        <div
           className="pointer-events-none fixed inset-0 z-0 opacity-40 [background-image:linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] [background-size:64px_64px]"
           aria-hidden="true"
         />

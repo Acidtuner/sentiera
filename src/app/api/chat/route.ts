@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { SENTIERA_SYSTEM_PROMPT } from "@/lib/chat-system-prompt";
 
 export const runtime = "nodejs";
@@ -15,9 +15,9 @@ interface Message {
 export async function POST(req: NextRequest) {
   const apiKey = process.env.XAI_API_KEY;
   if (!apiKey) {
-    return NextResponse.json(
-      { error: "Chat is not configured. XAI_API_KEY is missing on the server." },
-      { status: 500 }
+    return new Response(
+      JSON.stringify({ error: "Chat is not configured. XAI_API_KEY is missing on the server." }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
 
@@ -25,7 +25,10 @@ export async function POST(req: NextRequest) {
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+    return new Response(JSON.stringify({ error: "Invalid request." }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   const incoming = Array.isArray(body.messages) ? body.messages : [];
@@ -50,12 +53,13 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         model: MODEL,
         messages,
-        temperature: 0.4,
-        max_tokens: 800,
+        temperature: 0.5,
+        max_tokens: 400,
+        stream: true,
       }),
     });
 
-    if (!res.ok) {
+    if (!res.ok || !res.body) {
       const errText = await res.text().catch(() => "");
       console.error("xAI error", res.status, errText.slice(0, 800));
 
@@ -75,25 +79,67 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      return NextResponse.json({ error: detail }, { status: 502 });
+      return new Response(JSON.stringify({ error: detail }), {
+        status: 502,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
-    const data = await res.json();
-    const reply = data?.choices?.[0]?.message?.content?.trim() || "";
+    const encoder = new TextEncoder();
+    const decoder = new TextDecoder();
 
-    if (!reply) {
-      return NextResponse.json(
-        { error: "No reply received from the model." },
-        { status: 502 }
-      );
-    }
+    const stream = new ReadableStream({
+      async start(controller) {
+        const reader = res.body!.getReader();
+        let buffer = "";
 
-    return NextResponse.json({ reply });
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split("\n");
+            buffer = lines.pop() || "";
+
+            for (const line of lines) {
+              const trimmed = line.trim();
+              if (!trimmed.startsWith("data:")) continue;
+              const data = trimmed.slice(5).trim();
+              if (data === "[DONE]") continue;
+
+              try {
+                const json = JSON.parse(data);
+                const delta = json?.choices?.[0]?.delta?.content;
+                if (typeof delta === "string" && delta.length > 0) {
+                  controller.enqueue(encoder.encode(delta));
+                }
+              } catch {
+                // ignore malformed chunks
+              }
+            }
+          }
+        } catch (err) {
+          console.error("Stream error", err);
+        } finally {
+          controller.close();
+        }
+      },
+    });
+
+    return new Response(stream, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-cache, no-transform",
+      },
+    });
   } catch (err) {
     console.error("Chat route error", err);
-    return NextResponse.json(
-      { error: "Something went wrong. Please try again or email hello@sentieratech.com." },
-      { status: 500 }
+    return new Response(
+      JSON.stringify({
+        error: "Something went wrong. Please try again or email hello@sentieratech.com.",
+      }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
 }

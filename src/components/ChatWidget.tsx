@@ -92,9 +92,10 @@ export default function ChatWidget() {
         body: JSON.stringify({ messages: next }),
       });
 
-      const data = await res.json().catch(() => ({}));
+      const contentType = res.headers.get("content-type") || "";
 
-      if (!res.ok || !data.reply) {
+      if (!res.ok || contentType.includes("application/json")) {
+        const data = await res.json().catch(() => ({}));
         const detail =
           typeof data.error === "string"
             ? data.error
@@ -103,7 +104,51 @@ export default function ChatWidget() {
         return;
       }
 
-      setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
+      if (!res.body) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: "Sorry, I couldn’t get a reply just now.",
+          },
+        ]);
+        return;
+      }
+
+      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let acc = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        acc += decoder.decode(value, { stream: true });
+        const snapshot = acc;
+        setMessages((prev) => {
+          const copy = [...prev];
+          const last = copy[copy.length - 1];
+          if (last && last.role === "assistant") {
+            copy[copy.length - 1] = { role: "assistant", content: snapshot };
+          }
+          return copy;
+        });
+      }
+
+      if (!acc.trim()) {
+        setMessages((prev) => {
+          const copy = [...prev];
+          const last = copy[copy.length - 1];
+          if (last && last.role === "assistant" && !last.content) {
+            copy[copy.length - 1] = {
+              role: "assistant",
+              content: "Sorry, I couldn’t get a reply just now.",
+            };
+          }
+          return copy;
+        });
+      }
     } catch {
       setMessages((prev) => [
         ...prev,
@@ -195,20 +240,15 @@ export default function ChatWidget() {
             {messages.map((m, i) => (
               <div
                 key={i}
-                className={`max-w-[85%] rounded-sm px-3 py-2 font-sans text-sm leading-relaxed ${
+                className={`max-w-[85%] rounded-sm px-3 py-2 font-sans text-sm leading-relaxed whitespace-pre-wrap ${
                   m.role === "user"
                     ? "ml-auto bg-tech-blue text-white"
                     : "mr-auto bg-slate-50 text-slate-800"
                 }`}
               >
-                {m.content}
+                {m.content || (loading && i === messages.length - 1 ? "…" : "")}
               </div>
             ))}
-            {loading && (
-              <div className="mr-auto rounded-sm bg-slate-50 px-3 py-2 font-mono text-xs text-slate-500">
-                …
-              </div>
-            )}
             <div ref={bottomRef} />
           </div>
 

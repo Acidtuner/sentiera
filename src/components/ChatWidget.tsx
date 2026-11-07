@@ -15,6 +15,36 @@ const STARTER = [
 
 const IDLE_MS = 30_000;
 
+function playReplySound() {
+  try {
+    const ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+    const now = ctx.currentTime;
+
+    const tones = [
+      { freq: 880, start: 0, dur: 0.08 },
+      { freq: 1175, start: 0.09, dur: 0.12 },
+    ];
+
+    tones.forEach(({ freq, start, dur }) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.0001, now + start);
+      gain.gain.exponentialRampToValueAtTime(0.18, now + start + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + start + dur);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + start);
+      osc.stop(now + start + dur + 0.02);
+    });
+
+    setTimeout(() => ctx.close().catch(() => {}), 600);
+  } catch {
+    // audio blocked or unsupported
+  }
+}
+
 function BotIcon({ className }: { className?: string }) {
   return (
     <svg
@@ -25,6 +55,19 @@ function BotIcon({ className }: { className?: string }) {
     >
       <path d="M355.7,161.72h-63.96v-45.67c13.64-4.45,23.11-14.12,23.11-25.35,0-15.44-19.59-17.4-41.66-17.4s-38.26,1.96-38.26,17.4c0,11.23,9.46,20.9,23.11,25.35v45.67h-63.96c-42.94,0-77.74,34.81-77.74,77.74v88.47c0,60.49,49.04,109.53,109.53,109.53h98.04c60.49,0,109.53-49.04,109.53-109.53v-88.47c0-42.94-34.81-77.74-77.74-77.74ZM195.83,276.96v-22.72c0-12.5,10.14-22.64,22.64-22.64h0c12.5,0,22.64,10.14,22.64,22.64v22.72c0,12.5-10.14,22.64-22.64,22.64h0c-12.5,0-22.64-10.14-22.64-22.64ZM331.49,368.11l-42.21,10.55h-26.21l-45.79-10.55v-23.83h114.21v23.83ZM353.71,276.96c0,12.5-10.14,22.64-22.64,22.64s-22.64-10.14-22.64-22.64v-22.72c0-12.5,10.14-22.64,22.64-22.64s22.64,10.14,22.64,22.64v22.72ZM546.38,238.91v74.21c0,17.2-13.95,31.15-31.15,31.15h-17.52v44.74c0,79.1-64.35,143.45-143.45,143.45h-101.06v-28.36h-.18v-28.94c0-5.64,4.57-10.21,10.21-10.21h24.51c5.64,0,10.21,4.57,10.21,10.21v27.3h56.3c62.56,0,113.45-50.89,113.45-113.45v-164.5c0-107.26-87.26-194.52-194.52-194.52S78.67,117.26,78.67,224.52v120.11h-30v-.35h-17.52c-17.2,0-31.15-13.95-31.15-31.15v-74.21c0-17.2,13.95-31.15,31.15-31.15h18.14c3.93-53.66,26.72-103.57,65.15-142.01C156.84,23.35,213.22,0,273.19,0s116.35,23.35,158.76,65.76c38.43,38.43,61.22,88.35,65.15,142.01h18.14c17.2,0,31.15,13.95,31.15,31.15Z" />
     </svg>
+  );
+}
+
+function ThinkingBubble() {
+  return (
+    <div className="mr-auto flex items-center gap-2 rounded-sm bg-slate-50 px-3 py-2.5">
+      <span className="flex items-end gap-1" aria-hidden="true">
+        <span className="bot-dot h-1.5 w-1.5 rounded-full bg-tech-blue" />
+        <span className="bot-dot h-1.5 w-1.5 rounded-full bg-tech-blue" />
+        <span className="bot-dot h-1.5 w-1.5 rounded-full bg-tech-blue" />
+      </span>
+      <span className="font-sans text-sm text-slate-600">Thinking…</span>
+    </div>
   );
 }
 
@@ -40,6 +83,7 @@ export default function ChatWidget() {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [thinking, setThinking] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasNudged = useRef(false);
@@ -74,7 +118,7 @@ export default function ChatWidget() {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, open]);
+  }, [messages, open, thinking]);
 
   async function send(text: string) {
     const trimmed = text.trim();
@@ -84,6 +128,7 @@ export default function ChatWidget() {
     setMessages(next);
     setInput("");
     setLoading(true);
+    setThinking(true);
 
     try {
       const res = await fetch("/api/chat", {
@@ -100,56 +145,61 @@ export default function ChatWidget() {
           typeof data.error === "string"
             ? data.error
             : "Sorry, I couldn’t get a reply just now. You can email hello@sentieratech.com or message us on WhatsApp.";
+        setThinking(false);
         setMessages((prev) => [...prev, { role: "assistant", content: detail }]);
+        playReplySound();
         return;
       }
 
       if (!res.body) {
+        setThinking(false);
         setMessages((prev) => [
           ...prev,
-          {
-            role: "assistant",
-            content: "Sorry, I couldn’t get a reply just now.",
-          },
+          { role: "assistant", content: "Sorry, I couldn’t get a reply just now." },
         ]);
+        playReplySound();
         return;
       }
-
-      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let acc = "";
+      let started = false;
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
         acc += decoder.decode(value, { stream: true });
-        const snapshot = acc;
-        setMessages((prev) => {
-          const copy = [...prev];
-          const last = copy[copy.length - 1];
-          if (last && last.role === "assistant") {
-            copy[copy.length - 1] = { role: "assistant", content: snapshot };
-          }
-          return copy;
-        });
+
+        if (!started && acc.trim()) {
+          started = true;
+          setThinking(false);
+          setMessages((prev) => [...prev, { role: "assistant", content: acc }]);
+        } else if (started) {
+          const snapshot = acc;
+          setMessages((prev) => {
+            const copy = [...prev];
+            const last = copy[copy.length - 1];
+            if (last && last.role === "assistant") {
+              copy[copy.length - 1] = { role: "assistant", content: snapshot };
+            }
+            return copy;
+          });
+        }
       }
 
+      setThinking(false);
+
       if (!acc.trim()) {
-        setMessages((prev) => {
-          const copy = [...prev];
-          const last = copy[copy.length - 1];
-          if (last && last.role === "assistant" && !last.content) {
-            copy[copy.length - 1] = {
-              role: "assistant",
-              content: "Sorry, I couldn’t get a reply just now.",
-            };
-          }
-          return copy;
-        });
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", content: "Sorry, I couldn’t get a reply just now." },
+        ]);
       }
+
+      playReplySound();
     } catch {
+      setThinking(false);
       setMessages((prev) => [
         ...prev,
         {
@@ -157,8 +207,10 @@ export default function ChatWidget() {
           content: "Something went wrong. Please try again or email hello@sentieratech.com.",
         },
       ]);
+      playReplySound();
     } finally {
       setLoading(false);
+      setThinking(false);
     }
   }
 
@@ -170,6 +222,8 @@ export default function ChatWidget() {
   function dismissNudge() {
     setShowNudge(false);
   }
+
+  const lastIndex = messages.length - 1;
 
   return (
     <>
@@ -246,13 +300,17 @@ export default function ChatWidget() {
                     : "mr-auto bg-slate-50 text-slate-800"
                 }`}
               >
-                {m.content || (loading && i === messages.length - 1 ? "…" : "")}
+                {m.content}
+                {loading && !thinking && i === lastIndex && m.role === "assistant" && (
+                  <span className="bot-caret" aria-hidden="true" />
+                )}
               </div>
             ))}
+            {thinking && <ThinkingBubble />}
             <div ref={bottomRef} />
           </div>
 
-          {messages.length <= 2 && (
+          {messages.length <= 2 && !loading && (
             <div className="flex flex-wrap gap-2 px-4 pb-2">
               {STARTER.map((s) => (
                 <button
@@ -271,16 +329,24 @@ export default function ChatWidget() {
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Type a message…"
-              className="flex-1 border border-hairline px-3 py-2 font-sans text-sm focus:border-tech-blue focus:outline-none"
+              placeholder={loading ? "Waiting for a reply…" : "Type a message…"}
+              className="flex-1 border border-hairline px-3 py-2 font-sans text-sm focus:border-tech-blue focus:outline-none disabled:bg-slate-50"
               disabled={loading}
             />
             <button
               type="submit"
               disabled={loading || !input.trim()}
-              className="rounded-sm bg-tech-blue px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wider text-white disabled:opacity-50"
+              className="inline-flex items-center justify-center rounded-sm bg-tech-blue px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wider text-white disabled:opacity-50"
             >
-              Send
+              {loading ? (
+                <span className="inline-flex items-center gap-1" aria-label="Sending">
+                  <span className="bot-dot h-1 w-1 rounded-full bg-white" />
+                  <span className="bot-dot h-1 w-1 rounded-full bg-white" />
+                  <span className="bot-dot h-1 w-1 rounded-full bg-white" />
+                </span>
+              ) : (
+                "Send"
+              )}
             </button>
           </form>
         </div>

@@ -5,7 +5,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const XAI_API_URL = "https://api.x.ai/v1/chat/completions";
-const MODEL = process.env.XAI_MODEL || "grok-4.3";
+const MODEL = process.env.XAI_MODEL || "grok-4.7";
 
 interface Message {
   role: "user" | "assistant" | "system";
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
       if (res.status === 401 || res.status === 403) {
         detail = "The API key was rejected. Check XAI_API_KEY on the host and redeploy.";
       } else if (res.status === 404) {
-        detail = `Model \"${MODEL}\" was not found. Set XAI_MODEL to a current id such as grok-4.3.`;
+        detail = `Model \"${MODEL}\" was not found. List available models at https://api.x.ai/v1/models and set XAI_MODEL to one of them.`;
       } else if (res.status === 429) {
         detail = "Rate limit reached. Try again in a moment.";
       } else if (errText) {

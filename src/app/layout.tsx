@@ -46,8 +46,11 @@ export const metadata: Metadata = {
   authors: [{ name: "Sentiera Technologies LLC", url: "https://www.sentieratech.com" }],
   creator: "Sentiera Technologies LLC",
   icons: {
-    icon: "/favicon.ico",
-    apple: "/sentiera-logo.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "32x32" },
+      { url: "/icon.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: "/apple-icon.png",
   },
   openGraph: {
     title: "SEO & AEO Agency in Abu Dhabi | Sentiera Technologies",

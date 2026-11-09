@@ -4,6 +4,8 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Packages | Visibility, Growth and Build",
+  // Parked (not for launch): keep out of search results until revived.
+  robots: { index: false, follow: false },
   description: "Three packages for UAE businesses: Visibility for SEO, AEO, social and a website AI assistant; Growth adds photo, video and one automated workflow; Build for larger AI projects. No lock-in contracts.",
 };
 

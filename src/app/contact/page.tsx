@@ -1,11 +1,13 @@
 import React from "react";
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import ContactForm from "@/components/ContactForm";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Contact Sentiera Technologies | Masdar City, Abu Dhabi",
   description: "Arrange a meeting with Sentiera Technologies in Masdar City, Abu Dhabi. SEO, AEO, websites and creative for businesses in Abu Dhabi and Dubai.",
-};
+  path: "/contact",
+});
 
 export default function Contact() {
   return (

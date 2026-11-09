@@ -1,18 +1,20 @@
 import React from "react";
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import { FaqSection } from "@/lib/faqs";
 import ServicesAccordion, { type ServiceItem } from "@/components/ServicesAccordion";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "AI Agents, SEO & AEO, Brand & Events | Sentiera Abu Dhabi",
   description: "Four ways we work with UAE businesses: AI agents, 360° brand management, SEO and AEO, and events and PR. Led from Masdar City, Abu Dhabi.",
-};
+  path: "/services",
+});
 
 const services: ServiceItem[] = [
   {
     id: "ai-agents",
     title: "AI Agents for Sales, Support and Social",
     summary: "Assistants that answer your customers' questions from your own content, connected to the tools you already use. We plan, build and test each one with you before it goes live.",
-    detail: "From website and WhatsApp chatbots that answer from your content, to custom sales and support agents, and social listening that monitors and summarises what people say about your brand.",
     items: [
       "Website and WhatsApp chatbots that answer from your own content",
       "Custom sales and customer-service agents",
@@ -25,7 +27,6 @@ const services: ServiceItem[] = [
     id: "brand-management",
     title: "360° Brand Management in Abu Dhabi",
     summary: "One monthly partnership that keeps your brand clear and consistent wherever it appears. Our Abu Dhabi team runs it as a single plan and reviews it with you each month.",
-    detail: "Strategy, guidelines, brochures, internal communications and photography sit under one relationship so the brand stays consistent across channels.",
     items: [
       "Brand strategy and brand guidelines",
       "Company and product brochures",
@@ -39,6 +40,7 @@ const services: ServiceItem[] = [
     id: "digital-marketing",
     title: "Digital Marketing: SEO, AEO and Web",
     summary: "Help customers find you on Google, understand you in AI answers, and see you where they spend time online.",
+    // PENDING JAY: multi-channel marketing wording for this line. Kept as-is until approved.
     detail: "SEO and AEO, social content, email and website design are planned together so search, AI answers and presence reinforce each other.",
     items: [
       "SEO and AEO: audits, pages written around your customers' questions, local listings and structured data",
@@ -53,7 +55,6 @@ const services: ServiceItem[] = [
     id: "events-pr",
     title: "Events and PR for UAE Brands",
     summary: "From the first announcement to the follow-up, we look after the creative side of your event or campaign. Each project is quoted on its own.",
-    detail: "Graphics, on-the-day photography and video, pre-event promotion and follow-up content are delivered as one project.",
     items: [
       "Event graphics: stand, stage, screen and print",
       "Photography and video on the day",
@@ -86,6 +87,8 @@ export default function Services() {
           <ServicesAccordion services={services} />
         </div>
       </section>
+
+      <FaqSection />
     </div>
   );
 }

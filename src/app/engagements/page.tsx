@@ -1,11 +1,13 @@
 import React from "react";
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Ways to Work With Us | SEO, AEO & Creative | Sentiera",
   description: "Four ways to work with Sentiera Technologies: a Complimentary Visibility Review, a Partnership Retainer, an AI Integration Programme, and Events and Campaigns.",
-};
+  path: "/engagements",
+});
 
 const engagements = [
   {

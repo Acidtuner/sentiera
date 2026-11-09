@@ -1,10 +1,12 @@
 import React from "react";
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy",
+export const metadata: Metadata = pageMetadata({
+  title: "Privacy Policy | Sentiera Technologies",
   description: "Privacy Policy for Sentiera Technologies LLC. How we handle personal data collected through this website.",
-};
+  path: "/privacy",
+});
 
 export default function Privacy() {
   return (

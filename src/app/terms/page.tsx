@@ -1,10 +1,12 @@
 import React from "react";
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Terms of Use",
+export const metadata: Metadata = pageMetadata({
+  title: "Terms of Use | Sentiera Technologies",
   description: "Terms of Use for the Sentiera Technologies website.",
-};
+  path: "/terms",
+});
 
 export default function Terms() {
   return (

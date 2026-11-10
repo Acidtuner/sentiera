@@ -18,6 +18,13 @@ const whatWeDo = [
   { label: "Events and PR", href: "/services#events-pr" },
 ];
 
+const logos = [
+  { name: "Nidec" },
+  { name: "TSI Power" },
+  { name: "Murata" },
+  { name: "TD Power Systems" },
+];
+
 const proof = [
   { name: "Nidec", detail: "Ongoing social media creatives, event graphics and internal communications." },
   { name: "TD Power Systems", detail: "Ongoing social media creatives, event graphics and internal communications." },
@@ -83,11 +90,20 @@ export default function Home() {
 
       <section className="relative bg-slate-50/80 py-20 sm:py-28 border-b border-hairline">
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
-          <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">The team behind the work.</h2>
-          <p className="mt-4 font-sans text-base text-slate-600">Our delivery team in Bangalore has worked with these organisations.</p>
-          <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 font-mono text-sm text-slate-500 uppercase tracking-wide">
-            <span>Nidec</span><span>TSI Power</span><span>Murata</span><span>TD Power Systems</span>
-          </div>
+          <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">Organisations we&apos;ve worked with.</h2>
+          <p className="mt-4 font-sans text-base text-slate-600">Work delivered by our team in Bangalore.</p>
+          <ul className="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-4">
+            {logos.map((logo) => (
+              <li
+                key={logo.name}
+                className="flex min-h-[96px] items-center justify-center border border-hairline bg-white/90 px-4 py-6"
+              >
+                <span className="text-center font-sans text-sm font-semibold tracking-tight text-slate-900">
+                  {logo.name}
+                </span>
+              </li>
+            ))}
+          </ul>
           <ul className="mt-10 space-y-4">
             {proof.map((p) => (
               <li key={p.name} className="font-sans text-sm text-slate-700">

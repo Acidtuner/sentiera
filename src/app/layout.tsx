@@ -5,6 +5,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ChatWidget from "@/components/ChatWidget";
+import { OG_IMAGE } from "@/lib/seo";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -31,9 +32,11 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.sentieratech.com"),
+  metadataBase: new URL("https://sentieratech.com"),
   title: {
     default: "SEO & AEO Agency in Abu Dhabi | Sentiera Technologies",
+    // Pages with a full SEO title set it with title.absolute (see src/lib/seo.ts),
+    // so the brand is not appended twice. Short titles (e.g. Privacy Policy) still use this.
     template: "%s | Sentiera Technologies",
   },
   description:
@@ -47,7 +50,7 @@ export const metadata: Metadata = {
     "Masdar City",
     "UAE business marketing",
   ],
-  authors: [{ name: "Sentiera Technologies LLC", url: "https://www.sentieratech.com" }],
+  authors: [{ name: "Sentiera Technologies LLC", url: "https://sentieratech.com" }],
   creator: "Sentiera Technologies LLC",
   icons: {
     icon: [
@@ -59,17 +62,17 @@ export const metadata: Metadata = {
   openGraph: {
     title: "SEO & AEO Agency in Abu Dhabi | Sentiera Technologies",
     description: "Help customers find and choose your business on Google and in AI answers. SEO, AEO, web, content and creative from Masdar City, Abu Dhabi.",
-    url: "https://www.sentieratech.com",
+    url: "/",
     siteName: "Sentiera Technologies",
     locale: "en_US",
     type: "website",
-    images: [{ url: "/sentiera-logo.png", width: 1200, height: 630, alt: "Sentiera Technologies" }],
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "SEO & AEO Agency in Abu Dhabi | Sentiera Technologies",
     description: "Help customers find and choose your business on Google and in AI answers. SEO, AEO, web, content and creative from Masdar City, Abu Dhabi.",
-    images: ["/sentiera-logo.png"],
+    images: [OG_IMAGE.url],
   },
 };
 

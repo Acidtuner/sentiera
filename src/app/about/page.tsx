@@ -1,11 +1,13 @@
 import React from "react";
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "About Sentiera Technologies | Masdar City, Abu Dhabi",
-  description: "Sentiera Technologies is led from Masdar City, Abu Dhabi, with delivery by a dedicated production team in Bangalore. SEO, AEO and creative for businesses in Abu Dhabi and Dubai.",
-};
+  description: "Sentiera Technologies is led from Masdar City, Abu Dhabi, with delivery by our team in Bangalore. SEO, AEO and creative for businesses in Abu Dhabi and Dubai.",
+  path: "/about",
+});
 
 export default function About() {
   return (
@@ -26,8 +28,8 @@ export default function About() {
         <div className="mx-auto max-w-3xl px-6 lg:px-8">
           <div className="space-y-5 font-sans text-base sm:text-lg text-slate-700 leading-relaxed">
             <p>Sentiera Technologies is a digital marketing and software company based in Masdar City, Abu Dhabi.</p>
-            <p>Strategy and client leadership sit with us in Abu Dhabi. Design, writing, video and development are handled by our delivery team in Bangalore.</p>
-            <p>You work with one point of contact here, in your time zone, from the first conversation to every monthly review. A full production team sits behind that relationship.</p>
+            <p>Our Abu Dhabi team sets strategy and looks after every client relationship. You work with us directly, in your time zone, from the first meeting to each monthly review.</p>
+            <p>Our delivery team in Bangalore brings designers, writers, video editors and developers to every engagement.</p>
           </div>
 
           <div className="mt-16">
@@ -40,7 +42,7 @@ export default function About() {
           </div>
 
           <div className="mt-16 text-center">
-            <Link href="/contact" className="inline-flex items-center gap-2 rounded-sm bg-tech-blue px-8 py-4 font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-tech-button transition-all duration-200 hover:bg-tech-blue-600">Request a consultation →</Link>
+            <Link href="/contact" className="inline-flex items-center gap-2 rounded-sm bg-tech-blue px-8 py-4 font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-tech-button transition-all duration-200 hover:bg-tech-blue-600">Arrange a meeting →</Link>
           </div>
         </div>
       </section>

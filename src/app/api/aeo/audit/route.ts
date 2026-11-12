@@ -22,8 +22,9 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
       );
     }
 
-    // Step 1: Scrape target domain
-    const scraped = await scrapeTargetUrl(body.targetUrl, body.customContent);
+    // Step 1: Scrape target domain (use sitemap for richer signals when no manual content)
+    const useSitemap = !body.customContent;
+    const scraped = await scrapeTargetUrl(body.targetUrl, body.customContent, useSitemap);
 
     // Step 2: Evaluate 3 Pillars
     const auditResult = await evaluateAEO(

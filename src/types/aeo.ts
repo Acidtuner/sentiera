@@ -48,7 +48,7 @@ export interface ScrapedData {
     h2: string[];
     h3: string[];
   };
-  jsonLdSchemas: any[];
+  jsonLdSchemas: Record<string, unknown>[];
   schemaMarkupDetected: boolean;
   bodyTextSnippet: string;
   fullCleanText: string;

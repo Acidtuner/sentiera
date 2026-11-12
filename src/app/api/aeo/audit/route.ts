@@ -65,8 +65,8 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
         );
         auditResult.is_invisible_to_ai = auditResult.overall_aeo_score < 50;
       }
-    } catch (groundingErr: any) {
-      console.warn("Live Search Grounding non-fatal error:", groundingErr.message);
+    } catch (groundingErr: unknown) {
+      console.warn("Live Search Grounding non-fatal error:", groundingErr instanceof Error ? groundingErr.message : String(groundingErr));
     }
 
     return NextResponse.json({
@@ -82,12 +82,12 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
         schemasCount: scraped.jsonLdSchemas.length,
       },
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("AEO Audit Route Error:", err);
     return NextResponse.json(
       {
         success: false,
-        error: err.message || "An unexpected error occurred during the AEO audit.",
+        error: (err instanceof Error ? err.message : String(err)) || "An unexpected error occurred during the AEO audit.",
       },
       { status: 500 }
     );

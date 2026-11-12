@@ -92,17 +92,12 @@ export async function evaluateAEO(
       systemInstruction: SYSTEM_INSTRUCTION,
       generationConfig: {
         responseMimeType: "application/json",
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         responseSchema: AEO_JSON_SCHEMA as any,
       },
     });
 
-    const prompt = `TARGET_URL: ${targetUrl}
-TARGET_KEYWORD: ${targetKeyword}
-SCRAPED_TITLE: ${scraped.title}
-SCRAPED_DESCRIPTION: ${scraped.description}
-WORD_COUNT: ${scraped.wordCount}
-SCHEMA_DETECTED: ${scraped.schemaMarkupDetected}
-CONTENT_SNIPPET: ${scraped.bodyTextSnippet.slice(0, 3000)}`;
+    const prompt = `TARGET_URL: ${targetUrl}\nTARGET_KEYWORD: ${targetKeyword}\nSCRAPED_TITLE: ${scraped.title}\nSCRAPED_DESCRIPTION: ${scraped.description}\nWORD_COUNT: ${scraped.wordCount}\nSCHEMA_DETECTED: ${scraped.schemaMarkupDetected}\nCONTENT_SNIPPET: ${scraped.bodyTextSnippet.slice(0, 3000)}`;
 
     const result = await model.generateContent(prompt);
     const text = result.response.text();

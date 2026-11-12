@@ -77,12 +77,12 @@ export default function AEOEvaluatorPage() {
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-tech-blue"></span>
               </span>
               <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-slate-700">
-                AEO RADAR // SEARCH-GROUNDED VISIBILITY BENCHMARK
+                sentiera Cortex // AEO Visibility Benchmark
               </span>
             </div>
 
             <h1 className="font-sans text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight-heading text-slate-950 leading-[0.96]">
-              Is your brand missing from the{" "}
+              sentiera Cortex: Is your brand missing from the{" "}
               <span className="text-tech-blue">AI shortlist?</span>
             </h1>
 

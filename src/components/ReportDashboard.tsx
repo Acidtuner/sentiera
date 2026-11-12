@@ -10,7 +10,7 @@ interface ReportDashboardProps {
   liveGrounding?: LiveGroundingResult;
   targetUrl: string;
   targetKeyword: string;
-  scrapedData?: any;
+  scrapedData?: Record<string, unknown> | null;
   onReset: () => void;
 }
 
@@ -19,7 +19,6 @@ export default function ReportDashboard({
   liveGrounding,
   targetUrl,
   targetKeyword,
-  scrapedData,
   onReset,
 }: ReportDashboardProps) {
   return (

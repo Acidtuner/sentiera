@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { AEOResult, ScrapedData } from "@/types/aeo";
 
 const SYSTEM_INSTRUCTION = `You are an elite Answer Engine Optimization (AEO) evaluator. Analyze the provided TARGET_URL, TARGET_KEYWORD, and SCRAPED_CONTENT to assess visibility for AI assistants.
@@ -8,29 +8,14 @@ Analyze against three pillars:
 2. Entity & Accuracy Health (Max 30 points): Clarity of brand identity, location, and services without vague metaphors.
 3. RAG-Readiness & Schema (Max 30 points): Use of structured data, semantic HTML, and machine-readable Q&A formats.
 
-Respond ONLY with a valid JSON object matching the requested schema.`;
-
-const AEO_JSON_SCHEMA = {
-  type: SchemaType.OBJECT,
-  properties: {
-    overall_aeo_score: { type: SchemaType.NUMBER, description: "Total score 0-100" },
-    metrics: {
-      type: SchemaType.OBJECT,
-      properties: {
-        ai_recommendation_rate: { type: SchemaType.NUMBER },
-        entity_accuracy_health: { type: SchemaType.NUMBER },
-        rag_readiness_score: { type: SchemaType.NUMBER },
-      },
-      required: ["ai_recommendation_rate", "entity_accuracy_health", "rag_readiness_score"],
-    },
-    is_invisible_to_ai: { type: SchemaType.BOOLEAN },
-    schema_markup_detected: { type: SchemaType.BOOLEAN },
-    diagnostic_summary: { type: SchemaType.STRING },
-    critical_gaps: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING } },
-    recommended_fixes: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING } },
-  },
-  required: ["overall_aeo_score", "metrics", "is_invisible_to_ai", "schema_markup_detected", "diagnostic_summary", "critical_gaps", "recommended_fixes"],
-};
+Respond ONLY with a valid JSON object with these exact keys:
+overall_aeo_score (number 0-100),
+metrics: { ai_recommendation_rate (0-40), entity_accuracy_health (0-30), rag_readiness_score (0-30) },
+is_invisible_to_ai (boolean),
+schema_markup_detected (boolean),
+diagnostic_summary (string),
+critical_gaps (string array),
+recommended_fixes (string array).`;
 
 function deterministicEvaluate(url: string, keyword: string, scraped: ScrapedData): AEOResult {
   let rec = 15;
@@ -92,8 +77,6 @@ export async function evaluateAEO(
       systemInstruction: SYSTEM_INSTRUCTION,
       generationConfig: {
         responseMimeType: "application/json",
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        responseSchema: AEO_JSON_SCHEMA as any,
       },
     });
 
@@ -101,11 +84,11 @@ export async function evaluateAEO(
 
     const result = await model.generateContent(prompt);
     const text = result.response.text();
-    const parsed = JSON.parse(text.replace(/```json|```/g, "").trim());
+    const parsed = JSON.parse(text.replace(/```json|```/g, "").trim()) as AEOResult;
 
     parsed.overall_aeo_score = Math.min(100, Math.max(0, parsed.overall_aeo_score || 0));
     parsed.is_invisible_to_ai = parsed.overall_aeo_score < 50;
-    return parsed as AEOResult;
+    return parsed;
   } catch (err) {
     console.warn("Gemini evaluation failed, falling back to deterministic:", err);
     return deterministicEvaluate(targetUrl, targetKeyword, scraped);

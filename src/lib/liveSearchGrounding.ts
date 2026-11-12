@@ -40,7 +40,10 @@ export async function runLiveSearchGrounding(
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const result = await model.generateContent(buyerQuery);
     const answer = result.response.text();
-    const found = answer.toLowerCase().includes(targetHost) || (pageTitle && answer.toLowerCase().includes(pageTitle.toLowerCase().split("|")[0].trim()));
+    const found = Boolean(
+      answer.toLowerCase().includes(targetHost) ||
+        (pageTitle && answer.toLowerCase().includes(pageTitle.toLowerCase().split("|")[0].trim()))
+    );
 
     return {
       executed: true,
@@ -54,7 +57,7 @@ export async function runLiveSearchGrounding(
       competitorsCited: [],
       aiVerdictSummary: found ? "Target appears in the synthesized answer." : "Target was not mentioned in the AI shortlist.",
     };
-  } catch (err: any) {
+  } catch (err: unknown) {
     return {
       executed: false,
       queryPrompt: buyerQuery,
@@ -65,7 +68,7 @@ export async function runLiveSearchGrounding(
       targetUrlFound: false,
       targetBrandFound: false,
       competitorsCited: [],
-      aiVerdictSummary: err.message || "Error during live grounding.",
+      aiVerdictSummary: err instanceof Error ? err.message : "Error during live grounding.",
     };
   }
 }

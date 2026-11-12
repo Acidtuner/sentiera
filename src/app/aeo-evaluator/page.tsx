@@ -13,7 +13,7 @@ export default function AEOEvaluatorPage() {
   const [currentKeyword, setCurrentKeyword] = useState("");
   const [auditResult, setAuditResult] = useState<AEOResult | null>(null);
   const [liveGrounding, setLiveGrounding] = useState<LiveGroundingResult | undefined>(undefined);
-  const [scrapedData, setScrapedData] = useState<any>(null);
+  const [scrapedData, setScrapedData] = useState<Record<string, unknown> | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleRunAudit = async (
@@ -47,10 +47,10 @@ export default function AEOEvaluatorPage() {
 
       setAuditResult(data.data);
       setLiveGrounding(data.liveGrounding);
-      setScrapedData(data.scrapedData);
-    } catch (err: any) {
+      setScrapedData(data.scrapedData || null);
+    } catch (err: unknown) {
       console.error(err);
-      setErrorMsg(err.message || "An unexpected error occurred during the audit.");
+      setErrorMsg(err instanceof Error ? err.message : "An unexpected error occurred during the audit.");
     } finally {
       setIsLoading(false);
     }
@@ -68,7 +68,6 @@ export default function AEOEvaluatorPage() {
   return (
     <div className="relative min-h-[60vh] py-10 sm:py-16">
       <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-        {/* Hero Section */}
         {!auditResult && !isLoading && (
           <div className="text-center max-w-4xl mx-auto space-y-6 pt-2">
             <div className="inline-flex items-center gap-2 rounded-full border border-hairline bg-white/90 px-3.5 py-1.5 shadow-sm backdrop-blur-sm">

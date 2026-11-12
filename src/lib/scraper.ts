@@ -1,25 +1,127 @@
 import * as cheerio from "cheerio";
 import { ScrapedData } from "@/types/aeo";
 
+const BROWSER_HEADERS = {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+  "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+  "Accept-Language": "en-US,en;q=0.9",
+  "Accept-Encoding": "gzip, deflate, br",
+  "Cache-Control": "no-cache",
+  "Pragma": "no-cache",
+  "Sec-Fetch-Dest": "document",
+  "Sec-Fetch-Mode": "navigate",
+  "Sec-Fetch-Site": "none",
+  "Sec-Fetch-User": "?1",
+  "Upgrade-Insecure-Requests": "1",
+};
+
 function isPrivateOrLocalHost(hostname: string): boolean {
   const host = hostname.toLowerCase();
-
-  if (host === "localhost" || host === "127.0.0.1" || host === "::1" || host === "0.0.0.0") {
-    return true;
-  }
-  if (host === "169.254.169.254" || host.startsWith("169.254.")) {
-    return true;
-  }
-  if (/^10\./.test(host) || /^192\.168\./.test(host) || /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(host)) {
-    return true;
-  }
-  if (host.endsWith(".local") || host.endsWith(".internal") || host.endsWith(".lan")) {
-    return true;
-  }
+  if (host === "localhost" || host === "127.0.0.1" || host === "::1" || host === "0.0.0.0") return true;
+  if (host === "169.254.169.254" || host.startsWith("169.254.")) return true;
+  if (/^10\./.test(host) || /^192\.168\./.test(host) || /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(host)) return true;
+  if (host.endsWith(".local") || host.endsWith(".internal") || host.endsWith(".lan")) return true;
   return false;
 }
 
-export async function scrapeTargetUrl(targetUrl: string, manualContent?: string): Promise<ScrapedData> {
+async function fetchWithTimeout(url: string, timeoutMs = 12000): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, {
+      signal: controller.signal,
+      headers: BROWSER_HEADERS,
+      redirect: "follow",
+    });
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+/** Discover and parse sitemap.xml (handles sitemap index files). Returns up to maxUrls unique absolute URLs. */
+export async function discoverSitemapUrls(baseUrl: string, maxUrls = 25): Promise<string[]> {
+  let parsed: URL;
+  try {
+    parsed = new URL(baseUrl);
+  } catch {
+    return [];
+  }
+
+  const origin = parsed.origin;
+  const candidates = [
+    `${origin}/sitemap.xml`,
+    `${origin}/sitemap_index.xml`,
+    `${origin}/sitemap-index.xml`,
+    `${origin}/wp-sitemap.xml`,
+    `${origin}/sitemap/sitemap.xml`,
+  ];
+
+  const seen = new Set<string>();
+  const result: string[] = [];
+
+  for (const sitemapUrl of candidates) {
+    if (result.length >= maxUrls) break;
+    try {
+      const res = await fetchWithTimeout(sitemapUrl, 8000);
+      if (!res.ok) continue;
+      const text = await res.text();
+      if (!text.includes("<urlset") && !text.includes("<sitemapindex") && !text.includes("<sitemap")) continue;
+
+      const urls = await parseSitemapXml(text, origin, maxUrls - result.length);
+      for (const u of urls) {
+        if (!seen.has(u) && result.length < maxUrls) {
+          seen.add(u);
+          result.push(u);
+        }
+      }
+      if (result.length > 0) break; // found a working sitemap
+    } catch {
+      // try next candidate
+    }
+  }
+
+  return result;
+}
+
+async function parseSitemapXml(xml: string, origin: string, remaining: number): Promise<string[]> {
+  const urls: string[] = [];
+  const locRegex = /<loc[^>]*>([^<]+)<\/loc>/gi;
+  let match: RegExpExecArray | null;
+
+  // Sitemap index
+  if (xml.includes("<sitemapindex") || xml.includes("<sitemap>")) {
+    const indexLocs: string[] = [];
+    while ((match = locRegex.exec(xml)) !== null && indexLocs.length < 5) {
+      const loc = match[1].trim();
+      if (loc.startsWith("http")) indexLocs.push(loc);
+    }
+    for (const child of indexLocs) {
+      if (urls.length >= remaining) break;
+      try {
+        const res = await fetchWithTimeout(child, 8000);
+        if (!res.ok) continue;
+        const childXml = await res.text();
+        const childUrls = await parseSitemapXml(childXml, origin, remaining - urls.length);
+        urls.push(...childUrls);
+      } catch {
+        // skip broken child
+      }
+    }
+    return urls.slice(0, remaining);
+  }
+
+  // Regular urlset
+  locRegex.lastIndex = 0;
+  while ((match = locRegex.exec(xml)) !== null && urls.length < remaining) {
+    const loc = match[1].trim();
+    if (loc.startsWith("http") && loc.includes(new URL(origin).hostname)) {
+      urls.push(loc);
+    }
+  }
+  return urls;
+}
+
+export async function scrapeTargetUrl(targetUrl: string, manualContent?: string, useSitemap = false): Promise<ScrapedData> {
   let normalizedUrl = targetUrl.trim();
   if (!/^https?:\/\//i.test(normalizedUrl)) {
     normalizedUrl = `https://${normalizedUrl}`;
@@ -58,42 +160,54 @@ export async function scrapeTargetUrl(targetUrl: string, manualContent?: string)
     };
   }
 
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 15000);
-
-  let html = "";
-  try {
-    const response = await fetch(normalizedUrl, {
-      signal: controller.signal,
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Cache-Control": "no-cache",
-        "Pragma": "no-cache",
-        "Sec-Fetch-Dest": "document",
-        "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-Site": "none",
-        "Sec-Fetch-User": "?1",
-        "Upgrade-Insecure-Requests": "1",
-      },
-      redirect: "follow",
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch URL: ${response.status} ${response.statusText}`);
+  // Optional: discover additional pages from sitemap
+  let pagesToScrape = [normalizedUrl];
+  if (useSitemap) {
+    try {
+      const sitemapUrls = await discoverSitemapUrls(normalizedUrl, 12);
+      const unique = Array.from(new Set([normalizedUrl, ...sitemapUrls])).slice(0, 8);
+      pagesToScrape = unique;
+    } catch {
+      // fall back to single page
     }
-    html = await response.text();
-  } catch (err: unknown) {
-    if (err instanceof Error && err.name === "AbortError") {
-      throw new Error("Request timed out while fetching the target URL.");
-    }
-    throw new Error(`Scraping failed: ${err instanceof Error ? err.message : String(err)}`);
-  } finally {
-    clearTimeout(timeoutId);
   }
 
+  const allTexts: string[] = [];
+  const allSchemas: Record<string, unknown>[] = [];
+  let primary: ScrapedData | null = null;
+
+  for (const pageUrl of pagesToScrape) {
+    try {
+      const res = await fetchWithTimeout(pageUrl, 12000);
+      if (!res.ok) continue;
+      const html = await res.text();
+      const scraped = parseHtml(pageUrl, html);
+      if (!primary) primary = scraped;
+      allTexts.push(scraped.fullCleanText);
+      allSchemas.push(...scraped.jsonLdSchemas);
+    } catch {
+      // skip failed page
+    }
+  }
+
+  if (!primary) {
+    throw new Error("Failed to fetch any pages from the target URL.");
+  }
+
+  // Aggregate signals from all scraped pages
+  const combinedText = allTexts.join(" ").replace(/\s+/g, " ").trim();
+  primary.fullCleanText = combinedText.slice(0, 12000);
+  primary.wordCount = combinedText.split(/\s+/).length;
+  primary.bodyTextSnippet = combinedText.slice(0, 5000);
+  primary.jsonLdSchemas = allSchemas;
+  primary.schemaMarkupDetected = allSchemas.length > 0;
+  primary.hasFaqStructure = primary.hasFaqStructure || /faq|frequently asked|q&a/i.test(combinedText);
+  primary.hasAuthorOrOrg = primary.hasAuthorOrOrg || /about us|our team|founded|headquartered|contact/i.test(combinedText);
+
+  return primary;
+}
+
+function parseHtml(url: string, html: string): ScrapedData {
   const $ = cheerio.load(html);
   $("script, style, nav, footer, header, aside, noscript, iframe").remove();
 
@@ -131,7 +245,7 @@ export async function scrapeTargetUrl(targetUrl: string, manualContent?: string)
     jsonLdSchemas.some((s) => JSON.stringify(s).toLowerCase().includes("organization") || JSON.stringify(s).toLowerCase().includes("person"));
 
   return {
-    url: normalizedUrl,
+    url,
     title,
     description,
     canonical,

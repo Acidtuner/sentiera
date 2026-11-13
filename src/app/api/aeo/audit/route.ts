@@ -22,11 +22,9 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
       );
     }
 
-    // Step 1: Scrape target domain (use sitemap for richer signals when no manual content)
     const useSitemap = !body.customContent;
-    const scraped = await scrapeTargetUrl(body.targetUrl, body.customContent, useSitemap);
+    const scraped = await scrapeTargetUrl(body.targetUrl, body.customContent, useSitemap, body.targetKeyword);
 
-    // Step 2: Evaluate 3 Pillars
     const auditResult = await evaluateAEO(
       body.targetUrl,
       body.targetKeyword,
@@ -34,7 +32,6 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
       body.apiKey
     );
 
-    // Step 3: Live Gemini Google Search Grounding (optional)
     let liveGroundingResult;
     try {
       liveGroundingResult = await runLiveSearchGrounding(
@@ -81,6 +78,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
         wordCount: scraped.wordCount,
         schemaMarkupDetected: scraped.schemaMarkupDetected,
         schemasCount: scraped.jsonLdSchemas.length,
+        analyzedPages: scraped.analyzedPages,
       },
     });
   } catch (err: unknown) {

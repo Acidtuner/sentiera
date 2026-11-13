@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { AEOResult, LiveGroundingResult } from "@/types/aeo";
+import { AEOResult, LiveGroundingResult, AnalyzedPage } from "@/types/aeo";
 import PillarCard from "@/components/PillarCard";
 import { RotateCcw } from "lucide-react";
 
@@ -10,7 +10,10 @@ interface ReportDashboardProps {
   liveGrounding?: LiveGroundingResult;
   targetUrl: string;
   targetKeyword: string;
-  scrapedData?: Record<string, unknown> | null;
+  scrapedData?: {
+    analyzedPages?: AnalyzedPage[];
+    [key: string]: unknown;
+  } | null;
   onReset: () => void;
 }
 
@@ -19,8 +22,11 @@ export default function ReportDashboard({
   liveGrounding,
   targetUrl,
   targetKeyword,
+  scrapedData,
   onReset,
 }: ReportDashboardProps) {
+  const pages = scrapedData?.analyzedPages || [];
+
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="text-center">
@@ -43,7 +49,32 @@ export default function ReportDashboard({
       <div className="bg-white p-6 rounded-xl border border-hairline">
         <h3 className="font-mono text-xs uppercase tracking-widest text-slate-500 mb-2">Diagnostic Summary</h3>
         <p className="text-sm text-slate-800 leading-relaxed">{result.diagnostic_summary}</p>
+        {result.signalsUsed && result.signalsUsed.length > 0 && (
+          <ul className="mt-3 space-y-1 text-xs text-slate-600 font-mono">
+            {result.signalsUsed.map((s, i) => (
+              <li key={i}>• {s}</li>
+            ))}
+          </ul>
+        )}
       </div>
+
+      {pages.length > 0 && (
+        <div className="bg-white p-6 rounded-xl border border-hairline">
+          <h3 className="font-mono text-xs uppercase tracking-widest text-slate-500 mb-3">Pages Analyzed ({pages.length})</h3>
+          <ul className="space-y-3">
+            {pages.map((p, i) => (
+              <li key={i} className="text-sm border-b border-hairline/60 pb-2 last:border-0">
+                <div className="font-medium text-slate-900 truncate">{p.title || p.url}</div>
+                <div className="font-mono text-xs text-slate-500 truncate">{p.url}</div>
+                <div className="font-mono text-[11px] text-tech-blue mt-0.5">{p.reason}</div>
+                <div className="font-mono text-[11px] text-slate-400">
+                  {p.wordCount} words {p.hasSchema ? "· schema" : ""}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {result.critical_gaps?.length > 0 && (
         <div className="bg-rose-50 p-6 rounded-xl border border-rose-200">

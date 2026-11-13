@@ -12,6 +12,7 @@ export interface AEOResult {
   diagnostic_summary: string; // 2-3 sentence clinical executive summary
   critical_gaps: string[]; // 2-3 specific failures
   recommended_fixes: string[]; // 2-3 actionable fixes
+  signalsUsed?: string[];
 }
 
 export interface GroundingSource {
@@ -38,6 +39,14 @@ export interface LiveGroundingResult {
   aiVerdictSummary: string;
 }
 
+export interface AnalyzedPage {
+  url: string;
+  title: string;
+  reason: string;
+  wordCount: number;
+  hasSchema: boolean;
+}
+
 export interface ScrapedData {
   url: string;
   title: string;
@@ -56,6 +65,7 @@ export interface ScrapedData {
   openGraph: Record<string, string>;
   hasFaqStructure: boolean;
   hasAuthorOrOrg: boolean;
+  analyzedPages?: AnalyzedPage[];
 }
 
 export interface AuditRequestPayload {
@@ -77,6 +87,7 @@ export interface AuditResponsePayload {
     wordCount: number;
     schemaMarkupDetected: boolean;
     schemasCount: number;
+    analyzedPages?: AnalyzedPage[];
   };
   error?: string;
 }

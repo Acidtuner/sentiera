@@ -74,6 +74,10 @@ export interface AuditRequestPayload {
   customContent?: string;
   apiKey?: string;
   enableLiveSearchGrounding?: boolean;
+  name?: string;
+  company?: string;
+  email?: string;
+  honeypot?: string;
 }
 
 export interface AuditResponsePayload {

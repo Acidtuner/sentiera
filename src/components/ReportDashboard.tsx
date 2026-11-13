@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { AEOResult, LiveGroundingResult, AnalyzedPage } from "@/types/aeo";
+import { AEOResult, LiveGroundingResult, AnalyzedPage, AdvancedSignals } from "@/types/aeo";
 import PillarCard from "@/components/PillarCard";
 import { RotateCcw } from "lucide-react";
 
@@ -12,6 +12,7 @@ interface ReportDashboardProps {
   targetKeyword: string;
   scrapedData?: {
     analyzedPages?: AnalyzedPage[];
+    advancedSignals?: AdvancedSignals;
     [key: string]: unknown;
   } | null;
   onReset: () => void;
@@ -26,6 +27,7 @@ export default function ReportDashboard({
   onReset,
 }: ReportDashboardProps) {
   const pages = scrapedData?.analyzedPages || [];
+  const advanced = scrapedData?.advancedSignals || result.advancedSignals;
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -57,6 +59,45 @@ export default function ReportDashboard({
           </ul>
         )}
       </div>
+
+      {advanced && (
+        <div className="bg-white p-6 rounded-xl border border-hairline space-y-4">
+          <h3 className="font-mono text-xs uppercase tracking-widest text-slate-500">Advanced Signals</h3>
+
+          <div>
+            <p className="font-mono text-[11px] uppercase text-slate-400 mb-1">AI Crawler Access</p>
+            <ul className="text-xs font-mono space-y-0.5">
+              {advanced.crawlerAccess.slice(0, 6).map((c, i) => (
+                <li key={i} className={c.allowed === false ? "text-rose-600" : c.allowed === true ? "text-emerald-600" : "text-slate-500"}>
+                  {c.bot}: {c.allowed === null ? "not mentioned" : c.allowed ? "allowed" : "blocked"}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <p className="font-mono text-[11px] uppercase text-slate-400 mb-1">llms.txt</p>
+            <p className="text-sm">
+              {advanced.llmsTxt.present
+                ? `✓ Present (${advanced.llmsTxt.length || 0} chars) — ${advanced.llmsTxt.qualityNote || ""}`
+                : "✗ Not found"}
+            </p>
+          </div>
+
+          {advanced.citationSampling && (
+            <div>
+              <p className="font-mono text-[11px] uppercase text-slate-400 mb-1">Live Citation Sample</p>
+              <p className="text-sm">
+                {advanced.citationSampling.executed
+                  ? advanced.citationSampling.cited
+                    ? "✓ Domain appeared in sample answer"
+                    : "✗ Domain not mentioned in sample"
+                  : "Sampling skipped (no API key)"}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
 
       {pages.length > 0 && (
         <div className="bg-white p-6 rounded-xl border border-hairline">

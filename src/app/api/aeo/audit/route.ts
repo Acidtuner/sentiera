@@ -2,26 +2,44 @@ import { NextRequest, NextResponse } from "next/server";
 import { scrapeTargetUrl } from "@/lib/scraper";
 import { evaluateAEO } from "@/lib/evaluator";
 import { runLiveSearchGrounding } from "@/lib/liveSearchGrounding";
+import { storeAudit } from "@/lib/supabase";
+import { sendAuditReportEmail } from "@/lib/email";
 import { AuditRequestPayload, AuditResponsePayload } from "@/types/aeo";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export async function POST(req: NextRequest): Promise<NextResponse<AuditResponsePayload>> {
+  let body: AuditRequestPayload;
   try {
-    const body: AuditRequestPayload = await req.json();
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ success: false, error: "Invalid request body." }, { status: 400 });
+  }
 
-    if (!body.targetUrl || body.targetUrl.trim().length === 0) {
-      return NextResponse.json(
-        { success: false, error: "Target URL is required." },
-        { status: 400 }
-      );
-    }
+  // Honeypot
+  if (body.honeypot) {
+    return NextResponse.json({ success: false, error: "Invalid submission." }, { status: 400 });
+  }
 
-    if (!body.targetKeyword || body.targetKeyword.trim().length === 0) {
-      return NextResponse.json(
-        { success: false, error: "Target Keyword / Intent Query is required." },
-        { status: 400 }
-      );
-    }
+  const name = (body.name || "").trim();
+  const company = (body.company || "").trim();
+  const email = (body.email || "").trim().toLowerCase();
 
+  if (!name || !company || !email || !EMAIL_REGEX.test(email)) {
+    return NextResponse.json({ success: false, error: "Name, company, and a valid email are required." }, { status: 400 });
+  }
+
+  if (!body.targetUrl || body.targetUrl.trim().length === 0) {
+    await storeAudit({ name, company, email, target_url: body.targetUrl || "", keyword: body.targetKeyword || "", success: false, error_message: "Missing URL" });
+    return NextResponse.json({ success: false, error: "Target URL is required." }, { status: 400 });
+  }
+
+  if (!body.targetKeyword || body.targetKeyword.trim().length === 0) {
+    await storeAudit({ name, company, email, target_url: body.targetUrl, keyword: "", success: false, error_message: "Missing keyword" });
+    return NextResponse.json({ success: false, error: "Target Keyword / Intent Query is required." }, { status: 400 });
+  }
+
+  try {
     const useSitemap = !body.customContent;
     const scraped = await scrapeTargetUrl(body.targetUrl, body.customContent, useSitemap, body.targetKeyword);
 
@@ -43,17 +61,9 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
 
       if (liveGroundingResult.executed) {
         if (liveGroundingResult.targetUrlFound) {
-          auditResult.metrics.ai_recommendation_rate = Math.max(
-            32,
-            auditResult.metrics.ai_recommendation_rate
-          );
-        } else if (
-          liveGroundingResult.brandVisibilityStatus === "OMITTED_FROM_AI_SHORTLIST"
-        ) {
-          auditResult.metrics.ai_recommendation_rate = Math.min(
-            22,
-            auditResult.metrics.ai_recommendation_rate
-          );
+          auditResult.metrics.ai_recommendation_rate = Math.max(32, auditResult.metrics.ai_recommendation_rate);
+        } else if (liveGroundingResult.brandVisibilityStatus === "OMITTED_FROM_AI_SHORTLIST") {
+          auditResult.metrics.ai_recommendation_rate = Math.min(22, auditResult.metrics.ai_recommendation_rate);
         }
         auditResult.overall_aeo_score = Math.min(
           100,
@@ -66,6 +76,24 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
     } catch (groundingErr: unknown) {
       console.warn("Live Search Grounding non-fatal error:", groundingErr instanceof Error ? groundingErr.message : String(groundingErr));
     }
+
+    // Store success
+    await storeAudit({
+      name,
+      company,
+      email,
+      target_url: body.targetUrl,
+      keyword: body.targetKeyword,
+      success: true,
+      result: {
+        ...auditResult,
+        analyzedPages: scraped.analyzedPages,
+        liveGrounding: liveGroundingResult,
+      },
+    });
+
+    // Send email (non-blocking)
+    sendAuditReportEmail(email, name, company, body.targetUrl, body.targetKeyword, auditResult).catch(console.error);
 
     return NextResponse.json({
       success: true,
@@ -82,12 +110,21 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
       },
     });
   } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
     console.error("AEO Audit Route Error:", err);
+
+    await storeAudit({
+      name,
+      company,
+      email,
+      target_url: body.targetUrl,
+      keyword: body.targetKeyword,
+      success: false,
+      error_message: message,
+    });
+
     return NextResponse.json(
-      {
-        success: false,
-        error: (err instanceof Error ? err.message : String(err)) || "An unexpected error occurred during the AEO audit.",
-      },
+      { success: false, error: message || "An unexpected error occurred during the AEO audit." },
       { status: 500 }
     );
   }

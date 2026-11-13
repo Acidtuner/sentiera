@@ -16,26 +16,34 @@ export default function CortexPage() {
   const [scrapedData, setScrapedData] = useState<Record<string, unknown> | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const handleRunAudit = async (
-    targetUrl: string,
-    targetKeyword: string,
-    manualContent?: string
-  ) => {
+  const handleRunAudit = async (formData: {
+    url: string;
+    keyword: string;
+    manual?: string;
+    name: string;
+    company: string;
+    email: string;
+    honeypot?: string;
+  }) => {
     setIsLoading(true);
     setErrorMsg(null);
     setAuditResult(null);
     setLiveGrounding(undefined);
-    setCurrentUrl(targetUrl);
-    setCurrentKeyword(targetKeyword);
+    setCurrentUrl(formData.url);
+    setCurrentKeyword(formData.keyword);
 
     try {
       const res = await fetch("/api/aeo/audit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          targetUrl,
-          targetKeyword,
-          customContent: manualContent,
+          targetUrl: formData.url,
+          targetKeyword: formData.keyword,
+          customContent: formData.manual,
+          name: formData.name,
+          company: formData.company,
+          email: formData.email,
+          honeypot: formData.honeypot,
         }),
       });
 

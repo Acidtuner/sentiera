@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import { ScrapedData } from "@/types/aeo";
+import { ScrapedData, AnalyzedPage } from "@/types/aeo";
 
 const BROWSER_HEADERS = {
   "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
@@ -14,6 +14,9 @@ const BROWSER_HEADERS = {
   "Sec-Fetch-User": "?1",
   "Upgrade-Insecure-Requests": "1",
 };
+
+const HIGH_VALUE_PATHS = ["/about", "/services", "/service", "/contact", "/faq", "/about-us", "/our-services", "/pricing"];
+const MAX_PAGES = 8;
 
 function isPrivateOrLocalHost(hostname: string): boolean {
   const host = hostname.toLowerCase();
@@ -38,8 +41,7 @@ async function fetchWithTimeout(url: string, timeoutMs = 12000): Promise<Respons
   }
 }
 
-/** Discover and parse sitemap.xml (handles sitemap index files). Returns up to maxUrls unique absolute URLs. */
-export async function discoverSitemapUrls(baseUrl: string, maxUrls = 25): Promise<string[]> {
+export async function discoverSitemapUrls(baseUrl: string, maxUrls = 40): Promise<string[]> {
   let parsed: URL;
   try {
     parsed = new URL(baseUrl);
@@ -74,9 +76,9 @@ export async function discoverSitemapUrls(baseUrl: string, maxUrls = 25): Promis
           result.push(u);
         }
       }
-      if (result.length > 0) break; // found a working sitemap
+      if (result.length > 0) break;
     } catch {
-      // try next candidate
+      // try next
     }
   }
 
@@ -88,7 +90,6 @@ async function parseSitemapXml(xml: string, origin: string, remaining: number): 
   const locRegex = /<loc[^>]*>([^<]+)<\/loc>/gi;
   let match: RegExpExecArray | null;
 
-  // Sitemap index
   if (xml.includes("<sitemapindex") || xml.includes("<sitemap>")) {
     const indexLocs: string[] = [];
     while ((match = locRegex.exec(xml)) !== null && indexLocs.length < 5) {
@@ -104,13 +105,12 @@ async function parseSitemapXml(xml: string, origin: string, remaining: number): 
         const childUrls = await parseSitemapXml(childXml, origin, remaining - urls.length);
         urls.push(...childUrls);
       } catch {
-        // skip broken child
+        // skip
       }
     }
     return urls.slice(0, remaining);
   }
 
-  // Regular urlset
   locRegex.lastIndex = 0;
   while ((match = locRegex.exec(xml)) !== null && urls.length < remaining) {
     const loc = match[1].trim();
@@ -121,7 +121,53 @@ async function parseSitemapXml(xml: string, origin: string, remaining: number): 
   return urls;
 }
 
-export async function scrapeTargetUrl(targetUrl: string, manualContent?: string, useSitemap = false): Promise<ScrapedData> {
+function selectPages(userUrl: string, sitemapUrls: string[], keyword: string): { url: string; reason: string }[] {
+  const selected: { url: string; reason: string }[] = [];
+  const seen = new Set<string>();
+
+  const add = (url: string, reason: string) => {
+    if (!seen.has(url) && selected.length < MAX_PAGES) {
+      seen.add(url);
+      selected.push({ url, reason });
+    }
+  };
+
+  // 1. Always include user-provided URL
+  add(userUrl, "User-provided");
+
+  const kw = keyword.toLowerCase();
+  const origin = new URL(userUrl).origin;
+
+  // 2. Keyword matches in path or likely title
+  for (const u of sitemapUrls) {
+    const path = new URL(u).pathname.toLowerCase();
+    if (path.includes(kw) || u.toLowerCase().includes(kw)) {
+      add(u, "Keyword match in sitemap");
+    }
+  }
+
+  // 3. High-value paths
+  for (const path of HIGH_VALUE_PATHS) {
+    const candidate = origin + path;
+    if (sitemapUrls.some(u => u.toLowerCase().includes(path)) || true) {
+      add(candidate, "High-value path (about/services/contact)");
+    }
+  }
+
+  // 4. Fill remaining from sitemap
+  for (const u of sitemapUrls) {
+    add(u, "Sitemap entry");
+  }
+
+  return selected;
+}
+
+export async function scrapeTargetUrl(
+  targetUrl: string,
+  manualContent?: string,
+  useSitemap = false,
+  keyword = ""
+): Promise<ScrapedData> {
   let normalizedUrl = targetUrl.trim();
   if (!/^https?:\/\//i.test(normalizedUrl)) {
     normalizedUrl = `https://${normalizedUrl}`;
@@ -157,31 +203,41 @@ export async function scrapeTargetUrl(targetUrl: string, manualContent?: string,
       openGraph: {},
       hasFaqStructure: /q:|question:|faq|frequently asked/i.test(clean),
       hasAuthorOrOrg: /company|agency|studio|organization|founded|headquartered/i.test(clean),
+      analyzedPages: [{ url: normalizedUrl, title: "Manual Content", reason: "User-provided content", wordCount: clean.split(/\s+/).length, hasSchema: false }],
     };
   }
 
-  // Optional: discover additional pages from sitemap
-  let pagesToScrape = [normalizedUrl];
+  let pageSelections: { url: string; reason: string }[] = [{ url: normalizedUrl, reason: "User-provided" }];
+
   if (useSitemap) {
     try {
-      const sitemapUrls = await discoverSitemapUrls(normalizedUrl, 12);
-      const unique = Array.from(new Set([normalizedUrl, ...sitemapUrls])).slice(0, 8);
-      pagesToScrape = unique;
+      const sitemapUrls = await discoverSitemapUrls(normalizedUrl, 40);
+      pageSelections = selectPages(normalizedUrl, sitemapUrls, keyword);
     } catch {
       // fall back to single page
     }
   }
 
+  const analyzedPages: AnalyzedPage[] = [];
   const allTexts: string[] = [];
   const allSchemas: Record<string, unknown>[] = [];
   let primary: ScrapedData | null = null;
 
-  for (const pageUrl of pagesToScrape) {
+  for (const { url: pageUrl, reason } of pageSelections) {
     try {
       const res = await fetchWithTimeout(pageUrl, 12000);
       if (!res.ok) continue;
       const html = await res.text();
       const scraped = parseHtml(pageUrl, html);
+
+      analyzedPages.push({
+        url: pageUrl,
+        title: scraped.title,
+        reason,
+        wordCount: scraped.wordCount,
+        hasSchema: scraped.schemaMarkupDetected,
+      });
+
       if (!primary) primary = scraped;
       allTexts.push(scraped.fullCleanText);
       allSchemas.push(...scraped.jsonLdSchemas);
@@ -194,15 +250,15 @@ export async function scrapeTargetUrl(targetUrl: string, manualContent?: string,
     throw new Error("Failed to fetch any pages from the target URL.");
   }
 
-  // Aggregate signals from all scraped pages
   const combinedText = allTexts.join(" ").replace(/\s+/g, " ").trim();
-  primary.fullCleanText = combinedText.slice(0, 12000);
+  primary.fullCleanText = combinedText.slice(0, 15000);
   primary.wordCount = combinedText.split(/\s+/).length;
-  primary.bodyTextSnippet = combinedText.slice(0, 5000);
+  primary.bodyTextSnippet = combinedText.slice(0, 6000);
   primary.jsonLdSchemas = allSchemas;
   primary.schemaMarkupDetected = allSchemas.length > 0;
   primary.hasFaqStructure = primary.hasFaqStructure || /faq|frequently asked|q&a/i.test(combinedText);
   primary.hasAuthorOrOrg = primary.hasAuthorOrOrg || /about us|our team|founded|headquartered|contact/i.test(combinedText);
+  primary.analyzedPages = analyzedPages;
 
   return primary;
 }

@@ -68,6 +68,30 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Cortex lead-in */}
+      <section className="relative bg-white/70 py-16 sm:py-20 border-b border-hairline">
+        <div className="mx-auto max-w-4xl px-6 lg:px-8">
+          <div className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest-tag text-tech-blue font-semibold mb-4">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+            <span>sentiera Cortex</span>
+          </div>
+          <h2 className="font-sans text-3xl sm:text-4xl font-bold tracking-tight-heading text-slate-950">
+            See how visible your business is to AI answers.
+          </h2>
+          <p className="mt-6 font-sans text-base sm:text-lg text-slate-700 leading-relaxed max-w-3xl">
+            Most websites are built for Google rankings. AI assistants (ChatGPT, Gemini, Perplexity and others) recommend and cite businesses differently. Cortex checks the signals those systems use — content clarity, structured data, entity strength, crawler access and citation readiness — and returns a clear score with specific gaps and fixes.
+          </p>
+          <div className="mt-8">
+            <Link
+              href="/cortex"
+              className="inline-flex items-center gap-2 rounded-sm bg-tech-blue px-6 py-3 font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-tech-button transition-all duration-200 hover:bg-tech-blue-600 hover:shadow-accent-glow"
+            >
+              Run a free Cortex audit →
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <section className="relative bg-white/70 py-20 sm:py-28 border-b border-hairline">
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
           <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">AI, brand, digital and events services in Abu Dhabi and Dubai</h2>
@@ -120,8 +144,8 @@ export default function Home() {
 
       <section className="relative bg-white/70 py-20 sm:py-28">
         <div className="mx-auto max-w-3xl px-6 lg:px-8 text-center">
-          <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">Let&apos;s start with a conversation.</h2>
-          <p className="mt-6 font-sans text-base sm:text-lg text-slate-700 leading-relaxed">Tell us where your business is today and where you&apos;d like it to be. We&apos;ll give you an honest view of where to begin.</p>
+          <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">Let's start with a conversation.</h2>
+          <p className="mt-6 font-sans text-base sm:text-lg text-slate-700 leading-relaxed">Tell us where your business is today and where you'd like it to be. We'll give you an honest view of where to begin.</p>
           <div className="mt-10">
             <Link href="/contact" className="inline-flex items-center gap-2 rounded-sm bg-tech-blue px-8 py-4 font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-tech-button transition-all duration-200 hover:bg-tech-blue-600 hover:shadow-accent-glow">Arrange a meeting →</Link>
           </div>

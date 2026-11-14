@@ -13,6 +13,7 @@ export interface AEOResult {
   critical_gaps: string[]; // 2-3 specific failures
   recommended_fixes: string[]; // 2-3 actionable fixes
   signalsUsed?: string[];
+  advancedSignals?: AdvancedSignals;
 }
 
 export interface GroundingSource {
@@ -47,6 +48,28 @@ export interface AnalyzedPage {
   hasSchema: boolean;
 }
 
+export interface CrawlerAccess {
+  bot: string;
+  allowed: boolean | null; // null = not mentioned
+  rule?: string;
+}
+
+export interface AdvancedSignals {
+  crawlerAccess: CrawlerAccess[];
+  llmsTxt: {
+    present: boolean;
+    url?: string;
+    length?: number;
+    qualityNote?: string;
+  };
+  citationSampling?: {
+    executed: boolean;
+    cited: boolean;
+    sampleAnswer?: string;
+    sources?: string[];
+  };
+}
+
 export interface ScrapedData {
   url: string;
   title: string;
@@ -66,6 +89,7 @@ export interface ScrapedData {
   hasFaqStructure: boolean;
   hasAuthorOrOrg: boolean;
   analyzedPages?: AnalyzedPage[];
+  advancedSignals?: AdvancedSignals;
 }
 
 export interface AuditRequestPayload {
@@ -92,6 +116,7 @@ export interface AuditResponsePayload {
     schemaMarkupDetected: boolean;
     schemasCount: number;
     analyzedPages?: AnalyzedPage[];
+    advancedSignals?: AdvancedSignals;
   };
   error?: string;
 }

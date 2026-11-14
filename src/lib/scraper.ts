@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import { ScrapedData, AnalyzedPage } from "@/types/aeo";
+import { ScrapedData, AnalyzedPage, AdvancedSignals, CrawlerAccess } from "@/types/aeo";
 
 const BROWSER_HEADERS = {
   "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
@@ -14,6 +14,19 @@ const BROWSER_HEADERS = {
   "Sec-Fetch-User": "?1",
   "Upgrade-Insecure-Requests": "1",
 };
+
+const AI_BOTS = [
+  "GPTBot",
+  "ChatGPT-User",
+  "PerplexityBot",
+  "ClaudeBot",
+  "Claude-Web",
+  "Google-Extended",
+  "GoogleOther",
+  "Bingbot",
+  "Applebot",
+  "CCBot",
+];
 
 const HIGH_VALUE_PATHS = ["/about", "/services", "/service", "/contact", "/faq", "/about-us", "/our-services", "/pricing"];
 const MAX_PAGES = 8;
@@ -39,6 +52,62 @@ async function fetchWithTimeout(url: string, timeoutMs = 12000): Promise<Respons
   } finally {
     clearTimeout(timeoutId);
   }
+}
+
+async function checkCrawlerAccess(origin: string): Promise<CrawlerAccess[]> {
+  const results: CrawlerAccess[] = [];
+  try {
+    const res = await fetchWithTimeout(`${origin}/robots.txt`, 6000);
+    if (!res.ok) {
+      return AI_BOTS.map(bot => ({ bot, allowed: null }));
+    }
+    const text = await res.text();
+    const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+
+    for (const bot of AI_BOTS) {
+      let allowed: boolean | null = null;
+      let rule = "";
+      let inGroup = false;
+
+      for (const line of lines) {
+        const lower = line.toLowerCase();
+        if (lower.startsWith("user-agent:")) {
+          const agent = lower.slice(11).trim();
+          inGroup = agent === "*" || agent === bot.toLowerCase();
+        } else if (inGroup && (lower.startsWith("disallow:") || lower.startsWith("allow:"))) {
+          const path = line.split(":")[1]?.trim() || "";
+          if (path === "/" || path === "") {
+            allowed = lower.startsWith("allow:");
+            rule = line;
+          }
+        }
+      }
+      results.push({ bot, allowed, rule: rule || undefined });
+    }
+  } catch {
+    return AI_BOTS.map(bot => ({ bot, allowed: null }));
+  }
+  return results;
+}
+
+async function checkLlmsTxt(origin: string): Promise<AdvancedSignals["llmsTxt"]> {
+  const candidates = [`${origin}/llms.txt`, `${origin}/llms-full.txt`];
+  for (const url of candidates) {
+    try {
+      const res = await fetchWithTimeout(url, 5000);
+      if (res.ok) {
+        const text = await res.text();
+        const length = text.length;
+        let qualityNote = "Basic file present";
+        if (length > 500) qualityNote = "Substantial content";
+        if (length > 2000) qualityNote = "Detailed guidance file";
+        return { present: true, url, length, qualityNote };
+      }
+    } catch {
+      // continue
+    }
+  }
+  return { present: false };
 }
 
 export async function discoverSitemapUrls(baseUrl: string, maxUrls = 40): Promise<string[]> {
@@ -132,13 +201,11 @@ function selectPages(userUrl: string, sitemapUrls: string[], keyword: string): {
     }
   };
 
-  // 1. Always include user-provided URL
   add(userUrl, "User-provided");
 
   const kw = keyword.toLowerCase();
   const origin = new URL(userUrl).origin;
 
-  // 2. Keyword matches in path or likely title
   for (const u of sitemapUrls) {
     const path = new URL(u).pathname.toLowerCase();
     if (path.includes(kw) || u.toLowerCase().includes(kw)) {
@@ -146,7 +213,6 @@ function selectPages(userUrl: string, sitemapUrls: string[], keyword: string): {
     }
   }
 
-  // 3. High-value paths
   for (const path of HIGH_VALUE_PATHS) {
     const candidate = origin + path;
     if (sitemapUrls.some(u => u.toLowerCase().includes(path)) || true) {
@@ -154,7 +220,6 @@ function selectPages(userUrl: string, sitemapUrls: string[], keyword: string): {
     }
   }
 
-  // 4. Fill remaining from sitemap
   for (const u of sitemapUrls) {
     add(u, "Sitemap entry");
   }
@@ -259,6 +324,16 @@ export async function scrapeTargetUrl(
   primary.hasFaqStructure = primary.hasFaqStructure || /faq|frequently asked|q&a/i.test(combinedText);
   primary.hasAuthorOrOrg = primary.hasAuthorOrOrg || /about us|our team|founded|headquartered|contact/i.test(combinedText);
   primary.analyzedPages = analyzedPages;
+
+  // Advanced signals
+  const origin = parsedUrl.origin;
+  const crawlerAccess = await checkCrawlerAccess(origin);
+  const llmsTxt = await checkLlmsTxt(origin);
+
+  primary.advancedSignals = {
+    crawlerAccess,
+    llmsTxt,
+  };
 
   return primary;
 }

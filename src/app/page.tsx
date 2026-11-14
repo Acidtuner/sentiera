@@ -144,8 +144,8 @@ export default function Home() {
 
       <section className="relative bg-white/70 py-20 sm:py-28">
         <div className="mx-auto max-w-3xl px-6 lg:px-8 text-center">
-          <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">Let's start with a conversation.</h2>
-          <p className="mt-6 font-sans text-base sm:text-lg text-slate-700 leading-relaxed">Tell us where your business is today and where you'd like it to be. We'll give you an honest view of where to begin.</p>
+          <h2 className="font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading text-slate-950">Start with a conversation.</h2>
+          <p className="mt-6 font-sans text-base sm:text-lg text-slate-700 leading-relaxed">Tell us where your business is today and where you want it to be. We will give you an honest view of where to begin.</p>
           <div className="mt-10">
             <Link href="/contact" className="inline-flex items-center gap-2 rounded-sm bg-tech-blue px-8 py-4 font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-tech-button transition-all duration-200 hover:bg-tech-blue-600 hover:shadow-accent-glow">Arrange a meeting →</Link>
           </div>

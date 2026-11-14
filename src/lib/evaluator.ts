@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { AEOResult, ScrapedData } from "@/types/aeo";
+import { AEOResult, ScrapedData, AdvancedSignals } from "@/types/aeo";
 
 const SYSTEM_INSTRUCTION = `You are an elite Answer Engine Optimization (AEO) evaluator. Analyze the provided TARGET_URL, TARGET_KEYWORD, and SCRAPED_CONTENT to assess visibility for AI assistants.
 
@@ -18,82 +18,94 @@ critical_gaps (string array),
 recommended_fixes (string array).`;
 
 function deterministicEvaluate(url: string, keyword: string, scraped: ScrapedData): AEOResult {
-  let rec = 12;
-  let entity = 10;
-  let rag = 8;
+  let rec = 10;
+  let entity = 8;
+  let rag = 6;
   const signals: string[] = [];
+  const advanced = scraped.advancedSignals;
 
   const text = (scraped.fullCleanText || "").toLowerCase();
   const kw = keyword.toLowerCase();
   const pages = scraped.analyzedPages || [];
   const pageCount = pages.length || 1;
 
-  // Keyword relevance
   const kwCount = (text.match(new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi")) || []).length;
   if (kwCount > 0) {
-    rec += Math.min(12, 4 + kwCount);
+    rec += Math.min(10, 3 + Math.floor(kwCount / 2));
     signals.push(`Keyword found ${kwCount} time(s) across ${pageCount} page(s)`);
   }
   if (scraped.title?.toLowerCase().includes(kw)) {
-    rec += 4;
+    rec += 3;
     signals.push("Keyword in page title");
   }
 
-  // Content depth
   if (scraped.wordCount > 800) {
-    rec += 6;
+    rec += 5;
     signals.push(`Substantial content (${scraped.wordCount} words)`);
   } else if (scraped.wordCount > 300) {
-    rec += 3;
+    rec += 2;
   }
   if (pageCount >= 3) {
-    rec += 3;
+    rec += 2;
     signals.push(`Analyzed ${pageCount} pages`);
   }
 
-  // Schema quality
   const schemaText = JSON.stringify(scraped.jsonLdSchemas).toLowerCase();
   if (scraped.schemaMarkupDetected) {
-    rag += 8;
+    rag += 7;
     if (schemaText.includes("organization") || schemaText.includes("localbusiness")) {
-      rag += 4;
-      entity += 4;
+      rag += 3;
+      entity += 3;
       signals.push("Organization/LocalBusiness schema detected");
     }
     if (schemaText.includes("faqpage")) {
-      rag += 3;
-      signals.push("FAQPage schema detected");
-    }
-    if (schemaText.includes("service") || schemaText.includes("product")) {
       rag += 2;
-      signals.push("Service/Product schema present");
+      signals.push("FAQPage schema detected");
     }
   }
 
-  // Entity signals
   if (scraped.hasAuthorOrOrg) {
-    entity += 5;
+    entity += 4;
     signals.push("Author/organization signals found");
   }
   if (text.includes("abu dhabi") || text.includes("uae") || text.includes("masdar") || text.includes("dubai")) {
-    entity += 4;
+    entity += 3;
     signals.push("Location signals present");
   }
-  if (scraped.description && scraped.description.length > 60) {
-    entity += 3;
-  }
   if (pages.some(p => p.reason.includes("about") || p.reason.includes("contact"))) {
-    entity += 3;
+    entity += 2;
     signals.push("About or contact page included");
   }
 
-  // RAG readiness
-  if (scraped.headings.h1.length > 0) rag += 3;
+  if (scraped.headings.h1.length > 0) rag += 2;
   if (scraped.hasFaqStructure) {
-    rag += 5;
+    rag += 4;
     signals.push("FAQ or Q&A structure detected");
   }
-  if (scraped.headings.h2.length >= 3) rag += 2;
+
+  if (advanced) {
+    const blocked = advanced.crawlerAccess.filter(c => c.allowed === false).length;
+    const allowed = advanced.crawlerAccess.filter(c => c.allowed === true).length;
+    if (blocked === 0 && allowed > 0) {
+      rec += 4;
+      signals.push("Major AI crawlers explicitly allowed");
+    } else if (blocked > 2) {
+      rec -= 3;
+      signals.push(`${blocked} AI crawlers blocked in robots.txt`);
+    }
+
+    if (advanced.llmsTxt.present) {
+      rag += 5;
+      signals.push(`llms.txt present (${advanced.llmsTxt.qualityNote || "found"})`);
+    } else {
+      signals.push("No llms.txt detected");
+    }
+
+    if (advanced.citationSampling?.executed && advanced.citationSampling.cited) {
+      rec += 6;
+      signals.push("Domain cited in live sample answer");
+    }
+  }
 
   rec = Math.min(40, Math.max(0, rec));
   entity = Math.min(30, Math.max(0, entity));
@@ -106,18 +118,19 @@ function deterministicEvaluate(url: string, keyword: string, scraped: ScrapedDat
     metrics: { ai_recommendation_rate: rec, entity_accuracy_health: entity, rag_readiness_score: rag },
     is_invisible_to_ai: overall < 50,
     schema_markup_detected: scraped.schemaMarkupDetected,
-    diagnostic_summary: `sentiera Cortex scored ${overall}/100 after analyzing ${pageCount} page(s). ${scraped.schemaMarkupDetected ? "Structured data was found." : "Limited structured data."} Content volume: ${scraped.wordCount} words.`,
+    diagnostic_summary: `sentiera Cortex scored ${overall}/100 after analyzing ${pageCount} page(s). ${advanced?.llmsTxt.present ? "llms.txt found." : "No llms.txt."} AI crawler access checked.`,
     critical_gaps: [
-      !scraped.schemaMarkupDetected ? "Missing JSON-LD / Schema.org markup." : "Schema could be richer (Organization + Service + FAQ).",
-      !scraped.hasFaqStructure ? "No clear FAQ or Q&A blocks for AI extraction." : "FAQ structure present but could be expanded.",
-      pageCount < 3 ? "Limited page coverage; deeper pages may hold stronger signals." : "Brand location and concrete service definitions need tighter alignment.",
+      !scraped.schemaMarkupDetected ? "Missing JSON-LD / Schema.org markup." : "Schema could be richer.",
+      !advanced?.llmsTxt.present ? "No llms.txt file for AI guidance." : "llms.txt present but could be expanded.",
+      advanced && advanced.crawlerAccess.some(c => c.allowed === false) ? "Some AI crawlers are blocked in robots.txt." : "AI crawler access looks open.",
     ].slice(0, 3),
     recommended_fixes: [
-      "Add Organization + Service JSON-LD with clear name, areaServed, and description.",
-      "Create dedicated pages answering the exact questions buyers ask AI tools.",
-      "Include consistent NAP and concrete capability statements across key pages.",
+      "Ensure robots.txt allows GPTBot, PerplexityBot, ClaudeBot, and Google-Extended.",
+      "Add a /llms.txt file describing key pages and entity info.",
+      "Strengthen schema and FAQ structure for better RAG extraction.",
     ],
     signalsUsed: signals,
+    advancedSignals: advanced,
   };
 }
 
@@ -142,7 +155,7 @@ export async function evaluateAEO(
       },
     });
 
-    const prompt = `TARGET_URL: ${targetUrl}\nTARGET_KEYWORD: ${targetKeyword}\nPAGES_ANALYZED: ${scraped.analyzedPages?.length || 1}\nSCRAPED_TITLE: ${scraped.title}\nSCRAPED_DESCRIPTION: ${scraped.description}\nWORD_COUNT: ${scraped.wordCount}\nSCHEMA_DETECTED: ${scraped.schemaMarkupDetected}\nCONTENT_SNIPPET: ${scraped.bodyTextSnippet.slice(0, 3000)}`;
+    const prompt = `TARGET_URL: ${targetUrl}\nTARGET_KEYWORD: ${targetKeyword}\nPAGES_ANALYZED: ${scraped.analyzedPages?.length || 1}\nSCRAPED_TITLE: ${scraped.title}\nSCRAPED_DESCRIPTION: ${scraped.description}\nWORD_COUNT: ${scraped.wordCount}\nSCHEMA_DETECTED: ${scraped.schemaMarkupDetected}\nLLMS_TXT: ${scraped.advancedSignals?.llmsTxt.present ? "yes" : "no"}\nCONTENT_SNIPPET: ${scraped.bodyTextSnippet.slice(0, 2500)}`;
 
     const result = await model.generateContent(prompt);
     const text = result.response.text();
@@ -150,6 +163,7 @@ export async function evaluateAEO(
 
     parsed.overall_aeo_score = Math.min(100, Math.max(0, parsed.overall_aeo_score || 0));
     parsed.is_invisible_to_ai = parsed.overall_aeo_score < 50;
+    parsed.advancedSignals = scraped.advancedSignals;
     return parsed;
   } catch (err) {
     console.warn("Gemini evaluation failed, falling back to deterministic:", err);

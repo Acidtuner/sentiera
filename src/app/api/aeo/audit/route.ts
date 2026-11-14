@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { scrapeTargetUrl } from "@/lib/scraper";
 import { evaluateAEO } from "@/lib/evaluator";
 import { runLiveSearchGrounding } from "@/lib/liveSearchGrounding";
+import { runCitationSampling } from "@/lib/citationSampling";
 import { storeAudit } from "@/lib/supabase";
 import { sendAuditReportEmail } from "@/lib/email";
 import { AuditRequestPayload, AuditResponsePayload } from "@/types/aeo";
@@ -16,7 +17,6 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
     return NextResponse.json({ success: false, error: "Invalid request body." }, { status: 400 });
   }
 
-  // Honeypot
   if (body.honeypot) {
     return NextResponse.json({ success: false, error: "Invalid submission." }, { status: 400 });
   }
@@ -42,6 +42,15 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
   try {
     const useSitemap = !body.customContent;
     const scraped = await scrapeTargetUrl(body.targetUrl, body.customContent, useSitemap, body.targetKeyword);
+
+    // Live citation sampling
+    if (scraped.advancedSignals) {
+      scraped.advancedSignals.citationSampling = await runCitationSampling(
+        body.targetUrl,
+        body.targetKeyword,
+        body.apiKey
+      );
+    }
 
     const auditResult = await evaluateAEO(
       body.targetUrl,
@@ -77,7 +86,6 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
       console.warn("Live Search Grounding non-fatal error:", groundingErr instanceof Error ? groundingErr.message : String(groundingErr));
     }
 
-    // Store success
     await storeAudit({
       name,
       company,
@@ -88,11 +96,11 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
       result: {
         ...auditResult,
         analyzedPages: scraped.analyzedPages,
+        advancedSignals: scraped.advancedSignals,
         liveGrounding: liveGroundingResult,
       },
     });
 
-    // Send email (non-blocking)
     sendAuditReportEmail(email, name, company, body.targetUrl, body.targetKeyword, auditResult).catch(console.error);
 
     return NextResponse.json({
@@ -107,6 +115,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
         schemaMarkupDetected: scraped.schemaMarkupDetected,
         schemasCount: scraped.jsonLdSchemas.length,
         analyzedPages: scraped.analyzedPages,
+        advancedSignals: scraped.advancedSignals,
       },
     });
   } catch (err: unknown) {

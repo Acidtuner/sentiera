@@ -1,13 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import AuditForm from "@/components/AuditForm";
 import AuditProgress from "@/components/AuditProgress";
 import ReportDashboard from "@/components/ReportDashboard";
 import { AEOResult, LiveGroundingResult, AuditResponsePayload } from "@/types/aeo";
 import { AlertCircle, Bot, Database, MapPin } from "lucide-react";
+import { supabaseAuth } from "@/lib/auth";
 
 export default function CortexPage() {
+  const router = useRouter();
+  const [userId, setUserId] = useState<string | null>(null);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
   const [isLoading, setIsLoading] = useState(false);
   const [currentUrl, setCurrentUrl] = useState("");
   const [currentKeyword, setCurrentKeyword] = useState("");
@@ -15,6 +21,21 @@ export default function CortexPage() {
   const [liveGrounding, setLiveGrounding] = useState<LiveGroundingResult | undefined>(undefined);
   const [scrapedData, setScrapedData] = useState<Record<string, unknown> | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!supabaseAuth) {
+      setCheckingAuth(false);
+      return;
+    }
+    supabaseAuth.auth.getSession().then(({ data }) => {
+      if (data.session?.user) {
+        setUserId(data.session.user.id);
+      } else {
+        router.replace("/login");
+      }
+      setCheckingAuth(false);
+    });
+  }, [router]);
 
   const handleRunAudit = async (formData: {
     url: string;
@@ -25,6 +46,11 @@ export default function CortexPage() {
     email: string;
     honeypot?: string;
   }) => {
+    if (!userId) {
+      setErrorMsg("Please sign in first.");
+      return;
+    }
+
     setIsLoading(true);
     setErrorMsg(null);
     setAuditResult(null);
@@ -44,6 +70,7 @@ export default function CortexPage() {
           company: formData.company,
           email: formData.email,
           honeypot: formData.honeypot,
+          userId,
         }),
       });
 
@@ -72,6 +99,14 @@ export default function CortexPage() {
     setCurrentUrl("");
     setCurrentKeyword("");
   };
+
+  if (checkingAuth) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <p className="font-mono text-sm text-slate-500">Checking session…</p>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-[60vh] py-10 sm:py-16">

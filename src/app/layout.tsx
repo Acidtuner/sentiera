@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import Link from "next/link";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -71,9 +72,9 @@ export default function RootLayout({
       >
         <header className="border-b border-hairline bg-white/80 backdrop-blur-sm">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-            <a href="/" className="font-sans text-lg font-bold tracking-tight text-slate-950">
+            <Link href="/" className="font-sans text-lg font-bold tracking-tight text-slate-950">
               sentiera <span className="text-tech-blue">Cortex</span>
-            </a>
+            </Link>
             <a
               href="https://sentieratech.com"
               className="font-mono text-xs uppercase tracking-wider text-slate-500 hover:text-tech-blue"

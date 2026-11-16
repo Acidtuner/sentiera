@@ -1,10 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import Script from "next/script";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import ChatWidget from "@/components/ChatWidget";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -20,9 +16,6 @@ const geistMono = localFont({
   display: "swap",
 });
 
-const META_PIXEL_ID = "1111758175170543";
-const GTM_ID = "GTM-N5HXDN3L";
-
 export const viewport: Viewport = {
   themeColor: "#0066FF",
   width: "device-width",
@@ -31,23 +24,23 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.sentieratech.com"),
+  metadataBase: new URL("https://cortex.sentieratech.com"),
   title: {
-    default: "SEO & AEO Agency in Abu Dhabi | Sentiera Technologies",
-    template: "%s | Sentiera Technologies",
+    default: "sentiera Cortex | AI Visibility Audit",
+    template: "%s | sentiera Cortex",
   },
   description:
-    "Help customers find and choose your business on Google and in AI answers. SEO, AEO, web, content and creative from Masdar City, Abu Dhabi.",
+    "See how visible your business is to AI answers. Free AEO / GEO audit covering content clarity, structured data, crawler access, llms.txt and citation readiness.",
   keywords: [
-    "Sentiera",
-    "SEO Abu Dhabi",
     "AEO",
     "Answer Engine Optimisation",
-    "Digital Marketing Abu Dhabi",
-    "Masdar City",
-    "UAE business marketing",
+    "GEO",
+    "AI visibility",
+    "sentiera Cortex",
+    "ChatGPT visibility",
+    "Gemini citations",
   ],
-  authors: [{ name: "Sentiera Technologies LLC", url: "https://www.sentieratech.com" }],
+  authors: [{ name: "Sentiera Technologies LLC", url: "https://sentieratech.com" }],
   creator: "Sentiera Technologies LLC",
   icons: {
     icon: [
@@ -57,19 +50,12 @@ export const metadata: Metadata = {
     apple: "/apple-icon.png",
   },
   openGraph: {
-    title: "SEO & AEO Agency in Abu Dhabi | Sentiera Technologies",
-    description: "Help customers find and choose your business on Google and in AI answers. SEO, AEO, web, content and creative from Masdar City, Abu Dhabi.",
-    url: "https://www.sentieratech.com",
-    siteName: "Sentiera Technologies",
+    title: "sentiera Cortex | AI Visibility Audit",
+    description: "Free AEO / GEO audit for AI answer engines.",
+    url: "https://cortex.sentieratech.com",
+    siteName: "sentiera Cortex",
     locale: "en_US",
     type: "website",
-    images: [{ url: "/sentiera-logo.png", width: 1200, height: 630, alt: "Sentiera Technologies" }],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "SEO & AEO Agency in Abu Dhabi | Sentiera Technologies",
-    description: "Help customers find and choose your business on Google and in AI answers. SEO, AEO, web, content and creative from Masdar City, Abu Dhabi.",
-    images: ["/sentiera-logo.png"],
   },
 };
 
@@ -78,103 +64,33 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    name: "Sentiera Technologies LLC",
-    url: "https://sentieratech.com",
-    email: "hello@sentieratech.com",
-    telephone: "+971585737464",
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Masdar City, Abu Dhabi",
-      addressCountry: "AE",
-    },
-    areaServed: ["Abu Dhabi", "Dubai"],
-    knowsAbout: [
-      "AI agents",
-      "Chatbots",
-      "SEO",
-      "AEO",
-      "Digital marketing strategy",
-      "Social media creatives",
-      "Website design and management",
-      "Brand video and photography",
-      "Brochures",
-      "Events graphics",
-      "Internal communications",
-    ],
-  };
-
   return (
     <html lang="en" className="scroll-smooth bg-white text-slate-950">
-      <head>
-        <Script id="gtm" strategy="beforeInteractive">
-          {`
-            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','${GTM_ID}');
-          `}
-        </Script>
-        <Script id="meta-pixel" strategy="beforeInteractive">
-          {`
-            !function(f,b,e,v,n,t,s)
-            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)}(window, document,'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '${META_PIXEL_ID}');
-            fbq('track', 'PageView');
-          `}
-        </Script>
-      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans min-h-screen bg-white text-slate-950 antialiased selection:bg-tech-blue selection:text-white flex flex-col`}
       >
-        <noscript>
-          <iframe
-            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
-            height="0"
-            width="0"
-            style={{ display: "none", visibility: "hidden" }}
-            title="Google Tag Manager"
-          />
-        </noscript>
-        <noscript>
-          <img
-            height="1"
-            width="1"
-            style={{ display: "none" }}
-            src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
-            alt=""
-          />
-        </noscript>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-        <div
-          className="pointer-events-none fixed inset-0 z-0"
-          aria-hidden="true"
-          style={{
-            backgroundImage: [
-              "radial-gradient(ellipse 70% 50% at 8% -10%, rgba(255,46,156,0.10), transparent 55%)",
-              "radial-gradient(ellipse 55% 40% at 100% 8%, rgba(255,46,156,0.07), transparent 50%)",
-              "radial-gradient(ellipse 45% 35% at 90% 100%, rgba(255,46,156,0.06), transparent 55%)",
-              "radial-gradient(ellipse 40% 30% at 0% 70%, rgba(0,102,255,0.04), transparent 50%)",
-            ].join(", "),
-          }}
-        />
-        <div
-          className="pointer-events-none fixed inset-0 z-0 opacity-40 [background-image:linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] [background-size:64px_64px]"
-          aria-hidden="true"
-        />
-        <Navbar />
+        <header className="border-b border-hairline bg-white/80 backdrop-blur-sm">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <a href="/" className="font-sans text-lg font-bold tracking-tight text-slate-950">
+              sentiera <span className="text-tech-blue">Cortex</span>
+            </a>
+            <a
+              href="https://sentieratech.com"
+              className="font-mono text-xs uppercase tracking-wider text-slate-500 hover:text-tech-blue"
+            >
+              by Sentiera →
+            </a>
+          </div>
+        </header>
         <main className="relative z-10 flex-1">{children}</main>
-        <Footer />
-        <ChatWidget />
+        <footer className="border-t border-hairline py-6 text-center">
+          <p className="font-mono text-[11px] text-slate-400">
+            sentiera Cortex · A free AI visibility tool by{" "}
+            <a href="https://sentieratech.com" className="text-tech-blue hover:underline">
+              Sentiera Technologies
+            </a>
+          </p>
+        </footer>
       </body>
     </html>
   );

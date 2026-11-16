@@ -5,12 +5,13 @@ import { runLiveSearchGrounding } from "@/lib/liveSearchGrounding";
 import { runCitationSampling } from "@/lib/citationSampling";
 import { storeAudit } from "@/lib/supabase";
 import { sendAuditReportEmail } from "@/lib/email";
+import { checkDomainEntitlement, recordDomain, normalizeDomain } from "@/lib/auth";
 import { AuditRequestPayload, AuditResponsePayload } from "@/types/aeo";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(req: NextRequest): Promise<NextResponse<AuditResponsePayload>> {
-  let body: AuditRequestPayload;
+  let body: AuditRequestPayload & { userId?: string };
   try {
     body = await req.json();
   } catch {
@@ -24,6 +25,11 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
   const name = (body.name || "").trim();
   const company = (body.company || "").trim();
   const email = (body.email || "").trim().toLowerCase();
+  const userId = body.userId;
+
+  if (!userId) {
+    return NextResponse.json({ success: false, error: "Please sign in to run an audit." }, { status: 401 });
+  }
 
   if (!name || !company || !email || !EMAIL_REGEX.test(email)) {
     return NextResponse.json({ success: false, error: "Name, company, and a valid email are required." }, { status: 400 });
@@ -39,11 +45,20 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
     return NextResponse.json({ success: false, error: "Target Keyword / Intent Query is required." }, { status: 400 });
   }
 
+  // Domain entitlement check (free tier = 1 domain forever)
+  const domain = normalizeDomain(body.targetUrl);
+  const entitlement = await checkDomainEntitlement(userId, domain);
+  if (!entitlement.allowed) {
+    return NextResponse.json(
+      { success: false, error: entitlement.reason || "Domain limit reached." },
+      { status: 403 }
+    );
+  }
+
   try {
     const useSitemap = !body.customContent;
     const scraped = await scrapeTargetUrl(body.targetUrl, body.customContent, useSitemap, body.targetKeyword);
 
-    // Live citation sampling
     if (scraped.advancedSignals) {
       scraped.advancedSignals.citationSampling = await runCitationSampling(
         body.targetUrl,
@@ -86,6 +101,9 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
       console.warn("Live Search Grounding non-fatal error:", groundingErr instanceof Error ? groundingErr.message : String(groundingErr));
     }
 
+    // Record the domain for the free-tier limit
+    await recordDomain(userId, domain);
+
     await storeAudit({
       name,
       company,
@@ -98,6 +116,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
         analyzedPages: scraped.analyzedPages,
         advancedSignals: scraped.advancedSignals,
         liveGrounding: liveGroundingResult,
+        userId,
       },
     });
 

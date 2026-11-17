@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 interface AuditFormProps {
@@ -18,6 +18,20 @@ interface AuditFormProps {
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+function QueryPrefill({
+  onPrefill,
+}: {
+  onPrefill: (url: string | null, keyword: string | null) => void;
+}) {
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    onPrefill(searchParams.get("url"), searchParams.get("keyword"));
+  }, [searchParams, onPrefill]);
+
+  return null;
+}
+
 export default function AuditForm({ onSubmit, isLoading }: AuditFormProps) {
   const [url, setUrl] = useState("");
   const [keyword, setKeyword] = useState("");
@@ -28,14 +42,11 @@ export default function AuditForm({ onSubmit, isLoading }: AuditFormProps) {
   const [honeypot, setHoneypot] = useState("");
   const [agreed, setAgreed] = useState(false);
   const [emailError, setEmailError] = useState("");
-  const searchParams = useSearchParams();
 
-  useEffect(() => {
-    const u = searchParams.get("url");
-    const k = searchParams.get("keyword");
-    if (u) setUrl(u);
-    if (k) setKeyword(k);
-  }, [searchParams]);
+  const onPrefill = React.useCallback((nextUrl: string | null, nextKeyword: string | null) => {
+    if (nextUrl) setUrl(nextUrl);
+    if (nextKeyword) setKeyword(nextKeyword);
+  }, []);
 
   const validateEmail = (value: string) => {
     if (!value) {
@@ -70,6 +81,10 @@ export default function AuditForm({ onSubmit, isLoading }: AuditFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4 bg-white/90 p-6 rounded-xl border border-hairline shadow-sm">
+      <Suspense fallback={null}>
+        <QueryPrefill onPrefill={onPrefill} />
+      </Suspense>
+
       {/* Honeypot - hidden from users */}
       <input
         type="text"

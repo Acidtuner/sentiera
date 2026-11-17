@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "sentiera Cortex — Free AI Visibility Audit",
@@ -7,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function CortexLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return <Suspense fallback={null}>{children}</Suspense>;
 }

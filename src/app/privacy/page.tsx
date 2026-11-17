@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "Privacy Policy for Sentiera Technologies LLC. How we handle personal data collected through this website.",
+  description: "Privacy Policy for Sentiera Technologies Limited. How we handle personal data collected through this website.",
 };
 
 export default function Privacy() {
@@ -21,7 +21,7 @@ export default function Privacy() {
           <section>
             <h2 className="font-sans text-xl font-semibold text-slate-950">Who we are</h2>
             <p className="mt-3">
-              Sentiera Technologies LLC (&quot;we&quot;, &quot;us&quot;) is a company based in Masdar City, Abu Dhabi, United Arab Emirates. This policy explains how we handle personal data collected through www.sentieratech.com.
+              Sentiera Technologies Limited (&quot;we&quot;, &quot;us&quot;) is a company based in Masdar City, Abu Dhabi, United Arab Emirates. This policy explains how we handle personal data collected through www.sentieratech.com.
             </p>
           </section>
 
@@ -63,7 +63,7 @@ export default function Privacy() {
           <section>
             <h2 className="font-sans text-xl font-semibold text-slate-950">Contact</h2>
             <p className="mt-3">
-              Sentiera Technologies LLC<br />
+              Sentiera Technologies Limited<br />
               Masdar City, Abu Dhabi, United Arab Emirates<br />
               Email: <a href="mailto:hello@sentieratech.com" className="text-tech-blue hover:underline">hello@sentieratech.com</a>
             </p>

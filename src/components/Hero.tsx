@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
+import DiagnosticForm from "./DiagnosticForm";
 
 export default function Hero() {
   const containerVariants: Variants = {
@@ -30,7 +30,7 @@ export default function Hero() {
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
         <motion.div variants={containerVariants} initial="hidden" animate="visible" className="flex flex-col items-center text-center">
-          <motion.div variants={itemVariants} className="inline-flex items-center gap-2.5 rounded-none border border-hairline bg-slate-50/80 px-3.5 py-1.5 backdrop-blur-xs mb-8">
+          <motion.div variants={itemVariants} className="inline-flex items-center gap-2.5 border border-hairline bg-slate-50/80 px-3.5 py-1.5 backdrop-blur-xs mb-8">
             <span className="relative flex h-1.5 w-1.5">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
@@ -43,23 +43,11 @@ export default function Hero() {
           </motion.h1>
 
           <motion.p variants={itemVariants} className="mt-8 max-w-2xl font-sans text-base sm:text-lg text-slate-600 leading-relaxed">
-            When customers ask Google or an AI assistant who to call, your name should be on the list. We help businesses in Abu Dhabi and Dubai show up clearly in search and in AI answers.
+            Traditional search is fading. We architect AI infrastructure and answer-engine optimisation so your enterprise is the entity ChatGPT, Gemini and Google AI recommend.
           </motion.p>
 
-          <motion.div variants={itemVariants} className="mt-10 sm:mt-12 flex flex-col sm:flex-row items-center gap-4">
-            <Link href="/contact" className="group relative inline-flex items-center justify-center gap-3 rounded-none bg-tech-blue px-9 py-4 font-mono text-xs font-semibold uppercase tracking-widest text-white shadow-tech-button transition-all duration-200 hover:bg-tech-blue-600 hover:shadow-accent-glow active:scale-[0.99]">
-              <span>Arrange a meeting</span>
-              <span className="font-sans text-sm transition-transform duration-200 group-hover:translate-x-1">→</span>
-            </Link>
-            <Link href="/contact?intent=visibility-review" className="inline-flex items-center justify-center gap-2 rounded-none border border-hairline bg-white/80 px-7 py-4 font-mono text-xs font-medium uppercase tracking-widest text-slate-600 transition-all duration-200 hover:border-accent/40 hover:text-slate-950 hover:shadow-accent-soft backdrop-blur-xs">
-              <span>Book your Complimentary Visibility Review</span>
-            </Link>
-          </motion.div>
-
-          <motion.div variants={itemVariants} className="mt-6">
-            <a href="https://wa.me/971585737464" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-wider text-slate-600 hover:text-tech-blue transition-colors">
-              Message us on WhatsApp →
-            </a>
+          <motion.div variants={itemVariants} className="mt-10 w-full flex justify-center">
+            <DiagnosticForm />
           </motion.div>
         </motion.div>
       </div>

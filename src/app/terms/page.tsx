@@ -21,7 +21,7 @@ export default function Terms() {
           <section>
             <h2 className="font-sans text-xl font-semibold text-slate-950">Use of this website</h2>
             <p className="mt-3">
-              This website is operated by Sentiera Technologies LLC, Masdar City, Abu Dhabi. By using it you agree to these terms. The site provides general information about our services. Nothing on the site is an offer or a binding proposal until we confirm an engagement in writing.
+              This website is operated by Sentiera Technologies Limited, Masdar City, Abu Dhabi. By using it you agree to these terms. The site provides general information about our services. Nothing on the site is an offer or a binding proposal until we confirm an engagement in writing.
             </p>
           </section>
 
@@ -35,7 +35,7 @@ export default function Terms() {
           <section>
             <h2 className="font-sans text-xl font-semibold text-slate-950">Intellectual property</h2>
             <p className="mt-3">
-              Content on this site, including text, design and branding, belongs to Sentiera Technologies LLC unless otherwise stated. You may not copy or reuse it for commercial purposes without permission.
+              Content on this site, including text, design and branding, belongs to Sentiera Technologies Limited unless otherwise stated. You may not copy or reuse it for commercial purposes without permission.
             </p>
           </section>
 
@@ -63,7 +63,7 @@ export default function Terms() {
           <section>
             <h2 className="font-sans text-xl font-semibold text-slate-950">Contact</h2>
             <p className="mt-3">
-              Sentiera Technologies LLC<br />
+              Sentiera Technologies Limited<br />
               Masdar City, Abu Dhabi, United Arab Emirates<br />
               Email: <a href="mailto:hello@sentieratech.com" className="text-tech-blue hover:underline">hello@sentieratech.com</a>
             </p>

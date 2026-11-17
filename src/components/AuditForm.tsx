@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 interface AuditFormProps {
   onSubmit: (data: {
@@ -27,6 +28,14 @@ export default function AuditForm({ onSubmit, isLoading }: AuditFormProps) {
   const [honeypot, setHoneypot] = useState("");
   const [agreed, setAgreed] = useState(false);
   const [emailError, setEmailError] = useState("");
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const u = searchParams.get("url");
+    const k = searchParams.get("keyword");
+    if (u) setUrl(u);
+    if (k) setKeyword(k);
+  }, [searchParams]);
 
   const validateEmail = (value: string) => {
     if (!value) {

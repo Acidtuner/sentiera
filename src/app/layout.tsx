@@ -33,11 +33,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.sentieratech.com"),
   title: {
-    default: "SEO & AEO Agency in Abu Dhabi | Sentiera Technologies",
+    default: "The intelligence pathway | Sentiera Technologies Limited",
     template: "%s | Sentiera Technologies",
   },
   description:
-    "Help customers find and choose your business on Google and in AI answers. SEO, AEO, web, content and creative from Masdar City, Abu Dhabi.",
+    "Sentiera Technologies Limited is a Masdar City AI venture studio. Proprietary AI infrastructure and AI visibility for GCC enterprises.",
   keywords: [
     "Sentiera",
     "SEO Abu Dhabi",
@@ -47,8 +47,8 @@ export const metadata: Metadata = {
     "Masdar City",
     "UAE business marketing",
   ],
-  authors: [{ name: "Sentiera Technologies LLC", url: "https://www.sentieratech.com" }],
-  creator: "Sentiera Technologies LLC",
+  authors: [{ name: "Sentiera Technologies Limited", url: "https://www.sentieratech.com" }],
+  creator: "Sentiera Technologies Limited",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "32x32" },
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "SEO & AEO Agency in Abu Dhabi | Sentiera Technologies",
-    description: "Help customers find and choose your business on Google and in AI answers. SEO, AEO, web, content and creative from Masdar City, Abu Dhabi.",
+    description: "Sentiera Technologies Limited is a Masdar City AI venture studio. Proprietary AI infrastructure and AI visibility for GCC enterprises.",
     url: "https://www.sentieratech.com",
     siteName: "Sentiera Technologies",
     locale: "en_US",
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "SEO & AEO Agency in Abu Dhabi | Sentiera Technologies",
-    description: "Help customers find and choose your business on Google and in AI answers. SEO, AEO, web, content and creative from Masdar City, Abu Dhabi.",
+    description: "Sentiera Technologies Limited is a Masdar City AI venture studio. Proprietary AI infrastructure and AI visibility for GCC enterprises.",
     images: ["/sentiera-logo.png"],
   },
 };
@@ -81,7 +81,7 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
-    name: "Sentiera Technologies LLC",
+    name: "Sentiera Technologies Limited",
     url: "https://sentieratech.com",
     email: "hello@sentieratech.com",
     telephone: "+971585737464",

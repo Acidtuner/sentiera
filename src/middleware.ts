@@ -4,8 +4,9 @@ import { NextResponse, type NextRequest } from "next/server";
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow public routes
+  // Public routes — landing, auth pages, callback, and static assets
   if (
+    pathname === "/" ||
     pathname.startsWith("/login") ||
     pathname.startsWith("/register") ||
     pathname.startsWith("/auth/callback") ||
@@ -42,8 +43,8 @@ export async function middleware(request: NextRequest) {
 
   if (!user) {
     const loginUrl = request.nextUrl.clone();
-    loginUrl.pathname = "/login";
-    loginUrl.searchParams.set("redirectedFrom", pathname);
+    loginUrl.pathname = "/";
+    loginUrl.searchParams.set("auth", "login");
     return NextResponse.redirect(loginUrl);
   }
 

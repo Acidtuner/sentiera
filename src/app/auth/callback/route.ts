@@ -1,10 +1,15 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+const PRODUCTION_ORIGIN = "https://cortex.sentieratech.com";
+
 export async function GET(request: NextRequest) {
-  const { searchParams, origin } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
   const next = searchParams.get("next") ?? "/";
+
+  // Always use the known production origin (avoids 0.0.0.0 or internal hosts)
+  const origin = PRODUCTION_ORIGIN;
 
   if (code) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -31,6 +36,5 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // If something went wrong, redirect to login with error
   return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
 }

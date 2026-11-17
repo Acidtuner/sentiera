@@ -1,18 +1,21 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import AuditForm from "@/components/AuditForm";
 import AuditProgress from "@/components/AuditProgress";
 import ReportDashboard from "@/components/ReportDashboard";
+import AuthModal from "@/components/AuthModal";
 import { AEOResult, LiveGroundingResult, AuditResponsePayload } from "@/types/aeo";
 import { AlertCircle, Bot, Database, MapPin } from "lucide-react";
 import { supabaseAuth } from "@/lib/auth";
 
 export default function CortexPage() {
-  const router = useRouter();
+  const searchParams = useSearchParams();
   const [userId, setUserId] = useState<string | null>(null);
   const [checkingAuth, setCheckingAuth] = useState(true);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "register">("login");
 
   const [isLoading, setIsLoading] = useState(false);
   const [currentUrl, setCurrentUrl] = useState("");
@@ -23,6 +26,14 @@ export default function CortexPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
+    const authParam = searchParams.get("auth");
+    if (authParam === "login" || authParam === "register") {
+      setAuthMode(authParam);
+      setShowAuthModal(true);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
     if (!supabaseAuth) {
       setCheckingAuth(false);
       return;
@@ -30,12 +41,17 @@ export default function CortexPage() {
     supabaseAuth.auth.getSession().then(({ data }) => {
       if (data.session?.user) {
         setUserId(data.session.user.id);
-      } else {
-        router.replace("/login");
       }
       setCheckingAuth(false);
     });
-  }, [router]);
+  }, []);
+
+  const handleAuthSuccess = () => {
+    setShowAuthModal(false);
+    supabaseAuth?.auth.getSession().then(({ data }) => {
+      if (data.session?.user) setUserId(data.session.user.id);
+    });
+  };
 
   const handleRunAudit = async (formData: {
     url: string;
@@ -47,7 +63,7 @@ export default function CortexPage() {
     honeypot?: string;
   }) => {
     if (!userId) {
-      setErrorMsg("Please sign in first.");
+      setShowAuthModal(true);
       return;
     }
 
@@ -103,7 +119,7 @@ export default function CortexPage() {
   if (checkingAuth) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <p className="font-mono text-sm text-slate-500">Checking session…</p>
+        <p className="font-mono text-sm text-slate-500">Loading…</p>
       </div>
     );
   }
@@ -111,7 +127,7 @@ export default function CortexPage() {
   return (
     <div className="relative min-h-[60vh] py-10 sm:py-16">
       <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-        {!auditResult && !isLoading && (
+        {!userId && !auditResult && (
           <div className="text-center max-w-4xl mx-auto space-y-6 pt-2">
             <div className="inline-flex items-center gap-2 rounded-full border border-hairline bg-white/90 px-3.5 py-1.5 shadow-sm backdrop-blur-sm">
               <span className="relative flex h-2 w-2">
@@ -124,7 +140,7 @@ export default function CortexPage() {
             </div>
 
             <h1 className="font-sans text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight-heading text-slate-950 leading-[0.96]">
-              sentiera Cortex: Is your brand missing from the{" "}
+              Is your brand missing from the{" "}
               <span className="text-tech-blue">AI shortlist?</span>
             </h1>
 
@@ -138,35 +154,36 @@ export default function CortexPage() {
                   <Bot className="w-3.5 h-3.5 text-tech-blue" />
                   <span>Recommendation Rate (40)</span>
                 </div>
-                <p className="text-[11px] text-slate-500 font-mono">
-                  Semantic relevance and live citation probability in zero-shot answers.
-                </p>
+                <p className="text-[11px] text-slate-500 font-mono">Semantic relevance and live citation probability.</p>
               </div>
-
               <div className="bg-white/90 p-4 rounded-xl border border-hairline/80 shadow-sm backdrop-blur-sm">
                 <div className="flex items-center space-x-2 text-xs font-bold text-slate-900 mb-1">
                   <MapPin className="w-3.5 h-3.5 text-tech-blue" />
                   <span>Entity Health (30)</span>
                 </div>
-                <p className="text-[11px] text-slate-500 font-mono">
-                  Brand disambiguation, physical jurisdiction, concrete offerings.
-                </p>
+                <p className="text-[11px] text-slate-500 font-mono">Brand clarity, location, and concrete offerings.</p>
               </div>
-
               <div className="bg-white/90 p-4 rounded-xl border border-hairline/80 shadow-sm backdrop-blur-sm">
                 <div className="flex items-center space-x-2 text-xs font-bold text-slate-900 mb-1">
                   <Database className="w-3.5 h-3.5 text-tech-blue" />
                   <span>RAG-Readiness (30)</span>
                 </div>
-                <p className="text-[11px] text-slate-500 font-mono">
-                  Machine-readable JSON-LD schema, headings, and clean Q&A chunking.
-                </p>
+                <p className="text-[11px] text-slate-500 font-mono">Structured data, headings, and clean Q&A.</p>
               </div>
+            </div>
+
+            <div className="pt-4">
+              <button
+                onClick={() => { setAuthMode("login"); setShowAuthModal(true); }}
+                className="inline-flex items-center gap-2 rounded-sm bg-tech-blue px-8 py-3.5 font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-tech-button hover:bg-tech-blue-600"
+              >
+                Get your free audit →
+              </button>
             </div>
           </div>
         )}
 
-        {!auditResult && !isLoading && (
+        {userId && !auditResult && !isLoading && (
           <div>
             <AuditForm onSubmit={handleRunAudit} isLoading={isLoading} />
           </div>
@@ -199,6 +216,13 @@ export default function CortexPage() {
           />
         )}
       </div>
+
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={handleAuthSuccess}
+        initialMode={authMode}
+      />
     </div>
   );
 }

@@ -19,7 +19,7 @@ export default function DiagnosticForm() {
   return (
     <form onSubmit={onSubmit} className="w-full max-w-2xl border border-hairline bg-white/90 p-4 sm:p-5 shadow-sm backdrop-blur-sm">
       <div className="flex items-center justify-between mb-3">
-        <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500">// Cortex · AI visibility diagnostic</span>
+        <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500">{"// Cortex · AI visibility diagnostic"}</span>
         <span className="font-mono text-[10px] uppercase tracking-wider text-tech-blue">Live</span>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

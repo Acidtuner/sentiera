@@ -19,7 +19,7 @@ export default function Home() {
 
       <section className="relative border-b border-hairline bg-white/80 py-12 overflow-hidden">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400 mb-6">// Trusted entities & infrastructure</p>
+          <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400 mb-6">{"// Trusted entities & infrastructure"}</p>
           <div className="flex flex-wrap gap-x-10 gap-y-3 font-mono text-sm uppercase tracking-wide text-slate-500">
             {clients.map((name) => (
               <span key={name}>{name}</span>

@@ -14,6 +14,7 @@ interface AuditFormProps {
     honeypot?: string;
   }) => void;
   isLoading: boolean;
+  showManual?: boolean;
 }
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -32,7 +33,7 @@ function QueryPrefill({
   return null;
 }
 
-export default function AuditForm({ onSubmit, isLoading }: AuditFormProps) {
+export default function AuditForm({ onSubmit, isLoading, showManual = false }: AuditFormProps) {
   const [url, setUrl] = useState("");
   const [keyword, setKeyword] = useState("");
   const [manual, setManual] = useState("");
@@ -50,11 +51,11 @@ export default function AuditForm({ onSubmit, isLoading }: AuditFormProps) {
 
   const validateEmail = (value: string) => {
     if (!value) {
-      setEmailError("Email is required");
+      setEmailError("Work email is required");
       return false;
     }
     if (!EMAIL_REGEX.test(value)) {
-      setEmailError("Please enter a valid email address");
+      setEmailError("Please enter a valid work email");
       return false;
     }
     setEmailError("");
@@ -63,10 +64,10 @@ export default function AuditForm({ onSubmit, isLoading }: AuditFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (honeypot) return; // bot
+    if (honeypot) return;
     if (!agreed) return;
     if (!validateEmail(email)) return;
-    if (url.trim() && keyword.trim() && name.trim() && company.trim()) {
+    if (url.trim() && name.trim() && company.trim()) {
       onSubmit({
         url: url.trim(),
         keyword: keyword.trim(),
@@ -80,12 +81,11 @@ export default function AuditForm({ onSubmit, isLoading }: AuditFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4 bg-white/90 p-6 rounded-xl border border-hairline shadow-sm">
+    <form id="cortex-form" onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4 bg-white/90 p-6 border border-hairline shadow-sm">
       <Suspense fallback={null}>
         <QueryPrefill onPrefill={onPrefill} />
       </Suspense>
 
-      {/* Honeypot - hidden from users */}
       <input
         type="text"
         name="website"
@@ -99,30 +99,16 @@ export default function AuditForm({ onSubmit, isLoading }: AuditFormProps) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block font-mono text-xs uppercase tracking-wide text-slate-500 mb-1">Name</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Your name"
-            className="w-full px-3 py-2 border border-hairline rounded-sm font-mono text-sm focus:outline-none focus:border-tech-blue"
-            required
-          />
+          <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" className="w-full px-3 py-2 border border-hairline font-mono text-sm focus:outline-none focus:border-tech-blue" required />
         </div>
         <div>
           <label className="block font-mono text-xs uppercase tracking-wide text-slate-500 mb-1">Company</label>
-          <input
-            type="text"
-            value={company}
-            onChange={(e) => setCompany(e.target.value)}
-            placeholder="Company name"
-            className="w-full px-3 py-2 border border-hairline rounded-sm font-mono text-sm focus:outline-none focus:border-tech-blue"
-            required
-          />
+          <input type="text" value={company} onChange={(e) => setCompany(e.target.value)} placeholder="Company name" className="w-full px-3 py-2 border border-hairline font-mono text-sm focus:outline-none focus:border-tech-blue" required />
         </div>
       </div>
 
       <div>
-        <label className="block font-mono text-xs uppercase tracking-wide text-slate-500 mb-1">Email</label>
+        <label className="block font-mono text-xs uppercase tracking-wide text-slate-500 mb-1">Work email</label>
         <input
           type="email"
           value={email}
@@ -132,64 +118,38 @@ export default function AuditForm({ onSubmit, isLoading }: AuditFormProps) {
           }}
           onBlur={() => validateEmail(email)}
           placeholder="you@company.com"
-          className={`w-full px-3 py-2 border rounded-sm font-mono text-sm focus:outline-none focus:border-tech-blue ${emailError ? "border-rose-400" : "border-hairline"}`}
+          className={`w-full px-3 py-2 border font-mono text-sm focus:outline-none focus:border-tech-blue ${emailError ? "border-rose-400" : "border-hairline"}`}
           required
         />
         {emailError && <p className="text-xs text-rose-600 mt-1 font-mono">{emailError}</p>}
       </div>
 
       <div>
-        <label className="block font-mono text-xs uppercase tracking-wide text-slate-500 mb-1">Target URL</label>
-        <input
-          type="text"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          placeholder="https://example.com"
-          className="w-full px-3 py-2 border border-hairline rounded-sm font-mono text-sm focus:outline-none focus:border-tech-blue"
-          required
-        />
-      </div>
-      <div>
-        <label className="block font-mono text-xs uppercase tracking-wide text-slate-500 mb-1">Target Keyword / Intent</label>
-        <input
-          type="text"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          placeholder="SEO agency Abu Dhabi"
-          className="w-full px-3 py-2 border border-hairline rounded-sm font-mono text-sm focus:outline-none focus:border-tech-blue"
-          required
-        />
-      </div>
-      <div>
-        <label className="block font-mono text-xs uppercase tracking-wide text-slate-500 mb-1">Optional manual content (if scrape blocked)</label>
-        <textarea
-          value={manual}
-          onChange={(e) => setManual(e.target.value)}
-          placeholder="Paste page text here..."
-          rows={3}
-          className="w-full px-3 py-2 border border-hairline rounded-sm font-mono text-sm focus:outline-none focus:border-tech-blue"
-        />
+        <label className="block font-mono text-xs uppercase tracking-wide text-slate-500 mb-1">Website URL</label>
+        <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://example.com" className="w-full px-3 py-2 border border-hairline font-mono text-sm focus:outline-none focus:border-tech-blue" required />
       </div>
 
+      <div>
+        <label className="block font-mono text-xs uppercase tracking-wide text-slate-500 mb-1">A buyer topic you care about <span className="normal-case text-slate-400">(optional)</span></label>
+        <input type="text" value={keyword} onChange={(e) => setKeyword(e.target.value)} placeholder="industrial cable suppliers UAE" className="w-full px-3 py-2 border border-hairline font-mono text-sm focus:outline-none focus:border-tech-blue" />
+      </div>
+
+      {showManual && (
+        <div>
+          <label className="block font-mono text-xs uppercase tracking-wide text-slate-500 mb-1">Page text, if we could not read the site</label>
+          <textarea value={manual} onChange={(e) => setManual(e.target.value)} placeholder="Paste the main page text here" rows={4} className="w-full px-3 py-2 border border-hairline font-mono text-sm focus:outline-none focus:border-tech-blue" />
+        </div>
+      )}
+
       <label className="flex items-start gap-2 text-xs text-slate-600 font-mono">
-        <input
-          type="checkbox"
-          checked={agreed}
-          onChange={(e) => setAgreed(e.target.checked)}
-          className="mt-0.5"
-          required
-        />
+        <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} className="mt-0.5" required />
         <span>
-          I agree to the <a href="/privacy" className="text-tech-blue underline" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and <a href="/terms" className="text-tech-blue underline" target="_blank" rel="noopener noreferrer">Terms</a> for storing and emailing this analysis.
+          I agree to the <a href="/privacy" className="text-tech-blue underline" target="_blank" rel="noopener noreferrer">Privacy Policy</a>. We use this to prepare and email your snapshot.
         </span>
       </label>
 
-      <button
-        type="submit"
-        disabled={isLoading || !agreed}
-        className="w-full bg-tech-blue text-white font-mono text-xs uppercase tracking-wider py-3 rounded-sm hover:bg-tech-blue-600 disabled:opacity-50"
-      >
-        {isLoading ? "Running Cortex Audit..." : "Run sentiera Cortex Audit"}
+      <button type="submit" disabled={isLoading || !agreed} className="w-full bg-tech-blue text-white font-mono text-xs uppercase tracking-wider py-3 hover:bg-tech-blue-600 disabled:opacity-50">
+        {isLoading ? "Preparing your snapshot..." : "Get my free snapshot"}
       </button>
     </form>
   );

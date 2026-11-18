@@ -2,8 +2,8 @@
 
 import React from "react";
 import { AEOResult, LiveGroundingResult, AnalyzedPage, AdvancedSignals } from "@/types/aeo";
-import PillarCard from "@/components/PillarCard";
 import { RotateCcw } from "lucide-react";
+import Link from "next/link";
 
 interface ReportDashboardProps {
   result: AEOResult;
@@ -31,21 +31,31 @@ export default function ReportDashboard({
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-      <div className="text-center">
-        <h2 className="font-sans text-3xl font-bold text-slate-950">sentiera Cortex Score</h2>
-        <p className="font-mono text-sm text-slate-500 mt-1">{targetUrl} · {targetKeyword}</p>
-        <div className="mt-6 inline-flex items-center justify-center w-32 h-32 rounded-full border-4 border-tech-blue bg-tech-blue/5">
-          <span className="font-sans text-5xl font-bold text-tech-blue">{result.overall_aeo_score}</span>
-        </div>
-        <p className="mt-2 font-mono text-xs uppercase tracking-wider text-slate-500">
-          {result.is_invisible_to_ai ? "Invisible to AI" : "Visible to AI"}
-        </p>
+      <div className="text-center border border-hairline bg-white p-8">
+        <p className="font-mono text-[10px] uppercase tracking-wider text-tech-blue">Sentiera Cortex</p>
+        <h2 className="mt-3 font-sans text-2xl sm:text-3xl font-bold text-slate-950">Your snapshot is on its way.</h2>
+        <p className="mt-3 font-sans text-base text-slate-700">Want a specialist to walk you through it? Book a Complimentary Visibility Review.</p>
+        <Link href="/contact" className="mt-6 inline-flex items-center gap-2 bg-tech-blue px-6 py-3 font-mono text-xs font-semibold uppercase tracking-wider text-white hover:bg-tech-blue-600">
+          Book a review
+        </Link>
+        <p className="mt-4 font-mono text-xs text-slate-500">{targetUrl}{targetKeyword ? ` · ${targetKeyword}` : ""}</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <PillarCard title="AI Recommendation" score={result.metrics.ai_recommendation_rate} max={40} />
-        <PillarCard title="Entity Health" score={result.metrics.entity_accuracy_health} max={30} />
-        <PillarCard title="RAG-Readiness" score={result.metrics.rag_readiness_score} max={30} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="border border-hairline bg-white p-6">
+          <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Website readiness</p>
+          <p className="mt-3 font-sans text-sm text-slate-700">How clearly the public pages state who you are, where you are and what you offer.</p>
+        </div>
+        <div className="border border-hairline bg-white p-6">
+          <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Observed mention</p>
+          <p className="mt-3 font-sans text-sm text-slate-700">
+            {liveGrounding?.executed
+              ? liveGrounding.targetBrandFound || liveGrounding.targetUrlFound
+                ? "The live check mentioned this brand or URL."
+                : "The live check did not mention this brand or URL."
+              : "No live mention check was run for this snapshot."}
+          </p>
+        </div>
       </div>
 
       <div className="bg-white p-6 rounded-xl border border-hairline">
@@ -86,12 +96,12 @@ export default function ReportDashboard({
 
           {advanced.citationSampling && (
             <div>
-              <p className="font-mono text-[11px] uppercase text-slate-400 mb-1">Live Citation Sample</p>
+              <p className="font-mono text-[11px] uppercase text-slate-400 mb-1">Sample mention</p>
               <p className="text-sm">
                 {advanced.citationSampling.executed
                   ? advanced.citationSampling.cited
-                    ? "✓ Domain appeared in sample answer"
-                    : "✗ Domain not mentioned in sample"
+                    ? "Domain appeared in the sample"
+                    : "Domain was not mentioned in the sample"
                   : "Sampling skipped (no API key)"}
               </p>
             </div>

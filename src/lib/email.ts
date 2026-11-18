@@ -27,26 +27,17 @@ export async function sendAuditReportEmail(to: string, name: string, company: st
     return;
   }
 
-  const subject = `Your sentiera Cortex AI Visibility Report — ${url}`;
+  const gaps = (result.critical_gaps || []).slice(0, 3);
+  const subject = `Your Sentiera Cortex Snapshot — ${url}`;
   const html = `
     <div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; color: #1e293b;">
-      <h2 style="color: #0f172a;">sentiera Cortex Report</h2>
+      <h2 style="color: #0f172a;">Your Cortex Snapshot</h2>
       <p>Hi ${name},</p>
-      <p>Here's the AI visibility audit for <strong>${url}</strong> (keyword: ${keyword}).</p>
-      <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin: 16px 0;">
-        <p style="font-size: 32px; font-weight: bold; margin: 0; color: #2563eb;">${result.overall_aeo_score}/100</p>
-        <p style="margin: 4px 0 0; font-size: 14px;">Overall AEO Score</p>
-      </div>
-      <p><strong>Pillars:</strong></p>
-      <ul>
-        <li>AI Recommendation: ${result.metrics.ai_recommendation_rate}/40</li>
-        <li>Entity Health: ${result.metrics.entity_accuracy_health}/30</li>
-        <li>RAG-Readiness: ${result.metrics.rag_readiness_score}/30</li>
-      </ul>
+      <p>Here is the snapshot for <strong>${company}</strong> at <strong>${url}</strong>${keyword ? ` (topic: ${keyword})` : ""}.</p>
       <p><strong>Summary:</strong> ${result.diagnostic_summary}</p>
-      ${result.critical_gaps?.length ? `<p><strong>Critical Gaps:</strong></p><ul>${result.critical_gaps.map(g => `<li>${g}</li>`).join("")}</ul>` : ""}
-      ${result.recommended_fixes?.length ? `<p><strong>Recommended Fixes:</strong></p><ul>${result.recommended_fixes.map(f => `<li>${f}</li>`).join("")}</ul>` : ""}
-      <p style="margin-top: 24px; font-size: 13px; color: #64748b;">— sentiera Cortex<br/>Digital Marketing & AI · Masdar City, UAE</p>
+      ${gaps.length ? `<p><strong>Key gaps:</strong></p><ul>${gaps.map(g => `<li>${g}</li>`).join("")}</ul>` : ""}
+      <p>Want a specialist to walk you through it? <a href="https://www.sentieratech.com/contact">Book a Complimentary Visibility Review</a>.</p>
+      <p style="margin-top: 24px; font-size: 13px; color: #64748b;">Sentiera Technologies · Masdar City, Abu Dhabi</p>
     </div>
   `;
 

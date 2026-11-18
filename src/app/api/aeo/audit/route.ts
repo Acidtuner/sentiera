@@ -35,8 +35,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
   }
 
   if (!body.targetKeyword || body.targetKeyword.trim().length === 0) {
-    await storeAudit({ name, company, email, target_url: body.targetUrl, keyword: "", success: false, error_message: "Missing keyword" });
-    return NextResponse.json({ success: false, error: "Target Keyword / Intent Query is required." }, { status: 400 });
+    body.targetKeyword = body.targetKeyword || company || "brand";
   }
 
   try {

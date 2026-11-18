@@ -13,6 +13,12 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "sentieratech.com" }],
+        destination: "https://www.sentieratech.com/:path*",
+        permanent: true,
+      },
       { source: "/services", destination: "/products", permanent: false },
       { source: "/engagements", destination: "/contact", permanent: false },
       { source: "/packages", destination: "/products", permanent: false },

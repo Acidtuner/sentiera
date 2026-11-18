@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Sourza | Autonomous B2B procurement",
   description:
     "Sourza is Sentiera’s AI-native marketplace connecting industrial manufacturing with GCC enterprise buyers. Full case study coming.",
+  alternates: { canonical: "/products/sourza" },
 };
 
 export default function Sourza() {

@@ -7,11 +7,31 @@ import { resources } from "@/lib/resources";
 export const metadata: Metadata = {
   title: "Resources",
   description: "Longform notes from Sentiera Technologies Limited on AI visibility, AEO and the shift away from ten blue links.",
+  alternates: { canonical: "/resources" },
+  openGraph: {
+    title: "Resources | Sentiera Technologies",
+    description: "Longform notes from Sentiera Technologies Limited on AI visibility, AEO and the shift away from ten blue links.",
+    url: "/resources",
+    type: "website",
+  },
 };
 
 export default function Resources() {
+  const itemList = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Sentiera Resources",
+    itemListElement: resources.map((post, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: `https://www.sentieratech.com/resources/${post.slug}`,
+      name: post.title,
+    })),
+  };
+
   return (
     <div className="relative bg-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }} />
       <section className="relative overflow-hidden border-b border-hairline pt-24 pb-16 sm:pt-32 sm:pb-20">
         <div className="pointer-events-none absolute inset-0 z-0 opacity-40 [background-image:radial-gradient(#0066FF_0.75px,transparent_0.75px)] [background-size:32px_32px]" aria-hidden="true" />
         <div

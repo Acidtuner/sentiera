@@ -56,8 +56,9 @@ export const metadata: Metadata = {
     ],
     apple: "/apple-icon.png",
   },
+  alternates: { canonical: "/" },
   openGraph: {
-    title: "SEO & AEO Agency in Abu Dhabi | Sentiera Technologies",
+    title: "The intelligence pathway | Sentiera Technologies Limited",
     description: "Sentiera Technologies Limited is a Masdar City AI venture studio. Proprietary AI infrastructure and AI visibility for GCC enterprises.",
     url: "https://www.sentieratech.com",
     siteName: "Sentiera Technologies",
@@ -67,7 +68,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "SEO & AEO Agency in Abu Dhabi | Sentiera Technologies",
+    title: "The intelligence pathway | Sentiera Technologies Limited",
     description: "Sentiera Technologies Limited is a Masdar City AI venture studio. Proprietary AI infrastructure and AI visibility for GCC enterprises.",
     images: ["/sentiera-logo.png"],
   },
@@ -82,7 +83,7 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     name: "Sentiera Technologies Limited",
-    url: "https://sentieratech.com",
+    url: "https://www.sentieratech.com",
     email: "hello@sentieratech.com",
     telephone: "+971585737464",
     address: {

@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "About Sentiera | Masdar City, Abu Dhabi",
   description:
     "Sentiera Technologies Limited is an AI-native venture studio in Masdar City. Strategy in Abu Dhabi. Engineering and production in Bangalore.",
+  alternates: { canonical: "/about" },
 };
 
 export default function About() {

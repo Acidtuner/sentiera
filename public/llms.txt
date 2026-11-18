@@ -1,0 +1,29 @@
+# Sentiera Technologies Limited
+
+> Masdar City AI venture studio. We build proprietary AI infrastructure and help GCC enterprises stay visible in AI answers. Strategy in Abu Dhabi. Engineering in Bangalore.
+
+Canonical site: https://www.sentieratech.com
+
+## Products
+
+- [Cortex](https://www.sentieratech.com/cortex): AI visibility diagnostic. Enter a company URL and a target keyword.
+- [Sourza](https://www.sentieratech.com/products/sourza): Autonomous B2B procurement marketplace connecting industrial manufacturing with GCC enterprise buyers.
+
+## Company
+
+- [About](https://www.sentieratech.com/about): Vision, mission, hybrid model, founder note.
+- [Contact](https://www.sentieratech.com/contact): Book a 45-minute visibility review. hello@sentieratech.com
+
+## Resources
+
+- [The AI Procurement Pipeline](https://www.sentieratech.com/resources/ai-procurement-pipeline): Why B2B buyers are bypassing manufacturer websites.
+- [Knowledge Graphs vs. Keywords](https://www.sentieratech.com/resources/knowledge-graphs-vs-keywords): The technical shift to answer engine optimisation.
+- [Surviving the Zero-Click Web](https://www.sentieratech.com/resources/surviving-the-zero-click-web): When the answer appears before the click.
+- [Industrial Intelligence](https://www.sentieratech.com/resources/industrial-intelligence): Structuring legacy manufacturing data for AI.
+- [The Execution Gap](https://www.sentieratech.com/resources/the-execution-gap): Why enterprise AI needs boardroom strategy and engineering.
+- [The Death of the Ten Blue Links](https://www.sentieratech.com/resources/death-of-the-ten-blue-links): Why brands need an architecture shift.
+
+## Optional
+
+- [Privacy](https://www.sentieratech.com/privacy)
+- [Terms](https://www.sentieratech.com/terms)

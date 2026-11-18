@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "The intelligence pathway | Sentiera Technologies Limited",
   description:
     "Sentiera Technologies Limited is a Masdar City AI venture studio. We build proprietary AI infrastructure and help GCC enterprises stay visible in AI answers.",
+  alternates: { canonical: "/" },
 };
 
 const clients = ["Nidec", "Murata", "TD Power Systems", "Azzurro", "TSI Power"];

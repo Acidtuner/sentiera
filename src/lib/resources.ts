@@ -3,6 +3,7 @@ export type ResourceArticle = {
   title: string;
   excerpt: string;
   date: string;
+  isoDate: string;
   readTime: string;
   image: string;
   imageAlt: string;
@@ -16,6 +17,7 @@ export const resources: ResourceArticle[] = [
     excerpt:
       "Enterprise buyers no longer comb through brochures. They ask an AI to build the shortlist. If your data is unreadable, you are skipped.",
     date: "18 November 2026",
+    isoDate: "2026-11-18",
     readTime: "4 min",
     image: "/resources/ai-procurement-pipeline.jpg",
     imageAlt: "A website dissolving into a structured pathway toward a recommendation node",
@@ -32,6 +34,7 @@ export const resources: ResourceArticle[] = [
     excerpt:
       "Answer engines do not rank keywords. They map entities and relationships. A knowledge graph is how a brand becomes retrievable.",
     date: "18 November 2026",
+    isoDate: "2026-11-18",
     readTime: "4 min",
     image: "/resources/knowledge-graphs-vs-keywords.jpg",
     imageAlt: "A knowledge graph of connected nodes with a central accent node",
@@ -48,6 +51,7 @@ export const resources: ResourceArticle[] = [
     excerpt:
       "The answer now appears before the click. If the model omits your brand, the deal can be lost before you know the buyer existed.",
     date: "18 November 2026",
+    isoDate: "2026-11-18",
     readTime: "4 min",
     image: "/resources/surviving-the-zero-click-web.jpg",
     imageAlt: "A search interface synthesising an answer while a brand silhouette sits outside it",
@@ -64,6 +68,7 @@ export const resources: ResourceArticle[] = [
     excerpt:
       "Decades of specifications trapped in PDFs are a liability when procurement bots only read machine-readable data.",
     date: "18 November 2026",
+    isoDate: "2026-11-18",
     readTime: "4 min",
     image: "/resources/industrial-intelligence.jpg",
     imageAlt: "Stacked documents transforming into a structured industrial lattice",
@@ -80,6 +85,7 @@ export const resources: ResourceArticle[] = [
     excerpt:
       "Agencies often lack the engineering. Offshore shops often lack the boardroom. The gap between them is where AI programmes stall.",
     date: "18 November 2026",
+    isoDate: "2026-11-18",
     readTime: "4 min",
     image: "/resources/the-execution-gap.jpg",
     imageAlt: "A strategy plane and an engineering lattice meeting at a central node",
@@ -96,6 +102,7 @@ export const resources: ResourceArticle[] = [
     excerpt:
       "Buyers no longer browse ten results. They ask an AI and receive one answer. If your brand is not cited, you are invisible.",
     date: "17 November 2026",
+    isoDate: "2026-11-17",
     readTime: "4 min",
     image: "/resources/death-of-the-ten-blue-links.jpg",
     imageAlt: "Ten blue links dissolving into a single pathway toward a geometric structure",

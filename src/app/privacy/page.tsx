@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: "Privacy Policy for Sentiera Technologies Limited. How we handle personal data collected through this website.",
+  alternates: { canonical: "/privacy" },
 };
 
 export default function Privacy() {

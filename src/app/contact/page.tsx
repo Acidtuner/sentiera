@@ -5,6 +5,7 @@ import ContactForm from "@/components/ContactForm";
 export const metadata: Metadata = {
   title: "Contact Sentiera Technologies | Masdar City, Abu Dhabi",
   description: "Book a boardroom review with Sentiera Technologies in Masdar City, Abu Dhabi. SEO, AEO, websites and creative for businesses in Abu Dhabi and Dubai.",
+  alternates: { canonical: "/contact" },
 };
 
 export default function Contact() {

@@ -5,6 +5,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Products",
   description: "Sourza and Cortex. Proprietary products from Sentiera Technologies Limited.",
+  alternates: { canonical: "/products" },
 };
 
 export default function Products() {

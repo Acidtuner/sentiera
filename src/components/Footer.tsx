@@ -7,7 +7,12 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 sm:py-20">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div className="md:col-span-2">
-            <p className="font-sans text-lg font-semibold text-white">Sentiera Technologies Limited</p>
+            <img
+              src="/sentiera-logo-grey.svg"
+              alt="Sentiera"
+              className="h-8 w-auto brightness-0 invert opacity-80"
+            />
+            <p className="mt-4 font-sans text-lg font-semibold text-white">Sentiera Technologies Limited</p>
             <p className="mt-4 font-sans text-sm leading-relaxed">
               Masdar City Free Zone<br />
               Abu Dhabi<br />

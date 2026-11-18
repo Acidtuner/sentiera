@@ -1,3 +1,9 @@
+export type ResourceSection = {
+  heading: string;
+  paragraphs: string[];
+  list?: string[];
+};
+
 export type ResourceArticle = {
   slug: string;
   title: string;
@@ -8,24 +14,76 @@ export type ResourceArticle = {
   image: string;
   imageAlt: string;
   paragraphs: string[];
+  sections?: ResourceSection[];
 };
 
 export const resources: ResourceArticle[] = [
   {
     slug: "ai-procurement-pipeline",
-    title: "The AI Procurement Pipeline: Why B2B Buyers Are Bypassing Your Website",
+    title: "The AI procurement pipeline: how to check whether AI recommends you to B2B buyers",
     excerpt:
-      "Enterprise buyers no longer comb through brochures. They ask an AI to build the shortlist. If your data is unreadable, you are skipped.",
+      "A buyer can start a supplier search by asking an AI tool. If it does not name you, you may never hear about the enquiry you lost.",
     date: "18 November 2026",
     isoDate: "2026-11-18",
-    readTime: "4 min",
+    readTime: "6 min",
     image: "/resources/ai-procurement-pipeline.jpg",
     imageAlt: "A website dissolving into a structured pathway toward a recommendation node",
     paragraphs: [
-      "For years, enterprise procurement followed a predictable digital pathway: buyers searched for solutions, clicked through to manufacturer websites, and manually combed through brochures and product pages to compile vendor lists. Today, that manual scavenger hunt is being replaced by artificial intelligence.",
-      "Enterprise procurement officers and technical buyers are increasingly deploying AI agents and large language models to do the heavy lifting. Instead of browsing, they ask platforms such as ChatGPT, Google AI Overviews, or enterprise-specific tools to compile vendor shortlists, compare technical specifications, and summarise capabilities in seconds.",
-      "The implications for B2B brands are direct. Modern buyers want immediate, synthesised answers. If your technical data is locked in unstructured formats, or hidden behind visually heavy pages that AI crawlers cannot easily parse, your brand will not be included in the synthesised response. When the AI skips you, a competitor is recommended by default.",
-      "To protect the revenue pipeline, a brand has to move from being merely searchable to being recommended by the AI systems that enterprise buyers trust. That requires a shift in digital infrastructure, so capabilities are explicitly mapped and readable for machine ingestion.",
+      "A B2B buyer can now start a supplier search by asking an AI tool instead of opening ten websites. If that tool does not name you, you may never hear about the enquiry you lost. Here is how to see where you stand, and what to fix first.",
+    ],
+    sections: [
+      {
+        heading: "What has changed in how buyers find suppliers?",
+        paragraphs: [
+          "A procurement officer used to search, click through to supplier websites and build a shortlist by hand. Now they can ask ChatGPT, Google's AI Overviews or an in-house AI tool to do that first pass: which suppliers in the UAE make stainless steel valves to ASME standards, or which ISO 9001 machining vendors ship to Saudi Arabia.",
+          "The tool reads what it can find, picks a few names and summarises them. The buyer often starts from that answer. Your website still matters, but the first impression may now happen in someone else's interface.",
+        ],
+      },
+      {
+        heading: "How do you know if AI tools recommend you?",
+        paragraphs: [
+          "You can check this yourself in about 15 minutes.",
+          "Write down five questions your buyers ask before they contact a supplier. Use their words, not yours: the product, the standard, the location, the quantity.",
+          "Ask each one in two or three AI tools, such as ChatGPT, Gemini and Google with AI Overviews.",
+          "Note three things for each answer. Are you named? Is what it says about you correct? Which sources does it cite or link to?",
+          "If competitors appear and you do not, or you appear with the wrong capabilities, the problem is usually not your product. It is that the information AI needs about you is missing, hard to read, or inconsistent.",
+        ],
+      },
+      {
+        heading: "Why do AI tools skip a capable supplier?",
+        paragraphs: ["It usually comes down to a few things:"],
+        list: [
+          "Key facts are locked in PDFs or images. Tolerances, materials, certifications and capacities sit in a brochure scan or a product photo, not in text on a page.",
+          "One page tries to say everything. A single Products page lists twenty capabilities in a line each, so no page clearly answers any one question.",
+          "The basics are not stated plainly. Where you are based, which markets you serve, which standards you meet and typical lead times are not written anywhere a machine can find them.",
+          "Your facts disagree with each other. The website, directory listings and LinkedIn page give different addresses, names or product ranges, so an AI cannot be sure which is right.",
+        ],
+      },
+      {
+        heading: "What should you fix first?",
+        paragraphs: ["Start with what a buyer asks before they ever contact you."],
+        list: [
+          "Give each core capability its own page, written in plain text, with the specifications buyers compare.",
+          "Answer the real questions on the page. Add a short FAQ for each capability: standards, materials, minimum order, lead time, delivery regions.",
+          "Add structured data so search engines and AI tools can read your organisation, products and FAQs without guessing.",
+          "Make your facts match everywhere. Use the same company name, address, certifications and product names on your site, directories and social profiles.",
+          "Check again every month. Ask the same five questions and see what changed.",
+        ],
+      },
+      {
+        heading: "Where does Sentiera fit?",
+        paragraphs: [
+          "None of this guarantees that an AI tool will recommend you. What it does is remove the reasons it cannot.",
+          "This is the work we do. From Abu Dhabi, our team rebuilds a B2B brand's website and content so AI tools and search engines can read, understand and cite it, and then keeps it current as buyers' questions change.",
+        ],
+      },
+      {
+        heading: "See what AI tells your buyers about you",
+        paragraphs: [
+          "Send us your website and the three questions your buyers ask most. Our Abu Dhabi team will run them through the main AI tools and show you what comes back: whether you are named, what is said about you, and the first three things we would fix.",
+          "Email hello@sentieratech.com with the subject AI visibility check, or call +971 58 573 7464.",
+        ],
+      },
     ],
   },
   {

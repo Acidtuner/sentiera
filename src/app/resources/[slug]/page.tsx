@@ -91,9 +91,28 @@ export default async function ResourceArticle({ params }: Props) {
 
       <div className="mx-auto max-w-3xl px-6 lg:px-8 pb-20">
         <div className="space-y-6 font-sans text-base sm:text-lg text-slate-700 leading-relaxed">
-          {article.paragraphs.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
-          ))}
+          {article.sections ? (
+            article.sections.map((section) => (
+              <section key={section.heading} className="space-y-4">
+                <h2 className="font-sans text-2xl sm:text-3xl font-bold tracking-tight-heading text-slate-950">{section.heading}</h2>
+                {section.paragraphs.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+                {section.list && (
+                  <ul className="space-y-3">
+                    {section.list.map((item) => (
+                      <li key={item} className="flex items-start gap-3">
+                        <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-tech-blue" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </section>
+            ))
+          ) : (
+            article.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)
+          )}
         </div>
         <div className="mt-14 border-t border-hairline pt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <Link href="/cortex" className="font-mono text-xs uppercase tracking-wider text-tech-blue hover:underline">

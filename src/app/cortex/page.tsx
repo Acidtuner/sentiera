@@ -106,26 +106,34 @@ export default function CortexPage() {
     <div className="relative min-h-[60vh]">
       {!auditResult && !isLoading && (
         <>
-          <section className="relative overflow-hidden border-b border-hairline pt-20 pb-16 sm:pt-28 sm:pb-20">
+          <section className="relative overflow-hidden border-b border-hairline pt-16 pb-16 sm:pt-24 sm:pb-20">
             <div className="pointer-events-none absolute inset-0 z-0 opacity-40 [background-image:radial-gradient(#0066FF_0.75px,transparent_0.75px)] [background-size:32px_32px]" aria-hidden="true" />
-            <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
-              <div className="inline-flex items-center gap-2 border border-hairline bg-white/90 px-3.5 py-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-                <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-slate-700">Sentiera Cortex</span>
-              </div>
-              <h1 className="mt-6 font-sans text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight-heading text-slate-950 leading-[0.96]">
-                Is your brand missing from the <span className="text-tech-blue">AI shortlist?</span>
-              </h1>
-              <p className="mt-6 font-sans text-base sm:text-lg text-slate-700 leading-relaxed">
-                Get a free Cortex Snapshot showing how clearly your brand and offer come across to AI-assisted search, with your top fixes.
-              </p>
-              <div className="mt-8 flex flex-col items-center gap-4">
-                <a href="#cortex-form" className="inline-flex items-center gap-2 bg-tech-blue px-8 py-4 font-mono text-xs font-semibold uppercase tracking-wider text-white hover:bg-tech-blue-600">
-                  Get my free snapshot
-                </a>
-                <Link href="/contact" className="font-mono text-xs uppercase tracking-wider text-slate-600 hover:text-tech-blue">
-                  Prefer to talk? Book a Complimentary Visibility Review.
-                </Link>
+            <div className="relative z-10 mx-auto max-w-6xl px-6 lg:px-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-start">
+                <div className="lg:sticky lg:top-24">
+                  <div className="inline-flex items-center gap-2 border border-hairline bg-white/90 px-3.5 py-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                    <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-slate-700">Sentiera Cortex</span>
+                  </div>
+                  <h1 className="mt-6 font-sans text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight-heading text-slate-950 leading-[0.96]">
+                    Is your brand missing from the <span className="text-tech-blue">AI shortlist?</span>
+                  </h1>
+                  <p className="mt-6 font-sans text-base sm:text-lg text-slate-700 leading-relaxed max-w-xl">
+                    Get a free Cortex Snapshot showing how clearly your brand and offer come across to AI-assisted search, with your top fixes.
+                  </p>
+                  <Link href="/contact" className="mt-6 inline-block font-mono text-xs uppercase tracking-wider text-slate-600 hover:text-tech-blue">
+                    Prefer to talk? Book a Complimentary Visibility Review.
+                  </Link>
+                </div>
+                <div>
+                  <AuditForm onSubmit={handleRunAudit} isLoading={isLoading} showManual={showManual} />
+                  {errorMsg && (
+                    <div className="mt-4 p-4 bg-rose-50 border border-rose-200 text-rose-800 flex items-start gap-3 text-xs font-mono">
+                      <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                      <p>{errorMsg}{showManual ? " Paste the main page text above and submit again." : ""}</p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </section>
@@ -162,29 +170,6 @@ export default function CortexPage() {
                 <li className="font-sans text-base text-slate-700"><strong className="text-slate-950">3.</strong> You get a summary with priorities.</li>
               </ol>
               <p className="mt-6 font-sans text-base text-slate-700">Website readiness and any observed mention are shown separately. Cortex is a diagnostic indicator. It does not guarantee rankings, citations or leads.</p>
-            </div>
-          </section>
-
-          <section className="border-b border-hairline bg-white py-16 sm:py-20">
-            <div className="mx-auto max-w-3xl px-6">
-              <h2 className="font-sans text-3xl sm:text-4xl font-bold tracking-tight-heading text-slate-950 text-center">Get my free snapshot</h2>
-              <div className="mt-8">
-                <AuditForm onSubmit={handleRunAudit} isLoading={isLoading} showManual={showManual} />
-              </div>
-              {errorMsg && (
-                <div className="max-w-2xl mx-auto mt-4 p-4 bg-rose-50 border border-rose-200 text-rose-800 flex items-start gap-3 text-xs font-mono">
-                  <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                  <p>{errorMsg}{showManual ? " Paste the main page text above and submit again." : ""}</p>
-                </div>
-              )}
-            </div>
-          </section>
-
-          <section className="border-b border-hairline bg-white/70 py-16 sm:py-20">
-            <div className="mx-auto max-w-3xl px-6">
-              <h2 className="font-sans text-3xl sm:text-4xl font-bold tracking-tight-heading text-slate-950">Who is behind it</h2>
-              <p className="mt-4 font-sans text-base text-slate-700">Sentiera Technologies, a digital agency in Dubai and Abu Dhabi.</p>
-              <p className="mt-3 font-sans text-base text-slate-700">Our delivery team in Bangalore has worked with Nidec, Murata, TSI Power and TD Power Systems.</p>
             </div>
           </section>
 

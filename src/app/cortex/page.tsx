@@ -162,14 +162,37 @@ export default function CortexPage() {
           </section>
 
           <section className="border-b border-hairline bg-slate-50/80 py-16 sm:py-20">
-            <div className="mx-auto max-w-3xl px-6">
+            <div className="mx-auto max-w-6xl px-6 lg:px-8">
               <h2 className="font-sans text-3xl sm:text-4xl font-bold tracking-tight-heading text-slate-950">How Cortex works</h2>
-              <ol className="mt-8 space-y-4">
-                <li className="font-sans text-base text-slate-700"><strong className="text-slate-950">1.</strong> You share your website and, if you want, a buyer topic.</li>
-                <li className="font-sans text-base text-slate-700"><strong className="text-slate-950">2.</strong> Cortex reviews your public pages.</li>
-                <li className="font-sans text-base text-slate-700"><strong className="text-slate-950">3.</strong> You get a summary with priorities.</li>
-              </ol>
-              <p className="mt-6 font-sans text-base text-slate-700">Website readiness and any observed mention are shown separately. Cortex is a diagnostic indicator. It does not guarantee rankings, citations or leads.</p>
+              <div className="relative mt-12">
+                <div className="pointer-events-none absolute left-0 right-0 top-8 hidden h-px bg-slate-300 md:block" aria-hidden="true" />
+                <ol className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {[
+                    { n: "01", title: "You share", body: "Your website, and a buyer topic if you want one." },
+                    { n: "02", title: "Cortex reviews", body: "Public pages are read for how clearly the brand and offer are stated." },
+                    { n: "03", title: "You receive", body: "A summary on screen and by email, with the priorities." },
+                  ].map((step) => (
+                    <li key={step.n} className="relative bg-white border border-hairline p-6">
+                      <div className="flex h-16 w-16 items-center justify-center border border-tech-blue bg-white font-mono text-sm font-semibold text-tech-blue">
+                        {step.n}
+                      </div>
+                      <h3 className="mt-6 font-sans text-xl font-bold text-slate-950">{step.title}</h3>
+                      <p className="mt-2 font-sans text-sm text-slate-600 leading-relaxed">{step.body}</p>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+              <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="border border-hairline bg-white p-5">
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-tech-blue">Website readiness</p>
+                  <p className="mt-2 font-sans text-sm text-slate-700">How clearly the public pages state who you are and what you offer.</p>
+                </div>
+                <div className="border border-hairline bg-white p-5">
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-accent">Observed mention</p>
+                  <p className="mt-2 font-sans text-sm text-slate-700">Whether a live check mentioned the brand or URL. Shown separately.</p>
+                </div>
+              </div>
+              <p className="mt-6 font-sans text-sm text-slate-600">Cortex is a diagnostic indicator. It does not guarantee rankings, citations or leads.</p>
             </div>
           </section>
 

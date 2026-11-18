@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import Hero from "@/components/Hero";
+import ResourcesCarousel from "@/components/ResourcesCarousel";
 
 export const metadata: Metadata = {
   title: "The intelligence pathway | Sentiera Technologies Limited",
@@ -59,6 +60,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <ResourcesCarousel />
 
       <section className="relative bg-slate-950 text-white py-20 sm:py-28 border-b border-slate-800">
         <div className="mx-auto max-w-6xl px-6 lg:px-8">

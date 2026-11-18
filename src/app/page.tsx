@@ -67,30 +67,30 @@ export default function Home() {
 
       <section className="relative overflow-hidden bg-slate-950 text-white py-20 sm:py-28 border-b border-slate-800">
         <TopographicDrift />
-        <div className="pointer-events-none absolute inset-0 bg-slate-950/55" aria-hidden="true" />
+        <div className="pointer-events-none absolute inset-0 bg-slate-950/20" aria-hidden="true" />
         <div className="relative z-10 mx-auto max-w-6xl px-6 lg:px-8">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400">Sentiera Ventures</p>
+          <p className="font-mono text-[10px] uppercase tracking-widest text-slate-300">Sentiera Ventures</p>
           <h2 className="mt-4 font-sans text-4xl sm:text-5xl font-bold tracking-tight-heading">We build the infrastructure of tomorrow.</h2>
-          <p className="mt-4 max-w-2xl font-sans text-base text-slate-300">
+          <p className="mt-4 max-w-2xl font-sans text-base text-slate-200">
             Sentiera does not only consult. We engineer proprietary platforms.
           </p>
           <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Link href="/products/sourza" className="group border border-white/10 bg-slate-950/40 p-8 backdrop-blur-sm hover:border-accent/40 transition-colors">
+            <Link href="/products/sourza" className="group border border-white/15 bg-slate-950/55 p-8 backdrop-blur-sm hover:border-accent/40 transition-colors">
               <div className="flex items-center justify-between">
                 <h3 className="font-sans text-2xl font-bold">Sourza</h3>
                 <span className="font-mono text-[10px] uppercase tracking-wider text-accent">Active / scaling</span>
               </div>
-              <p className="mt-4 font-sans text-sm text-slate-300 leading-relaxed">
+              <p className="mt-4 font-sans text-sm text-slate-200 leading-relaxed">
                 Autonomous B2B procurement. An AI-native marketplace connecting industrial manufacturing with GCC enterprise buyers.
               </p>
               <span className="mt-6 inline-block font-mono text-xs uppercase tracking-wider text-white group-hover:text-accent">View Sourza →</span>
             </Link>
-            <Link href="/cortex" className="group border border-white/10 bg-slate-950/40 p-8 backdrop-blur-sm hover:border-tech-blue/40 transition-colors">
+            <Link href="/cortex" className="group border border-white/15 bg-slate-950/55 p-8 backdrop-blur-sm hover:border-tech-blue/40 transition-colors">
               <div className="flex items-center justify-between">
                 <h3 className="font-sans text-2xl font-bold">Cortex</h3>
                 <span className="font-mono text-[10px] uppercase tracking-wider text-tech-blue">Live diagnostic</span>
               </div>
-              <p className="mt-4 font-sans text-sm text-slate-300 leading-relaxed">
+              <p className="mt-4 font-sans text-sm text-slate-200 leading-relaxed">
                 A basic AI visibility check. Enter a URL and a commercial keyword. Cortex scores citation probability, entity health and RAG readiness.
               </p>
               <span className="mt-6 inline-block font-mono text-xs uppercase tracking-wider text-white group-hover:text-tech-blue">Run Cortex →</span>

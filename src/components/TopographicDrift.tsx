@@ -2,11 +2,11 @@
 
 import React, { useEffect, useRef } from "react";
 
-const CELL = 12;
-const LEVELS = 18;
+const CELL = 14;
+const LEVELS = 14;
 const BG = "#020617";
-const LINE = "#0b5cc0";
-const PEAK = "#fc3a99";
+const LINE = "#4da3ff";
+const PEAK = "#ff2e9c";
 
 function lerp(a: number, b: number, iso: number) {
   return (iso - a) / (b - a);
@@ -52,7 +52,7 @@ export default function TopographicDrift() {
     function fieldVal(gx: number, gy: number, t: number, w: number, h: number) {
       const x = gx * CELL;
       const y = gy * CELL;
-      const s = 0.0042;
+      const s = 0.0034;
       const v =
         Math.sin(x * s + t) * Math.cos(y * s * 1.2 - t * 0.5) +
         Math.sin((x - y) * s * 0.8 + t * 0.6) * 0.8 +
@@ -74,10 +74,10 @@ export default function TopographicDrift() {
       }
       for (let l = 1; l < LEVELS; l++) {
         const iso = l / LEVELS;
-        const isPeak = l >= LEVELS - 2;
+        const isPeak = l >= LEVELS - 3;
         ctx.strokeStyle = isPeak ? PEAK : LINE;
-        ctx.globalAlpha = isPeak ? 0.9 : 0.35 + (l / LEVELS) * 0.4;
-        ctx.lineWidth = isPeak ? 1.4 : 1;
+        ctx.globalAlpha = isPeak ? 1 : 0.55 + (l / LEVELS) * 0.4;
+        ctx.lineWidth = isPeak ? 2.4 : 1.6;
         ctx.beginPath();
         for (let j = 0; j < rows - 1; j++) {
           for (let i = 0; i < cols - 1; i++) {

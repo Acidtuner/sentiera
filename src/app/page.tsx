@@ -34,7 +34,7 @@ export default function Home() {
                 key={entity.alt}
                 src={entity.src}
                 alt={entity.alt}
-                className="h-8 w-auto max-w-[140px] object-contain sm:h-10"
+                className="h-16 w-auto max-w-[280px] object-contain sm:h-20"
               />
             ))}
           </div>

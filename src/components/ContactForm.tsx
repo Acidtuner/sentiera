@@ -5,7 +5,7 @@ import React, { useState } from "react";
 export default function ContactForm() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [error, setError] = useState("");
-  const [honeypot, setHoneypot] = useState("");
+  const [companyFax, setCompanyFax] = useState("");
   const [form, setForm] = useState({
     name: "",
     company: "",
@@ -29,9 +29,9 @@ export default function ContactForm() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, honeypot }),
+        body: JSON.stringify({ ...form, company_fax: companyFax }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.success) {
         throw new Error(data.error || "We could not send your details.");
       }
@@ -51,16 +51,20 @@ export default function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-12 space-y-6">
-      <input
-        type="text"
-        name="website_url"
-        value={honeypot}
-        onChange={(e) => setHoneypot(e.target.value)}
-        className="absolute opacity-0 pointer-events-none h-0 w-0"
-        tabIndex={-1}
-        autoComplete="off"
-      />
+    <form onSubmit={handleSubmit} className="mt-12 space-y-6" autoComplete="on">
+      <div aria-hidden="true" className="absolute h-0 w-0 overflow-hidden">
+        <label>
+          Fax
+          <input
+            type="text"
+            name="company_fax"
+            value={companyFax}
+            onChange={(e) => setCompanyFax(e.target.value)}
+            tabIndex={-1}
+            autoComplete="off"
+          />
+        </label>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
           <label className="block font-mono text-xs uppercase tracking-wide text-slate-600 mb-1">Name</label>

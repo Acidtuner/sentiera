@@ -13,7 +13,7 @@ type ContactBody = {
   website?: string;
   engagement?: string;
   message?: string;
-  honeypot?: string;
+  company_fax?: string;
 };
 
 export async function POST(req: NextRequest) {
@@ -24,8 +24,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false, error: "Invalid request." }, { status: 400 });
   }
 
-  if (body.honeypot) {
-    return NextResponse.json({ success: true });
+  if (body.company_fax) {
+    console.warn("Contact honeypot filled — ignored");
+    return NextResponse.json({ success: true, ignored: true });
   }
 
   const name = body.name?.trim() || "";
@@ -50,7 +51,13 @@ export async function POST(req: NextRequest) {
     await storeContactEnquiry(payload);
   } catch (err) {
     console.error("Contact save failed:", err);
-    return NextResponse.json({ success: false, error: "We could not save your details. Please email hello@sentieratech.com." }, { status: 500 });
+    const detail = err instanceof Error ? err.message : "unknown";
+    return NextResponse.json({
+      success: false,
+      error: detail.includes("not configured")
+        ? "Contact storage is not configured on the server."
+        : "We could not save your details. Please email hello@sentieratech.com.",
+    }, { status: 500 });
   }
 
   try {

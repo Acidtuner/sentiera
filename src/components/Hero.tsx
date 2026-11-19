@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
-import DiagnosticForm from "./DiagnosticForm";
 
 export default function Hero() {
   const containerVariants: Variants = {
@@ -46,8 +46,14 @@ export default function Hero() {
             Traditional search is fading. We architect AI infrastructure and answer-engine optimisation so your enterprise is the entity ChatGPT, Gemini and Google AI recommend.
           </motion.p>
 
-          <motion.div variants={itemVariants} className="mt-10 w-full flex justify-center">
-            <DiagnosticForm />
+          <motion.div variants={itemVariants} className="mt-10 flex flex-col items-center gap-4">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">Cortex · free AI visibility snapshot</p>
+            <Link href="/cortex" className="inline-flex items-center gap-2 bg-tech-blue px-8 py-4 font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-tech-button transition-all duration-200 hover:bg-tech-blue-600 hover:shadow-accent-glow">
+              Get my free snapshot →
+            </Link>
+            <Link href="/contact" className="font-mono text-xs uppercase tracking-wider text-slate-600 hover:text-tech-blue">
+              Prefer to talk? Book a Complimentary Visibility Review.
+            </Link>
           </motion.div>
         </motion.div>
       </div>

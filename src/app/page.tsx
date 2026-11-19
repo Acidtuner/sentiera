@@ -12,8 +12,13 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-const clients = ["Nidec", "Murata", "TD Power Systems", "Azzurro", "TSI Power"];
-const stack = ["Google Cloud", "Vercel", "Meta Llama", "n8n"];
+const entities = [
+  { src: "/clients/nidec.svg", alt: "Nidec" },
+  { src: "/clients/murata.svg", alt: "Murata" },
+  { src: "/clients/tdps.svg", alt: "TD Power Systems" },
+  { src: "/clients/genpact.svg", alt: "Genpact" },
+  { src: "/clients/kubtec.svg", alt: "Kubtec" },
+];
 
 export default function Home() {
   return (
@@ -23,13 +28,14 @@ export default function Home() {
       <section className="relative border-b border-hairline bg-white/80 py-12 overflow-hidden">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400 mb-6">{"// Trusted entities & infrastructure"}</p>
-          <div className="flex flex-wrap gap-x-10 gap-y-3 font-mono text-sm uppercase tracking-wide text-slate-500">
-            {clients.map((name) => (
-              <span key={name}>{name}</span>
-            ))}
-            <span className="text-slate-300">·</span>
-            {stack.map((name) => (
-              <span key={name}>{name}</span>
+          <div className="flex flex-wrap items-center justify-between gap-x-10 gap-y-6">
+            {entities.map((entity) => (
+              <img
+                key={entity.alt}
+                src={entity.src}
+                alt={entity.alt}
+                className="h-8 w-auto max-w-[140px] object-contain sm:h-10"
+              />
             ))}
           </div>
         </div>

@@ -41,3 +41,33 @@ export async function storeAudit(payload: {
     console.error("Failed to store audit:", err);
   }
 }
+
+export async function storeContactEnquiry(payload: {
+  name: string;
+  company: string;
+  role?: string | null;
+  email: string;
+  phone: string;
+  website?: string | null;
+  engagement: string;
+  message?: string | null;
+}) {
+  if (!supabase) {
+    throw new Error("Supabase is not configured.");
+  }
+  const { error } = await supabase.from("contact_enquiries").insert({
+    name: payload.name,
+    company: payload.company,
+    role: payload.role || null,
+    email: payload.email,
+    phone: payload.phone,
+    website: payload.website || null,
+    engagement: payload.engagement,
+    message: payload.message || null,
+    created_at: new Date().toISOString(),
+  });
+  if (error) {
+    console.error("Supabase contact insert error:", error);
+    throw new Error(error.message);
+  }
+}

@@ -14,6 +14,14 @@ function getGmailClient() {
   return google.gmail({ version: "v1", auth: oauth2Client });
 }
 
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 export async function sendAuditReportEmail(to: string, name: string, company: string, url: string, keyword: string, result: {
   overall_aeo_score: number;
   diagnostic_summary: string;
@@ -32,17 +40,17 @@ export async function sendAuditReportEmail(to: string, name: string, company: st
   const html = `
     <div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; color: #1e293b;">
       <h2 style="color: #0f172a;">Your Cortex Snapshot</h2>
-      <p>Hi ${name},</p>
-      <p>Here is the snapshot for <strong>${company}</strong> at <strong>${url}</strong>${keyword ? ` (topic: ${keyword})` : ""}.</p>
-      <p><strong>Summary:</strong> ${result.diagnostic_summary}</p>
-      ${gaps.length ? `<p><strong>Key gaps:</strong></p><ul>${gaps.map(g => `<li>${g}</li>`).join("")}</ul>` : ""}
+      <p>Hi ${escapeHtml(name)},</p>
+      <p>Here is the snapshot for <strong>${escapeHtml(company)}</strong> at <strong>${escapeHtml(url)}</strong>${keyword ? ` (topic: ${escapeHtml(keyword)})` : ""}.</p>
+      <p><strong>Summary:</strong> ${escapeHtml(result.diagnostic_summary)}</p>
+      ${gaps.length ? `<p><strong>Key gaps:</strong></p><ul>${gaps.map(g => `<li>${escapeHtml(g)}</li>`).join("")}</ul>` : ""}
       <p>Want a specialist to walk you through it? <a href="https://www.sentieratech.com/contact">Book a Complimentary Visibility Review</a>.</p>
       <p style="margin-top: 24px; font-size: 13px; color: #64748b;">Sentiera Technologies · Masdar City, Abu Dhabi</p>
     </div>
   `;
 
   const message = [
-    `From: sentiera Cortex <${FROM_EMAIL}>`,
+    `From: Sentiera Cortex <${FROM_EMAIL}>`,
     `To: ${to}`,
     `Subject: ${subject}`,
     `MIME-Version: 1.0`,
@@ -61,4 +69,54 @@ export async function sendAuditReportEmail(to: string, name: string, company: st
   } catch (err) {
     console.error("Failed to send audit email:", err);
   }
+}
+
+export async function sendContactEnquiryEmail(payload: {
+  name: string;
+  company: string;
+  role?: string | null;
+  email: string;
+  phone: string;
+  website?: string | null;
+  engagement: string;
+  message?: string | null;
+}) {
+  const gmail = getGmailClient();
+  if (!gmail) {
+    throw new Error("Gmail credentials missing.");
+  }
+
+  const to = process.env.CONTACT_TO_EMAIL || "hello@sentieratech.com";
+  const subject = `New contact: ${payload.company} — ${payload.name}`;
+  const html = `
+    <div style="font-family: system-ui, sans-serif; max-width: 640px; margin: 0 auto; color: #1e293b;">
+      <h2 style="color: #0f172a;">New contact form submission</h2>
+      <p><strong>Name:</strong> ${escapeHtml(payload.name)}</p>
+      <p><strong>Company:</strong> ${escapeHtml(payload.company)}</p>
+      <p><strong>Role:</strong> ${escapeHtml(payload.role || "—")}</p>
+      <p><strong>Email:</strong> ${escapeHtml(payload.email)}</p>
+      <p><strong>Phone:</strong> ${escapeHtml(payload.phone)}</p>
+      <p><strong>Website:</strong> ${escapeHtml(payload.website || "—")}</p>
+      <p><strong>Engagement:</strong> ${escapeHtml(payload.engagement)}</p>
+      <p><strong>Message:</strong></p>
+      <p style="white-space: pre-wrap;">${escapeHtml(payload.message || "—")}</p>
+    </div>
+  `;
+
+  const message = [
+    `From: Sentiera Website <${FROM_EMAIL}>`,
+    `To: ${to}`,
+    `Reply-To: ${payload.email}`,
+    `Subject: ${subject}`,
+    `MIME-Version: 1.0`,
+    `Content-Type: text/html; charset=utf-8`,
+    ``,
+    html,
+  ].join("\n");
+
+  const encoded = Buffer.from(message).toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  await gmail.users.messages.send({
+    userId: "me",
+    requestBody: { raw: encoded },
+  });
 }

@@ -28,135 +28,123 @@ export default function ReportDashboard({
 }: ReportDashboardProps) {
   const pages = scrapedData?.analyzedPages || [];
   const advanced = scrapedData?.advancedSignals || result.advancedSignals;
+  const gaps = (result.critical_gaps || []).slice(0, 3);
+  const fixes = (result.recommended_fixes || []).slice(0, 3);
+
+  const mention = !liveGrounding?.executed
+    ? "Not run"
+    : liveGrounding.targetBrandFound || liveGrounding.targetUrlFound
+      ? "Mentioned"
+      : "Not mentioned";
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <div className="text-center border border-hairline bg-white p-8">
-        <p className="font-mono text-[10px] uppercase tracking-wider text-tech-blue">Sentiera Cortex</p>
-        <h2 className="mt-3 font-sans text-2xl sm:text-3xl font-bold text-slate-950">Your snapshot is on its way.</h2>
-        <p className="mt-3 font-sans text-base text-slate-700">Want a specialist to walk you through it? Book a Complimentary Visibility Review.</p>
-        <Link href="/contact" className="mt-6 inline-flex items-center gap-2 bg-tech-blue px-6 py-3 font-mono text-xs font-semibold uppercase tracking-wider text-white hover:bg-tech-blue-600">
-          Book a review
-        </Link>
-        <p className="mt-4 font-mono text-xs text-slate-500">{targetUrl}{targetKeyword ? ` · ${targetKeyword}` : ""}</p>
+    <div className="mx-auto max-w-6xl space-y-4">
+      <div className="flex flex-col gap-3 border border-hairline bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <p className="font-mono text-[10px] uppercase tracking-wider text-tech-blue">Sentiera Cortex</p>
+          <p className="truncate font-sans text-sm font-medium text-slate-950">{targetUrl}</p>
+          {targetKeyword && <p className="truncate font-mono text-[11px] text-slate-500">{targetKeyword}</p>}
+        </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <button onClick={onReset} className="inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-wider text-slate-600 hover:text-tech-blue">
+            <RotateCcw className="h-3 w-3" /> Run another
+          </button>
+          <Link href="/contact" className="inline-flex items-center bg-tech-blue px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-wider text-white hover:bg-tech-blue-600">
+            Book a review
+          </Link>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="border border-hairline bg-white p-6">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <div className="border border-hairline bg-white p-4">
           <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Website readiness</p>
-          <p className="mt-3 font-sans text-sm text-slate-700">How clearly the public pages state who you are, where you are and what you offer.</p>
+          <p className="mt-2 font-sans text-4xl font-bold text-tech-blue">{result.overall_aeo_score}</p>
+          <p className="mt-1 font-sans text-xs text-slate-500">Out of 100. A diagnostic indicator, not a ranking.</p>
         </div>
-        <div className="border border-hairline bg-white p-6">
+        <div className="border border-hairline bg-white p-4">
           <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Observed mention</p>
-          <p className="mt-3 font-sans text-sm text-slate-700">
-            {liveGrounding?.executed
-              ? liveGrounding.targetBrandFound || liveGrounding.targetUrlFound
-                ? "The live check mentioned this brand or URL."
-                : "The live check did not mention this brand or URL."
-              : "No live mention check was run for this snapshot."}
+          <p className={`mt-2 font-sans text-2xl font-bold ${mention === "Mentioned" ? "text-emerald-600" : mention === "Not mentioned" ? "text-accent" : "text-slate-500"}`}>
+            {mention}
           </p>
+          <p className="mt-1 font-sans text-xs text-slate-500">Whether a live check named the brand or URL.</p>
+        </div>
+        <div className="border border-hairline bg-white p-4">
+          <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Pages reviewed</p>
+          <p className="mt-2 font-sans text-4xl font-bold text-slate-950">{pages.length || "—"}</p>
+          <p className="mt-1 font-sans text-xs text-slate-500">Public pages read for this snapshot.</p>
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-xl border border-hairline">
-        <h3 className="font-mono text-xs uppercase tracking-widest text-slate-500 mb-2">Diagnostic Summary</h3>
-        <p className="text-sm text-slate-800 leading-relaxed">{result.diagnostic_summary}</p>
-        {result.signalsUsed && result.signalsUsed.length > 0 && (
-          <ul className="mt-3 space-y-1 text-xs text-slate-600 font-mono">
-            {result.signalsUsed.map((s, i) => (
-              <li key={i}>• {s}</li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {advanced && (
-        <div className="bg-white p-6 rounded-xl border border-hairline space-y-4">
-          <h3 className="font-mono text-xs uppercase tracking-widest text-slate-500">Advanced Signals</h3>
-
-          <div>
-            <p className="font-mono text-[11px] uppercase text-slate-400 mb-1">AI Crawler Access</p>
-            <ul className="text-xs font-mono space-y-0.5">
-              {advanced.crawlerAccess.slice(0, 6).map((c, i) => (
-                <li key={i} className={c.allowed === false ? "text-rose-600" : c.allowed === true ? "text-emerald-600" : "text-slate-500"}>
-                  {c.bot}: {c.allowed === null ? "not mentioned" : c.allowed ? "allowed" : "blocked"}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <p className="font-mono text-[11px] uppercase text-slate-400 mb-1">llms.txt</p>
-            <p className="text-sm">
-              {advanced.llmsTxt.present
-                ? `✓ Present (${advanced.llmsTxt.length || 0} chars) — ${advanced.llmsTxt.qualityNote || ""}`
-                : "✗ Not found"}
-            </p>
-          </div>
-
-          {advanced.citationSampling && (
-            <div>
-              <p className="font-mono text-[11px] uppercase text-slate-400 mb-1">Sample mention</p>
-              <p className="text-sm">
-                {advanced.citationSampling.executed
-                  ? advanced.citationSampling.cited
-                    ? "Domain appeared in the sample"
-                    : "Domain was not mentioned in the sample"
-                  : "Sampling skipped (no API key)"}
-              </p>
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+        <div className="border border-hairline bg-white p-5">
+          <h3 className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Summary</h3>
+          <p className="mt-3 font-sans text-sm leading-relaxed text-slate-800">{result.diagnostic_summary}</p>
+          {gaps.length > 0 && (
+            <div className="mt-4 border-t border-hairline pt-4">
+              <p className="font-mono text-[10px] uppercase tracking-wider text-rose-700">Top gaps</p>
+              <ul className="mt-2 space-y-2">
+                {gaps.map((gap) => (
+                  <li key={gap} className="font-sans text-sm text-slate-700">{gap}</li>
+                ))}
+              </ul>
             </div>
           )}
         </div>
-      )}
-
-      {pages.length > 0 && (
-        <div className="bg-white p-6 rounded-xl border border-hairline">
-          <h3 className="font-mono text-xs uppercase tracking-widest text-slate-500 mb-3">Pages Analyzed ({pages.length})</h3>
-          <ul className="space-y-3">
-            {pages.map((p, i) => (
-              <li key={i} className="text-sm border-b border-hairline/60 pb-2 last:border-0">
-                <div className="font-medium text-slate-900 truncate">{p.title || p.url}</div>
-                <div className="font-mono text-xs text-slate-500 truncate">{p.url}</div>
-                <div className="font-mono text-[11px] text-tech-blue mt-0.5">{p.reason}</div>
-                <div className="font-mono text-[11px] text-slate-400">
-                  {p.wordCount} words {p.hasSchema ? "· schema" : ""}
-                </div>
-              </li>
-            ))}
-          </ul>
+        <div className="border border-hairline bg-white p-5">
+          <h3 className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Priority fixes</h3>
+          {fixes.length > 0 ? (
+            <ul className="mt-3 space-y-2">
+              {fixes.map((fix) => (
+                <li key={fix} className="font-sans text-sm text-slate-700">{fix}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-3 font-sans text-sm text-slate-500">No priority fixes were returned for this snapshot.</p>
+          )}
+          {liveGrounding?.executed && liveGrounding.aiVerdictSummary && (
+            <p className="mt-4 border-t border-hairline pt-4 font-sans text-sm text-slate-600">{liveGrounding.aiVerdictSummary}</p>
+          )}
         </div>
-      )}
+      </div>
 
-      {result.critical_gaps?.length > 0 && (
-        <div className="bg-rose-50 p-6 rounded-xl border border-rose-200">
-          <h3 className="font-mono text-xs uppercase tracking-widest text-rose-700 mb-2">Critical Gaps</h3>
-          <ul className="list-disc pl-5 space-y-1 text-sm text-rose-900">
-            {result.critical_gaps.map((g, i) => <li key={i}>{g}</li>)}
-          </ul>
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+        <div className="border border-hairline bg-white p-4">
+          <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Crawler access</p>
+          {advanced?.crawlerAccess?.length ? (
+            <ul className="mt-2 space-y-1 font-mono text-[11px]">
+              {advanced.crawlerAccess.slice(0, 5).map((crawler) => (
+                <li key={crawler.bot} className={crawler.allowed === false ? "text-rose-600" : crawler.allowed ? "text-emerald-600" : "text-slate-500"}>
+                  {crawler.bot}: {crawler.allowed === null ? "not mentioned" : crawler.allowed ? "allowed" : "blocked"}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-2 font-sans text-sm text-slate-500">Not checked.</p>
+          )}
         </div>
-      )}
-
-      {result.recommended_fixes?.length > 0 && (
-        <div className="bg-emerald-50 p-6 rounded-xl border border-emerald-200">
-          <h3 className="font-mono text-xs uppercase tracking-widest text-emerald-700 mb-2">Recommended Fixes</h3>
-          <ul className="list-disc pl-5 space-y-1 text-sm text-emerald-900">
-            {result.recommended_fixes.map((f, i) => <li key={i}>{f}</li>)}
-          </ul>
+        <div className="border border-hairline bg-white p-4">
+          <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">llms.txt</p>
+          <p className="mt-2 font-sans text-sm text-slate-700">
+            {advanced?.llmsTxt?.present ? "Present" : "Not found"}
+          </p>
+          {advanced?.citationSampling && (
+            <p className="mt-2 font-sans text-sm text-slate-600">
+              Sample mention: {advanced.citationSampling.executed ? (advanced.citationSampling.cited ? "appeared" : "not mentioned") : "not run"}
+            </p>
+          )}
         </div>
-      )}
-
-      {liveGrounding?.executed && (
-        <div className="bg-slate-50 p-6 rounded-xl border border-hairline">
-          <h3 className="font-mono text-xs uppercase tracking-widest text-slate-500 mb-2">Live Grounding</h3>
-          <p className="text-sm text-slate-700">{liveGrounding.aiVerdictSummary}</p>
-          <p className="mt-2 font-mono text-xs text-slate-500">Status: {liveGrounding.brandVisibilityStatus}</p>
+        <div className="border border-hairline bg-white p-4">
+          <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Pages</p>
+          {pages.length > 0 ? (
+            <ul className="mt-2 space-y-1">
+              {pages.slice(0, 4).map((page) => (
+                <li key={page.url} className="truncate font-mono text-[11px] text-slate-600">{page.title || page.url}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-2 font-sans text-sm text-slate-500">No page list returned.</p>
+          )}
         </div>
-      )}
-
-      <div className="text-center">
-        <button onClick={onReset} className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-tech-blue hover:underline">
-          <RotateCcw className="w-3 h-3" /> Run another audit
-        </button>
       </div>
     </div>
   );

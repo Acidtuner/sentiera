@@ -19,6 +19,100 @@ export type ResourceArticle = {
 
 export const resources: ResourceArticle[] = [
   {
+    slug: "ai-agents-vs-saas",
+    title: "Are AI agents the new SaaS? What GCC companies can use them for now",
+    excerpt:
+      "AI agents will not replace SaaS wholesale. They take away the parts where the software sits and waits for a person to do the work.",
+    date: "19 November 2026",
+    isoDate: "2026-11-19",
+    readTime: "6 min",
+    image: "/resources/ai-agents-vs-saas.jpg",
+    imageAlt: "A SaaS dashboard shattering into a pathway of agent nodes ending at a human review",
+    paragraphs: [
+      "AI agents will not replace SaaS wholesale. They take away parts of it: the parts where the software sits and waits for a person to do the work.",
+      "At Sentiera Technologies, we are building for companies in the GCC from Abu Dhabi. Here is what we have learned from replacing a tool with agents ourselves, and what we think it means for a GCC business buying software today.",
+    ],
+    sections: [
+      {
+        heading: "What's the difference between an AI agent and SaaS?",
+        paragraphs: [
+          "SaaS gives a team a tool. The team logs in and does the work inside it. You pay for access, usually per seat.",
+          "An AI agent does a defined piece of the work itself. It takes an input, produces an output, and hands it to a person to check. You are no longer paying for a place to do the work. You are paying for work that gets done.",
+        ],
+      },
+      {
+        heading: "Will AI agents replace SaaS, or sit alongside it?",
+        paragraphs: [
+          "Our view: agents take away parts of SaaS applications, not the whole category.",
+          "Most software has two kinds of features. Some help a person think, decide or collaborate. Others are passive: they store work, display it or move it to the next person. The passive parts are the ones agents take over first, because an agent can do the step instead of waiting for someone to do it.",
+          "The tool does not disappear overnight. It gets thinner, until one day you notice you are paying for features nobody opens.",
+        ],
+      },
+      {
+        heading: "What does this look like in practice?",
+        paragraphs: [
+          "Our team in Bangalore used storyboard software for video work. It did what it promised: it gave us a place to build storyboards. But every frame still depended on a person filling it in.",
+          "So we replaced it with a workflow on a self-hosted automation platform, run by specialised AI agents. Each agent handles one step:",
+        ],
+        list: [
+          "One turns the script into a screenplay.",
+          "One generates the storyboard slides from the screenplay.",
+          "One produces the final art renders.",
+        ],
+      },
+      {
+        heading: "A person still signs off",
+        paragraphs: [
+          "A person reviews and edits the output at every step before it moves on. The agents do the first pass; our team keeps the judgement.",
+          "The result was a better cost structure and a faster route to market. Not because the model was clever, but because we redesigned the work around it.",
+        ],
+      },
+      {
+        heading: "Where can a GCC company use AI agents today?",
+        paragraphs: [
+          "Start with the work your team repeats every week and mostly moves from one place to another. Good first candidates:",
+        ],
+        list: [
+          "Turning one input into several outputs. A brief becomes a draft, a draft becomes versions for each channel, and someone signs off.",
+          "Preparing documents for review. Pulling details from a quote, a contract or an RFQ into a standard summary before a person checks it.",
+          "Keeping content current. Updating product pages, FAQs and listings so customers and AI answer engines see the same, correct information.",
+          "First-line enquiries. Sorting and drafting replies to routine questions, with a person approving anything that commits the business.",
+        ],
+      },
+      {
+        heading: "The test",
+        paragraphs: [
+          "The test is simple: if the software only stores or passes along work a person still has to do, an agent can probably do that step.",
+        ],
+      },
+      {
+        heading: "What should a GCC buyer ask before buying an AI agent?",
+        paragraphs: [
+          "Three questions matter more than which model sits underneath.",
+          "Does it know our workflow? An agent is only as good as the steps it follows. Our storyboard pipeline works because we know what a good screenplay, storyboard and render look like, and where each one usually goes wrong. Ask the vendor to show you the steps, not just the demo.",
+          "Where does a person sign off? No serious business should hand real work to an agent without clear limits, a human approval and a record of what the agent did. In our workflow, nothing moves forward without approval. That is not a weakness of the agent. It is what makes it usable.",
+          "Where does our data go, and what does each run cost? Ask where the model runs and whether your data leaves the country. Across the GCC, the UAE, Saudi Arabia and the financial free zones each set their own conditions for sending personal data abroad. A self-hosted workflow lets you choose where it sits. Rules change, so confirm with your advisor. Agents also use storage and compute every time they run, so ask what each run costs and who pays for it. We self-host our own workflow to keep both the data and the cost under control.",
+          "How you pay for that work is a separate question. We wrote about it in our piece on outcome-based pricing: https://www.linkedin.com/pulse/outcome-based-pricing-why-software-subscriptions-making-attoor-27trf/",
+        ],
+      },
+      {
+        heading: "Why is a thin wrapper around someone else's model a weak product?",
+        paragraphs: [
+          "If a product is a nice screen on top of someone else's model, the next model update can copy it.",
+          "What lasts is everything around the model: the workflow, the steps, the human checks, and the cost discipline. Our gains did not come from a better model. They came from knowing the work well enough to rebuild it.",
+          "That is why the best partner for an agent is often not a pure software vendor. It is a team that already knows the workflow inside out and will build the agent around it.",
+        ],
+      },
+      {
+        heading: "The real question",
+        paragraphs: [
+          "For a GCC business, the question is not \"should we buy an AI agent?\" It is \"which part of our software just waits for a person?\"",
+          "Which tool in your stack would you replace first?",
+        ],
+      },
+    ],
+  },
+  {
     slug: "ai-procurement-pipeline",
     title: "The AI procurement pipeline: how to check whether AI recommends you to B2B buyers",
     excerpt:

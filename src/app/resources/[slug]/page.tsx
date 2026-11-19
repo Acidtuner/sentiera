@@ -9,6 +9,8 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
+const SITE = "https://www.sentieratech.com";
+
 export function generateStaticParams() {
   return resources.map((item) => ({ slug: item.slug }));
 }
@@ -18,6 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = getResource(slug);
   if (!article) return { title: "Resource" };
   const path = `/resources/${article.slug}`;
+  const imageUrl = `${SITE}${article.image}`;
   return {
     title: article.title,
     description: article.excerpt,
@@ -25,16 +28,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: article.title,
       description: article.excerpt,
-      url: path,
+      url: `${SITE}${path}`,
       type: "article",
       publishedTime: article.isoDate,
-      images: [{ url: article.image, alt: article.imageAlt }],
+      images: [
+        {
+          url: imageUrl,
+          secureUrl: imageUrl,
+          width: 1168,
+          height: 784,
+          alt: article.imageAlt,
+          type: "image/jpeg",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: article.title,
       description: article.excerpt,
-      images: [article.image],
+      images: [imageUrl],
     },
   };
 }
@@ -50,18 +62,18 @@ export default async function ResourceArticle({ params }: Props) {
     headline: article.title,
     description: article.excerpt,
     datePublished: article.isoDate,
-    image: `https://www.sentieratech.com${article.image}`,
-    mainEntityOfPage: `https://www.sentieratech.com/resources/${article.slug}`,
-    articleBody: article.paragraphs.join("\n\n"),
+    image: `${SITE}${article.image}`,
+    mainEntityOfPage: `${SITE}/resources/${article.slug}`,
+    articleBody: (article.sections?.flatMap((section) => [section.heading, ...section.paragraphs, ...(section.list ?? [])]) ?? article.paragraphs).join("\n\n"),
     publisher: {
       "@type": "Organization",
       name: "Sentiera Technologies Limited",
-      url: "https://www.sentieratech.com",
+      url: SITE,
     },
     author: {
       "@type": "Organization",
       name: "Sentiera Technologies Limited",
-      url: "https://www.sentieratech.com",
+      url: SITE,
     },
   };
 

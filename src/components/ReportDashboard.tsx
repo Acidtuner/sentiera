@@ -67,8 +67,8 @@ export default function ReportDashboard({
             {mention}
           </p>
           <p className="mt-1 font-sans text-xs text-slate-500">Whether a live Gemini check named the brand or URL.</p>
-          {!liveGrounding?.executed && liveGrounding?.aiVerdictSummary && (
-            <p className="mt-2 font-sans text-xs text-rose-600">{liveGrounding.aiVerdictSummary}</p>
+          {liveGrounding?.aiVerdictSummary && (
+            <p className={`mt-2 font-sans text-xs ${liveGrounding.executed ? "text-slate-500" : "text-rose-600"}`}>{liveGrounding.aiVerdictSummary}</p>
           )}
         </div>
         <div className="border border-hairline bg-white p-4">
@@ -104,8 +104,11 @@ export default function ReportDashboard({
           ) : (
             <p className="mt-3 font-sans text-sm text-slate-500">No priority fixes were returned for this snapshot.</p>
           )}
-          {liveGrounding?.executed && liveGrounding.aiVerdictSummary && (
-            <p className="mt-4 border-t border-hairline pt-4 font-sans text-sm text-slate-600">{liveGrounding.aiVerdictSummary}</p>
+          {liveGrounding?.executed && liveGrounding.aiSynthesizedAnswer && (
+            <div className="mt-4 border-t border-hairline pt-4">
+              <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Gemini answer</p>
+              <p className="mt-2 whitespace-pre-wrap font-sans text-sm leading-relaxed text-slate-700">{liveGrounding.aiSynthesizedAnswer}</p>
+            </div>
           )}
         </div>
       </div>

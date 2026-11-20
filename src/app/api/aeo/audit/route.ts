@@ -1,8 +1,9 @@
+export const maxDuration = 60;
+
 import { NextRequest, NextResponse } from "next/server";
 import { scrapeTargetUrl } from "@/lib/scraper";
 import { evaluateAEO } from "@/lib/evaluator";
 import { runLiveSearchGrounding } from "@/lib/liveSearchGrounding";
-import { runCitationSampling } from "@/lib/citationSampling";
 import { storeAudit } from "@/lib/supabase";
 import { sendAuditReportEmail } from "@/lib/email";
 import { AuditRequestPayload, AuditResponsePayload } from "@/types/aeo";
@@ -42,15 +43,6 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
     const useSitemap = !body.customContent;
     const scraped = await scrapeTargetUrl(body.targetUrl, body.customContent, useSitemap, body.targetKeyword);
 
-    // Live citation sampling
-    if (scraped.advancedSignals) {
-      scraped.advancedSignals.citationSampling = await runCitationSampling(
-        body.targetUrl,
-        body.targetKeyword,
-        body.apiKey
-      );
-    }
-
     const auditResult = await evaluateAEO(
       body.targetUrl,
       body.targetKeyword,
@@ -67,19 +59,13 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
         body.apiKey
       );
 
-      if (liveGroundingResult.executed) {
-        if (liveGroundingResult.targetUrlFound) {
-          auditResult.metrics.ai_recommendation_rate = Math.max(32, auditResult.metrics.ai_recommendation_rate);
-        } else if (liveGroundingResult.brandVisibilityStatus === "OMITTED_FROM_AI_SHORTLIST") {
-          auditResult.metrics.ai_recommendation_rate = Math.min(22, auditResult.metrics.ai_recommendation_rate);
-        }
-        auditResult.overall_aeo_score = Math.min(
-          100,
-          auditResult.metrics.ai_recommendation_rate +
-            auditResult.metrics.entity_accuracy_health +
-            auditResult.metrics.rag_readiness_score
-        );
-        auditResult.is_invisible_to_ai = auditResult.overall_aeo_score < 50;
+      if (liveGroundingResult.executed && scraped.advancedSignals) {
+        scraped.advancedSignals.citationSampling = {
+          executed: true,
+          cited: liveGroundingResult.targetUrlFound || liveGroundingResult.targetBrandFound,
+          sampleAnswer: liveGroundingResult.aiSynthesizedAnswer,
+        };
+        auditResult.advancedSignals = scraped.advancedSignals;
       }
     } catch (groundingErr: unknown) {
       console.warn("Live Search Grounding non-fatal error:", groundingErr instanceof Error ? groundingErr.message : String(groundingErr));

@@ -33,7 +33,7 @@ export async function askGemini(prompt: string, apiKey: string): Promise<string>
       store: false,
       generation_config: { thinking_level: "low" },
     },
-    { timeout: 18000 }
+    { timeout: 35000 }
   );
   const text = textFromInteraction(interaction);
   if (!text) throw new Error("Gemini returned an empty answer.");

@@ -34,6 +34,7 @@ const faqs = [
 
 export default function CortexPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [attempt, setAttempt] = useState(1);
   const [currentUrl, setCurrentUrl] = useState("");
   const [currentKeyword, setCurrentKeyword] = useState("");
   const [auditResult, setAuditResult] = useState<AEOResult | null>(null);
@@ -58,33 +59,47 @@ export default function CortexPage() {
     setCurrentUrl(formData.url);
     setCurrentKeyword(formData.keyword);
 
-    try {
+    const payload = {
+      targetUrl: formData.url,
+      targetKeyword: formData.keyword,
+      customContent: formData.manual,
+      name: formData.name,
+      company: formData.company,
+      email: formData.email,
+      honeypot: formData.honeypot,
+    };
+
+    const runOnce = async () => {
       const res = await fetch("/api/aeo/audit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          targetUrl: formData.url,
-          targetKeyword: formData.keyword,
-          customContent: formData.manual,
-          name: formData.name,
-          company: formData.company,
-          email: formData.email,
-          honeypot: formData.honeypot,
-        }),
+        body: JSON.stringify(payload),
       });
-
       const raw = await res.text();
-      let data: AuditResponsePayload;
       try {
-        data = JSON.parse(raw) as AuditResponsePayload;
+        return { res, data: JSON.parse(raw) as AuditResponsePayload };
       } catch {
         throw new Error(
           res.status === 504 || res.status === 502
-            ? "The check took too long and the server stopped it. Try again, or use a simpler page."
-            : "The server returned an unexpected page instead of a result. Redeploy, then try again."
+            ? "timeout"
+            : "The server returned an unexpected page instead of a result."
         );
       }
+    };
 
+    try {
+      setAttempt(1);
+      let result;
+      try {
+        result = await runOnce();
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "";
+        if (message !== "timeout") throw err;
+        setAttempt(2);
+        result = await runOnce();
+      }
+
+      const { res, data } = result;
       if (!res.ok || !data.success || !data.data) {
         const message = data.error || "We could not complete the snapshot.";
         if (/fetch any pages|could not read|blocked/i.test(message)) setShowManual(true);
@@ -97,7 +112,10 @@ export default function CortexPage() {
       setScrapedData(data.scrapedData || null);
     } catch (err: unknown) {
       console.error(err);
-      setErrorMsg(err instanceof Error ? err.message : "An unexpected error occurred.");
+      const message = err instanceof Error ? err.message : "An unexpected error occurred.";
+      setErrorMsg(message === "timeout"
+        ? "Gemini did not answer in time, even on a second attempt. Please try again in a moment."
+        : message);
     } finally {
       setIsLoading(false);
     }
@@ -224,7 +242,7 @@ export default function CortexPage() {
 
       {isLoading && (
         <div className="max-w-3xl mx-auto px-6 py-16">
-          <AuditProgress targetUrl={currentUrl} targetKeyword={currentKeyword} />
+          <AuditProgress targetUrl={currentUrl} targetKeyword={currentKeyword} attempt={attempt} />
         </div>
       )}
 

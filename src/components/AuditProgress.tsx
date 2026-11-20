@@ -5,25 +5,18 @@ import React, { useEffect, useState } from "react";
 interface AuditProgressProps {
   targetUrl: string;
   targetKeyword: string;
+  attempt?: number;
 }
 
-const STATUSES = [
-  "Discovering pages from sitemap…",
-  "Fetching and analyzing content…",
-  "Evaluating AI visibility signals…",
-  "Scoring recommendation rate, entity health & RAG-readiness…",
-  "Preparing your Cortex report…",
-];
-
-export default function AuditProgress({ targetUrl, targetKeyword }: AuditProgressProps) {
-  const [statusIndex, setStatusIndex] = useState(0);
+export default function AuditProgress({ targetUrl, targetKeyword, attempt = 1 }: AuditProgressProps) {
+  const [elapsed, setElapsed] = useState(0);
 
   useEffect(() => {
-    const id = setInterval(() => {
-      setStatusIndex((i) => (i + 1) % STATUSES.length);
-    }, 2200);
+    const id = setInterval(() => setElapsed((value) => value + 1), 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [attempt]);
+
+  const waiting = elapsed >= 12;
 
   return (
     <div className="text-center space-y-6 py-12">
@@ -32,17 +25,26 @@ export default function AuditProgress({ targetUrl, targetKeyword }: AuditProgres
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-tech-blue opacity-75"></span>
           <span className="relative inline-flex rounded-full h-3 w-3 bg-tech-blue"></span>
         </span>
-        <span className="font-mono text-sm uppercase tracking-wider text-slate-700">sentiera Cortex running…</span>
+        <span className="font-mono text-sm uppercase tracking-wider text-slate-700">
+          {attempt > 1 ? "Trying once more…" : "Asking Gemini…"}
+        </span>
       </div>
       <p className="font-mono text-xs text-slate-500">
-        Analyzing {targetUrl} for “{targetKeyword}”
+        {targetKeyword ? `Topic: ${targetKeyword}` : targetUrl}
       </p>
 
-      <div className="max-w-xs mx-auto">
-        <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-          <div className="h-full bg-tech-blue rounded-full animate-progress-indeterminate" />
+      <div className="mx-auto max-w-md">
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200">
+          <div className="h-full animate-progress-indeterminate rounded-full bg-tech-blue" />
         </div>
-        <p className="mt-3 font-mono text-xs text-slate-600 h-4">{STATUSES[statusIndex]}</p>
+        <p className="mt-4 font-sans text-sm text-slate-700">
+          {attempt > 1
+            ? "The first attempt did not return. Running it once more."
+            : "This usually takes 15 to 30 seconds. Please keep this page open."}
+        </p>
+        {waiting && (
+          <p className="mt-2 font-sans text-xs text-slate-500">Still working. Gemini can be slow on the first answer.</p>
+        )}
       </div>
 
       <style jsx>{`

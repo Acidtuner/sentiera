@@ -26,7 +26,7 @@ function textFromResponse(data: {
 
 export async function askGrok(prompt: string, apiKey: string, useSearch = false): Promise<string> {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), useSearch ? 18000 : 15000);
+  const timer = setTimeout(() => controller.abort(), useSearch ? 22000 : 12000);
   try {
     const res = await fetch(useSearch ? "https://api.x.ai/v1/responses" : "https://api.x.ai/v1/chat/completions", {
       method: "POST",

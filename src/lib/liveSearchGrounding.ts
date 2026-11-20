@@ -95,23 +95,15 @@ export async function runLiveSearchGrounding(
   }
 
   try {
-    let usedSearch = true;
-    let searchError = "";
-    let answer = "";
-    try {
-      answer = await askGrok(buyerQuery, apiKey, true);
-    } catch (err) {
-      usedSearch = false;
-      searchError = err instanceof Error ? err.message : "search failed";
-      answer = await askGrok(buyerQuery, apiKey, false);
-    }
+    const answer = await askGrok(buyerQuery, apiKey, true);
+    const usedSearch = true;
     const tokens = company ? brandTokens(company) : [];
     const domainMatched = includesTerm(answer, targetHost);
     const companyMatched = Boolean(company && (includesTerm(answer, company) || tokens.some((token) => includesTerm(answer, token))));
     const titleMatched = Boolean(pageTitle && includesTerm(answer, pageTitle.split("|")[0]));
     const found = domainMatched || companyMatched || titleMatched;
     const others = otherNames(answer, company || "", targetHost);
-    const searchNote = usedSearch ? "Search was on." : `Search failed (${searchError}), so this is a memory answer.`;
+    const searchNote = "Search was on.";
 
     return {
       executed: true,

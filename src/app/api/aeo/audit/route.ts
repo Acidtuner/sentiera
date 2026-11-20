@@ -1,14 +1,27 @@
 export const maxDuration = 60;
 
 import { NextRequest, NextResponse } from "next/server";
-import { scrapeTargetUrl } from "@/lib/scraper";
-import { evaluateAEO } from "@/lib/evaluator";
 import { runLiveSearchGrounding } from "@/lib/liveSearchGrounding";
 import { storeAudit } from "@/lib/supabase";
 import { sendAuditReportEmail } from "@/lib/email";
-import { AuditRequestPayload, AuditResponsePayload } from "@/types/aeo";
+import { AuditRequestPayload, AuditResponsePayload, AEOResult } from "@/types/aeo";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function mentionResult(url: string, keyword: string, mention: string): AEOResult {
+  return {
+    overall_aeo_score: 0,
+    metrics: { ai_recommendation_rate: 0, entity_accuracy_health: 0, rag_readiness_score: 0 },
+    is_invisible_to_ai: false,
+    schema_markup_detected: false,
+    diagnostic_summary: keyword
+      ? `Gemini was asked who is recommended for ${keyword}. This snapshot is that one answer. It is not a site score.`
+      : "No buyer topic was given, so Gemini was not asked.",
+    critical_gaps: [],
+    recommended_fixes: [],
+    signalsUsed: [mention],
+  };
+}
 
 export async function POST(req: NextRequest): Promise<NextResponse<AuditResponsePayload>> {
   let body: AuditRequestPayload;
@@ -31,57 +44,34 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
   }
 
   if (!body.targetUrl || body.targetUrl.trim().length === 0) {
-    await storeAudit({ name, company, email, target_url: body.targetUrl || "", keyword: body.targetKeyword || "", success: false, error_message: "Missing URL" });
     return NextResponse.json({ success: false, error: "Target URL is required." }, { status: 400 });
   }
 
   body.targetKeyword = (body.targetKeyword || "").trim();
 
   try {
-    const scrapedPromise = scrapeTargetUrl(body.targetUrl, body.customContent, false, body.targetKeyword);
-    const livePromise = runLiveSearchGrounding(
+    const liveGroundingResult = await runLiveSearchGrounding(
       body.targetUrl,
       body.targetKeyword,
       undefined,
       body.apiKey,
       company
     );
-    const [scraped, liveGroundingResult] = await Promise.all([scrapedPromise, livePromise]);
-
-    const auditResult = await evaluateAEO(
+    const auditResult = mentionResult(
       body.targetUrl,
       body.targetKeyword,
-      scraped
+      liveGroundingResult.aiVerdictSummary
     );
 
-    try {
-
-      if (liveGroundingResult.executed && scraped.advancedSignals) {
-        scraped.advancedSignals.citationSampling = {
-          executed: true,
-          cited: liveGroundingResult.targetUrlFound || liveGroundingResult.targetBrandFound,
-          sampleAnswer: liveGroundingResult.aiSynthesizedAnswer,
-        };
-        auditResult.advancedSignals = scraped.advancedSignals;
-      }
-    } catch (groundingErr: unknown) {
-      console.warn("Live Search Grounding non-fatal error:", groundingErr instanceof Error ? groundingErr.message : String(groundingErr));
-    }
-
-    await storeAudit({
+    storeAudit({
       name,
       company,
       email,
       target_url: body.targetUrl,
       keyword: body.targetKeyword,
       success: true,
-      result: {
-        ...auditResult,
-        analyzedPages: scraped.analyzedPages,
-        advancedSignals: scraped.advancedSignals,
-        liveGrounding: liveGroundingResult,
-      },
-    });
+      result: { ...auditResult, liveGrounding: liveGroundingResult },
+    }).catch(console.error);
 
     sendAuditReportEmail(email, name, company, body.targetUrl, body.targetKeyword, auditResult, liveGroundingResult).catch(console.error);
 
@@ -89,31 +79,10 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
       success: true,
       data: auditResult,
       liveGrounding: liveGroundingResult,
-      scrapedData: {
-        url: scraped.url,
-        title: scraped.title,
-        description: scraped.description,
-        wordCount: scraped.wordCount,
-        schemaMarkupDetected: scraped.schemaMarkupDetected,
-        schemasCount: scraped.jsonLdSchemas.length,
-        analyzedPages: scraped.analyzedPages,
-        advancedSignals: scraped.advancedSignals,
-      },
     });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("AEO Audit Route Error:", err);
-
-    await storeAudit({
-      name,
-      company,
-      email,
-      target_url: body.targetUrl,
-      keyword: body.targetKeyword,
-      success: false,
-      error_message: message,
-    });
-
     return NextResponse.json(
       { success: false, error: message || "An unexpected error occurred during the AEO audit." },
       { status: 500 }

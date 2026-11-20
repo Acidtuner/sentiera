@@ -104,9 +104,21 @@ export default function ReportDashboard({
           ) : (
             <p className="mt-3 font-sans text-sm text-slate-500">No priority fixes were returned for this snapshot.</p>
           )}
+          {liveGrounding?.executed && liveGrounding.competitorsCited?.length > 0 && (
+            <div className="mt-4">
+              <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Other names in this answer</p>
+              <ul className="mt-2 space-y-1">
+                {liveGrounding.competitorsCited.slice(0, 6).map((item) => (
+                  <li key={`${item.title}-${item.domain}`} className="font-sans text-sm text-slate-700">
+                    {item.title}{item.domain ? ` · ${item.domain}` : ""}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           {liveGrounding?.executed && liveGrounding.aiSynthesizedAnswer && (
             <div className="mt-4 border-t border-hairline pt-4">
-              <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Gemini answer</p>
+              <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Gemini answer · one run</p>
               <p className="mt-2 whitespace-pre-wrap font-sans text-sm leading-relaxed text-slate-700">{liveGrounding.aiSynthesizedAnswer}</p>
             </div>
           )}

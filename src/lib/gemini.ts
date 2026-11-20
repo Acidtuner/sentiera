@@ -24,7 +24,7 @@ function textFromInteraction(interaction: {
   return parts.join("\n").trim();
 }
 
-export async function askGemini(prompt: string, apiKey: string): Promise<string> {
+export async function askGemini(prompt: string, apiKey: string, useSearch = false): Promise<string> {
   const ai = new GoogleGenAI({ apiKey });
   const interaction = await ai.interactions.create(
     {
@@ -32,8 +32,9 @@ export async function askGemini(prompt: string, apiKey: string): Promise<string>
       input: prompt,
       store: false,
       generation_config: { thinking_level: "low" },
+      ...(useSearch ? { tools: [{ type: "google_search" as const }] } : {}),
     },
-    { timeout: 35000 }
+    { timeout: 20000 }
   );
   const text = textFromInteraction(interaction);
   if (!text) throw new Error("Gemini returned an empty answer.");

@@ -1,6 +1,8 @@
 import { LiveGroundingResult } from "@/types/aeo";
 import { GEMINI_MODEL, askGemini } from "@/lib/gemini";
 
+const SKIP = new Set(["ltd", "limited", "llc", "inc", "company", "co", "the", "and", "for", "technologies", "technology", "group", "services"]);
+
 function extractHostname(url: string): string {
   try {
     const normalized = /^https?:\/\//i.test(url) ? url : `https://${url}`;
@@ -16,6 +18,36 @@ function includesTerm(answer: string, term: string): boolean {
   return answer.toLowerCase().includes(clean);
 }
 
+function brandTokens(company: string): string[] {
+  return company
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .filter((word) => word.length >= 4 && !SKIP.has(word));
+}
+
+function otherNames(answer: string, company: string, host: string): Array<{ title: string; domain: string; uri: string }> {
+  const own = new Set([company.toLowerCase(), host, ...brandTokens(company)]);
+  const found = new Map<string, { title: string; domain: string; uri: string }>();
+  const link = /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g;
+  let match: RegExpExecArray | null;
+  while ((match = link.exec(answer))) {
+    const title = match[1].trim();
+    const uri = match[2];
+    const domain = extractHostname(uri);
+    if (!own.has(title.toLowerCase()) && !own.has(domain)) found.set(domain, { title, domain, uri });
+  }
+  const lines = answer.split(/\n+/);
+  for (const line of lines) {
+    const cleaned = line.replace(/^\s*(?:[-*]|\d+[.)])\s*/, "").trim();
+    const name = cleaned.split(/\s+[–—:-]\s+|\s+\|\s+/)[0].replace(/\*+/g, "").trim();
+    if (name.length < 3 || name.length > 60 || own.has(name.toLowerCase())) continue;
+    if (!/[A-Z]/.test(name)) continue;
+    if (!found.has(name.toLowerCase())) found.set(name.toLowerCase(), { title: name, domain: "", uri: "" });
+  }
+  return Array.from(found.values()).slice(0, 6);
+}
+
 export async function runLiveSearchGrounding(
   targetUrl: string,
   targetKeyword: string,
@@ -29,7 +61,7 @@ export async function runLiveSearchGrounding(
   const topic = targetKeyword.trim();
   const place = location?.trim();
   const buyerQuery = topic
-    ? `Which companies or service providers${place ? ` in ${place}` : ""} are recommended for ${topic}? List top options with websites.`
+    ? `Which companies or service providers${place ? ` in ${place}` : ""} are recommended for ${topic}? List the top options with websites.`
     : "";
 
   if (!topic) {
@@ -63,16 +95,21 @@ export async function runLiveSearchGrounding(
   }
 
   try {
-    const answer = await askGemini(buyerQuery, apiKey);
+    let usedSearch = true;
+    let answer = "";
+    try {
+      answer = await askGemini(buyerQuery, apiKey, true);
+    } catch {
+      usedSearch = false;
+      answer = await askGemini(buyerQuery, apiKey, false);
+    }
+    const tokens = company ? brandTokens(company) : [];
     const domainMatched = includesTerm(answer, targetHost);
-    const companyMatched = Boolean(company && includesTerm(answer, company));
+    const companyMatched = Boolean(company && (includesTerm(answer, company) || tokens.some((token) => includesTerm(answer, token))));
     const titleMatched = Boolean(pageTitle && includesTerm(answer, pageTitle.split("|")[0]));
     const found = domainMatched || companyMatched || titleMatched;
-    const matched = [
-      domainMatched ? "domain" : "",
-      companyMatched ? "company name" : "",
-      titleMatched ? "page title" : "",
-    ].filter(Boolean).join(" and ");
+    const others = otherNames(answer, company || "", targetHost);
+    const searchNote = usedSearch ? "Search was on." : "Search was not available, so this is a memory answer.";
 
     return {
       executed: true,
@@ -83,10 +120,8 @@ export async function runLiveSearchGrounding(
       brandVisibilityStatus: found ? "CITED_AND_RECOMMENDED" : "OMITTED_FROM_AI_SHORTLIST",
       targetUrlFound: domainMatched,
       targetBrandFound: companyMatched || titleMatched,
-      competitorsCited: [],
-      aiVerdictSummary: found
-        ? `Mentioned. Matched on ${matched}.`
-        : "Not mentioned. The company name and domain were not in the Gemini answer.",
+      competitorsCited: others,
+      aiVerdictSummary: `One Gemini run. ${found ? "Mentioned." : "Not mentioned."} ${searchNote}`,
     };
   } catch (err: unknown) {
     return {

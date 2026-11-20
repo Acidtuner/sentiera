@@ -56,7 +56,7 @@ export default function CortexPage() {
     setAuditResult(null);
     setLiveGrounding(undefined);
     setCurrentUrl(formData.url);
-    setCurrentKeyword(formData.keyword || formData.company);
+    setCurrentKeyword(formData.keyword);
 
     try {
       const res = await fetch("/api/aeo/audit", {
@@ -64,7 +64,7 @@ export default function CortexPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           targetUrl: formData.url,
-          targetKeyword: formData.keyword || formData.company,
+          targetKeyword: formData.keyword,
           customContent: formData.manual,
           name: formData.name,
           company: formData.company,
@@ -73,7 +73,17 @@ export default function CortexPage() {
         }),
       });
 
-      const data: AuditResponsePayload = await res.json();
+      const raw = await res.text();
+      let data: AuditResponsePayload;
+      try {
+        data = JSON.parse(raw) as AuditResponsePayload;
+      } catch {
+        throw new Error(
+          res.status === 504 || res.status === 502
+            ? "The check took too long and the server stopped it. Try again, or use a simpler page."
+            : "The server returned an unexpected page instead of a result. Redeploy, then try again."
+        );
+      }
 
       if (!res.ok || !data.success || !data.data) {
         const message = data.error || "We could not complete the snapshot.";

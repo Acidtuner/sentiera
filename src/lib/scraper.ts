@@ -29,7 +29,7 @@ const AI_BOTS = [
 ];
 
 const HIGH_VALUE_PATHS = ["/about", "/services", "/service", "/contact", "/faq", "/about-us", "/our-services", "/pricing"];
-const MAX_PAGES = 8;
+const MAX_PAGES = 4;
 
 function isPrivateOrLocalHost(hostname: string): boolean {
   const host = hostname.toLowerCase();
@@ -40,7 +40,7 @@ function isPrivateOrLocalHost(hostname: string): boolean {
   return false;
 }
 
-async function fetchWithTimeout(url: string, timeoutMs = 12000): Promise<Response> {
+async function fetchWithTimeout(url: string, timeoutMs = 7000): Promise<Response> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
   try {

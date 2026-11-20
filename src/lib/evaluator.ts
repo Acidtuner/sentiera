@@ -1,4 +1,3 @@
-import { askGemini } from "@/lib/gemini";
 import { AEOResult, ScrapedData, AdvancedSignals } from "@/types/aeo";
 
 const SYSTEM_INSTRUCTION = `You are an elite Answer Engine Optimization (AEO) evaluator. Analyze the provided TARGET_URL, TARGET_KEYWORD, and SCRAPED_CONTENT to assess visibility for AI assistants.
@@ -137,26 +136,7 @@ function deterministicEvaluate(url: string, keyword: string, scraped: ScrapedDat
 export async function evaluateAEO(
   targetUrl: string,
   targetKeyword: string,
-  scraped: ScrapedData,
-  apiKeyOverride?: string
+  scraped: ScrapedData
 ): Promise<AEOResult> {
-  const apiKey = apiKeyOverride || process.env.GEMINI_API_KEY;
-  if (!apiKey || apiKey.length < 10) {
-    return deterministicEvaluate(targetUrl, targetKeyword, scraped);
-  }
-
-  try {
-    const prompt = `${SYSTEM_INSTRUCTION}\n\nTARGET_URL: ${targetUrl}\nTARGET_KEYWORD: ${targetKeyword}\nPAGES_ANALYZED: ${scraped.analyzedPages?.length || 1}\nSCRAPED_TITLE: ${scraped.title}\nSCRAPED_DESCRIPTION: ${scraped.description}\nWORD_COUNT: ${scraped.wordCount}\nSCHEMA_DETECTED: ${scraped.schemaMarkupDetected}\nLLMS_TXT: ${scraped.advancedSignals?.llmsTxt.present ? "yes" : "no"}\nCONTENT_SNIPPET: ${scraped.bodyTextSnippet.slice(0, 2500)}`;
-
-    const text = await askGemini(prompt, apiKey);
-    const parsed = JSON.parse(text.replace(/```json|```/g, "").trim()) as AEOResult;
-
-    parsed.overall_aeo_score = Math.min(100, Math.max(0, parsed.overall_aeo_score || 0));
-    parsed.is_invisible_to_ai = parsed.overall_aeo_score < 50;
-    parsed.advancedSignals = scraped.advancedSignals;
-    return parsed;
-  } catch (err) {
-    console.warn("Gemini evaluation failed, falling back to deterministic:", err);
-    return deterministicEvaluate(targetUrl, targetKeyword, scraped);
-  }
+  return deterministicEvaluate(targetUrl, targetKeyword, scraped);
 }

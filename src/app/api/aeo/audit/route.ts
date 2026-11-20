@@ -35,9 +35,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
     return NextResponse.json({ success: false, error: "Target URL is required." }, { status: 400 });
   }
 
-  if (!body.targetKeyword || body.targetKeyword.trim().length === 0) {
-    body.targetKeyword = body.targetKeyword || company || "brand";
-  }
+  body.targetKeyword = (body.targetKeyword || "").trim();
 
   try {
     const useSitemap = !body.customContent;
@@ -46,17 +44,21 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
     const auditResult = await evaluateAEO(
       body.targetUrl,
       body.targetKeyword,
-      scraped,
-      body.apiKey
+      scraped
     );
 
     let liveGroundingResult;
     try {
+      const siteText = `${scraped.title || ""} ${scraped.description || ""} ${scraped.fullCleanText || ""}`.toLowerCase();
+      const places = ["Abu Dhabi", "Dubai", "Sharjah", "UAE", "Saudi Arabia", "Riyadh", "Qatar", "Doha", "Bahrain", "Oman", "Kuwait", "Masdar City"];
+      const location = places.find((place) => siteText.includes(place.toLowerCase()));
       liveGroundingResult = await runLiveSearchGrounding(
         body.targetUrl,
         body.targetKeyword,
         scraped.title,
-        body.apiKey
+        body.apiKey,
+        company,
+        location
       );
 
       if (liveGroundingResult.executed && scraped.advancedSignals) {
@@ -86,7 +88,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
       },
     });
 
-    sendAuditReportEmail(email, name, company, body.targetUrl, body.targetKeyword, auditResult).catch(console.error);
+    sendAuditReportEmail(email, name, company, body.targetUrl, body.targetKeyword, auditResult, liveGroundingResult).catch(console.error);
 
     return NextResponse.json({
       success: true,

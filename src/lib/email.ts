@@ -28,6 +28,11 @@ export async function sendAuditReportEmail(to: string, name: string, company: st
   critical_gaps: string[];
   recommended_fixes: string[];
   metrics: { ai_recommendation_rate: number; entity_accuracy_health: number; rag_readiness_score: number };
+}, live?: {
+  executed?: boolean;
+  queryPrompt?: string;
+  aiSynthesizedAnswer?: string;
+  aiVerdictSummary?: string;
 }) {
   const gmail = getGmailClient();
   if (!gmail) {
@@ -43,6 +48,9 @@ export async function sendAuditReportEmail(to: string, name: string, company: st
       <p>Hi ${escapeHtml(name)},</p>
       <p>Here is the snapshot for <strong>${escapeHtml(company)}</strong> at <strong>${escapeHtml(url)}</strong>${keyword ? ` (topic: ${escapeHtml(keyword)})` : ""}.</p>
       <p><strong>Summary:</strong> ${escapeHtml(result.diagnostic_summary)}</p>
+      <p><strong>Mention check:</strong> ${escapeHtml(live?.aiVerdictSummary || "Not run")}</p>
+      ${live?.queryPrompt ? `<p><strong>Question asked:</strong> ${escapeHtml(live.queryPrompt)}</p>` : ""}
+      ${live?.aiSynthesizedAnswer ? `<p><strong>Gemini answer:</strong></p><p style="white-space: pre-wrap;">${escapeHtml(live.aiSynthesizedAnswer.slice(0, 1500))}</p>` : ""}
       ${gaps.length ? `<p><strong>Key gaps:</strong></p><ul>${gaps.map(g => `<li>${escapeHtml(g)}</li>`).join("")}</ul>` : ""}
       <p>Want a specialist to walk you through it? <a href="https://www.sentieratech.com/contact">Book a Complimentary Visibility Review</a>.</p>
       <p style="margin-top: 24px; font-size: 13px; color: #64748b;">Sentiera Technologies · Masdar City, Abu Dhabi</p>

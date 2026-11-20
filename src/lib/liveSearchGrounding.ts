@@ -96,11 +96,13 @@ export async function runLiveSearchGrounding(
 
   try {
     let usedSearch = true;
+    let searchError = "";
     let answer = "";
     try {
       answer = await askGrok(buyerQuery, apiKey, true);
-    } catch {
+    } catch (err) {
       usedSearch = false;
+      searchError = err instanceof Error ? err.message : "search failed";
       answer = await askGrok(buyerQuery, apiKey, false);
     }
     const tokens = company ? brandTokens(company) : [];
@@ -109,7 +111,7 @@ export async function runLiveSearchGrounding(
     const titleMatched = Boolean(pageTitle && includesTerm(answer, pageTitle.split("|")[0]));
     const found = domainMatched || companyMatched || titleMatched;
     const others = otherNames(answer, company || "", targetHost);
-    const searchNote = usedSearch ? "Search was on." : "Search was not available, so this is a memory answer.";
+    const searchNote = usedSearch ? "Search was on." : `Search failed (${searchError}), so this is a memory answer.`;
 
     return {
       executed: true,

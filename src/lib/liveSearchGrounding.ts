@@ -1,4 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 import { LiveGroundingResult } from "@/types/aeo";
 
 function extractHostname(url: string): string {
@@ -37,7 +39,7 @@ export async function runLiveSearchGrounding(
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
     const result = await model.generateContent(buyerQuery);
     const answer = result.response.text();
     const found = Boolean(
@@ -61,14 +63,14 @@ export async function runLiveSearchGrounding(
     return {
       executed: false,
       queryPrompt: buyerQuery,
-      aiSynthesizedAnswer: "Grounding failed.",
+      aiSynthesizedAnswer: err instanceof Error ? err.message : "Grounding failed.",
       groundingQueries: [],
       citedSources: [],
       brandVisibilityStatus: "OMITTED_FROM_AI_SHORTLIST",
       targetUrlFound: false,
       targetBrandFound: false,
       competitorsCited: [],
-      aiVerdictSummary: err instanceof Error ? err.message : "Error during live grounding.",
+      aiVerdictSummary: `Gemini check failed (${GEMINI_MODEL}): ${err instanceof Error ? err.message : "unknown error"}`,
     };
   }
 }

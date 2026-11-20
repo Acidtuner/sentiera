@@ -214,10 +214,14 @@ function selectPages(userUrl: string, sitemapUrls: string[], keyword: string): {
   }
 
   for (const path of HIGH_VALUE_PATHS) {
-    const candidate = origin + path;
-    if (sitemapUrls.some(u => u.toLowerCase().includes(path)) || true) {
-      add(candidate, "High-value path (about/services/contact)");
-    }
+    const match = sitemapUrls.find(u => {
+      try {
+        return new URL(u).pathname.toLowerCase().replace(/\/$/, "") === path;
+      } catch {
+        return false;
+      }
+    });
+    if (match) add(match, "High-value path in sitemap");
   }
 
   for (const u of sitemapUrls) {
@@ -295,10 +299,13 @@ export async function scrapeTargetUrl(
       const html = await res.text();
       const scraped = parseHtml(pageUrl, html);
 
+      const fingerprint = `${scraped.title}|${scraped.wordCount}|${scraped.fullCleanText.slice(0, 240)}`;
+      if (analyzedPages.some(page => page.url === pageUrl || page.reason.endsWith(fingerprint))) continue;
+
       analyzedPages.push({
         url: pageUrl,
         title: scraped.title,
-        reason,
+        reason: `${reason}::${fingerprint}`,
         wordCount: scraped.wordCount,
         hasSchema: scraped.schemaMarkupDetected,
       });
@@ -323,7 +330,10 @@ export async function scrapeTargetUrl(
   primary.schemaMarkupDetected = allSchemas.length > 0;
   primary.hasFaqStructure = primary.hasFaqStructure || /faq|frequently asked|q&a/i.test(combinedText);
   primary.hasAuthorOrOrg = primary.hasAuthorOrOrg || /about us|our team|founded|headquartered|contact/i.test(combinedText);
-  primary.analyzedPages = analyzedPages;
+  primary.analyzedPages = analyzedPages.map(page => ({
+    ...page,
+    reason: page.reason.split("::")[0],
+  }));
 
   // Advanced signals
   const origin = parsedUrl.origin;

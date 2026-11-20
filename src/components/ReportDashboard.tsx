@@ -66,7 +66,10 @@ export default function ReportDashboard({
           <p className={`mt-2 font-sans text-2xl font-bold ${mention === "Mentioned" ? "text-emerald-600" : mention === "Not mentioned" ? "text-accent" : "text-slate-500"}`}>
             {mention}
           </p>
-          <p className="mt-1 font-sans text-xs text-slate-500">Whether a live check named the brand or URL.</p>
+          <p className="mt-1 font-sans text-xs text-slate-500">Whether a live Gemini check named the brand or URL.</p>
+          {!liveGrounding?.executed && liveGrounding?.aiVerdictSummary && (
+            <p className="mt-2 font-sans text-xs text-rose-600">{liveGrounding.aiVerdictSummary}</p>
+          )}
         </div>
         <div className="border border-hairline bg-white p-4">
           <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Pages reviewed</p>

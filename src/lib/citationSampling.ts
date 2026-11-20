@@ -1,4 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 import { AdvancedSignals } from "@/types/aeo";
 
 export async function runCitationSampling(
@@ -23,7 +25,7 @@ export async function runCitationSampling(
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
     const result = await model.generateContent(prompt);
     const answer = result.response.text();
     const cited = answer.toLowerCase().includes(host.toLowerCase());
@@ -34,7 +36,11 @@ export async function runCitationSampling(
       sampleAnswer: answer.slice(0, 1200),
       sources: cited ? [host] : [],
     };
-  } catch {
-    return { executed: false, cited: false };
+  } catch (err) {
+    return {
+      executed: false,
+      cited: false,
+      sampleAnswer: err instanceof Error ? err.message : "Citation sample failed.",
+    };
   }
 }

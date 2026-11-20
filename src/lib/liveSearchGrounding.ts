@@ -56,7 +56,7 @@ export async function runLiveSearchGrounding(
   company?: string,
   location?: string
 ): Promise<LiveGroundingResult> {
-  const apiKey = apiKeyOverride || process.env.XAI_API_KEY;
+  const apiKey = (apiKeyOverride || process.env.XAI_API_KEY || "").trim();
   const targetHost = extractHostname(targetUrl);
   const topic = targetKeyword.trim();
   const place = location?.trim();
@@ -90,7 +90,7 @@ export async function runLiveSearchGrounding(
       targetUrlFound: false,
       targetBrandFound: false,
       competitorsCited: [],
-      aiVerdictSummary: "Deterministic mode only.",
+      aiVerdictSummary: "Not run. XAI_API_KEY is not available to this check. Set it on the host and redeploy.",
     };
   }
 

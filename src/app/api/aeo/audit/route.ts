@@ -54,7 +54,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
       body.targetUrl,
       body.targetKeyword,
       undefined,
-      body.apiKey,
+      process.env.XAI_API_KEY,
       company
     );
     const auditResult = mentionResult(

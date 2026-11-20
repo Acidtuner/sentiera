@@ -1,12 +1,12 @@
 import { AdvancedSignals } from "@/types/aeo";
-import { askGemini } from "@/lib/gemini";
+import { askGrok } from "@/lib/gemini";
 
 export async function runCitationSampling(
   targetUrl: string,
   keyword: string,
   apiKeyOverride?: string
 ): Promise<AdvancedSignals["citationSampling"]> {
-  const apiKey = apiKeyOverride || process.env.GEMINI_API_KEY;
+  const apiKey = apiKeyOverride || process.env.XAI_API_KEY;
   if (!apiKey || apiKey.length < 10) {
     return { executed: false, cited: false };
   }
@@ -22,7 +22,7 @@ export async function runCitationSampling(
   const prompt = `List the top recommended providers or companies for "${keyword}". Include website URLs when possible. Be concise.`;
 
   try {
-    const answer = await askGemini(prompt, apiKey);
+    const answer = await askGrok(prompt, apiKey);
     const cited = answer.toLowerCase().includes(host.toLowerCase());
     return {
       executed: true,

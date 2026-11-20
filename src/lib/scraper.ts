@@ -294,7 +294,7 @@ export async function scrapeTargetUrl(
 
   for (const { url: pageUrl, reason } of pageSelections) {
     try {
-      const res = await fetchWithTimeout(pageUrl, 12000);
+      const res = await fetchWithTimeout(pageUrl, 6000);
       if (!res.ok) continue;
       const html = await res.text();
       const scraped = parseHtml(pageUrl, html);

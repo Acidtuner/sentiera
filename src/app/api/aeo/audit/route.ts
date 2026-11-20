@@ -38,8 +38,15 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
   body.targetKeyword = (body.targetKeyword || "").trim();
 
   try {
-    const useSitemap = !body.customContent;
-    const scraped = await scrapeTargetUrl(body.targetUrl, body.customContent, useSitemap, body.targetKeyword);
+    const scrapedPromise = scrapeTargetUrl(body.targetUrl, body.customContent, false, body.targetKeyword);
+    const livePromise = runLiveSearchGrounding(
+      body.targetUrl,
+      body.targetKeyword,
+      undefined,
+      body.apiKey,
+      company
+    );
+    const [scraped, liveGroundingResult] = await Promise.all([scrapedPromise, livePromise]);
 
     const auditResult = await evaluateAEO(
       body.targetUrl,
@@ -47,19 +54,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<AuditResponse
       scraped
     );
 
-    let liveGroundingResult;
     try {
-      const siteText = `${scraped.title || ""} ${scraped.description || ""} ${scraped.fullCleanText || ""}`.toLowerCase();
-      const places = ["Abu Dhabi", "Dubai", "Sharjah", "UAE", "Saudi Arabia", "Riyadh", "Qatar", "Doha", "Bahrain", "Oman", "Kuwait", "Masdar City"];
-      const location = places.find((place) => siteText.includes(place.toLowerCase()));
-      liveGroundingResult = await runLiveSearchGrounding(
-        body.targetUrl,
-        body.targetKeyword,
-        scraped.title,
-        body.apiKey,
-        company,
-        location
-      );
 
       if (liveGroundingResult.executed && scraped.advancedSignals) {
         scraped.advancedSignals.citationSampling = {

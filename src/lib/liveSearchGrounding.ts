@@ -1,7 +1,5 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-4-hydrogen";
 import { LiveGroundingResult } from "@/types/aeo";
+import { GEMINI_MODEL, askGemini } from "@/lib/gemini";
 
 function extractHostname(url: string): string {
   try {
@@ -38,10 +36,7 @@ export async function runLiveSearchGrounding(
   }
 
   try {
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
-    const result = await model.generateContent(buyerQuery);
-    const answer = result.response.text();
+    const answer = await askGemini(buyerQuery, apiKey);
     const found = Boolean(
       answer.toLowerCase().includes(targetHost) ||
         (pageTitle && answer.toLowerCase().includes(pageTitle.toLowerCase().split("|")[0].trim()))
@@ -57,7 +52,7 @@ export async function runLiveSearchGrounding(
       targetUrlFound: found,
       targetBrandFound: found,
       competitorsCited: [],
-      aiVerdictSummary: found ? "Target appears in the synthesized answer." : "Target was not mentioned in the AI shortlist.",
+      aiVerdictSummary: found ? "Target appears in the Gemini answer." : "Target was not mentioned in the Gemini answer.",
     };
   } catch (err: unknown) {
     return {

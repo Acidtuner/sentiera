@@ -1,6 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-4-hydrogen";
+import { askGemini } from "@/lib/gemini";
 import { AEOResult, ScrapedData, AdvancedSignals } from "@/types/aeo";
 
 const SYSTEM_INSTRUCTION = `You are an elite Answer Engine Optimization (AEO) evaluator. Analyze the provided TARGET_URL, TARGET_KEYWORD, and SCRAPED_CONTENT to assess visibility for AI assistants.
@@ -148,19 +146,9 @@ export async function evaluateAEO(
   }
 
   try {
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({
-      model: GEMINI_MODEL,
-      systemInstruction: SYSTEM_INSTRUCTION,
-      generationConfig: {
-        responseMimeType: "application/json",
-      },
-    });
+    const prompt = `${SYSTEM_INSTRUCTION}\n\nTARGET_URL: ${targetUrl}\nTARGET_KEYWORD: ${targetKeyword}\nPAGES_ANALYZED: ${scraped.analyzedPages?.length || 1}\nSCRAPED_TITLE: ${scraped.title}\nSCRAPED_DESCRIPTION: ${scraped.description}\nWORD_COUNT: ${scraped.wordCount}\nSCHEMA_DETECTED: ${scraped.schemaMarkupDetected}\nLLMS_TXT: ${scraped.advancedSignals?.llmsTxt.present ? "yes" : "no"}\nCONTENT_SNIPPET: ${scraped.bodyTextSnippet.slice(0, 2500)}`;
 
-    const prompt = `TARGET_URL: ${targetUrl}\nTARGET_KEYWORD: ${targetKeyword}\nPAGES_ANALYZED: ${scraped.analyzedPages?.length || 1}\nSCRAPED_TITLE: ${scraped.title}\nSCRAPED_DESCRIPTION: ${scraped.description}\nWORD_COUNT: ${scraped.wordCount}\nSCHEMA_DETECTED: ${scraped.schemaMarkupDetected}\nLLMS_TXT: ${scraped.advancedSignals?.llmsTxt.present ? "yes" : "no"}\nCONTENT_SNIPPET: ${scraped.bodyTextSnippet.slice(0, 2500)}`;
-
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    const text = await askGemini(prompt, apiKey);
     const parsed = JSON.parse(text.replace(/```json|```/g, "").trim()) as AEOResult;
 
     parsed.overall_aeo_score = Math.min(100, Math.max(0, parsed.overall_aeo_score || 0));

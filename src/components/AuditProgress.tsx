@@ -26,7 +26,7 @@ export default function AuditProgress({ targetUrl, targetKeyword, attempt = 1 }:
           <span className="relative inline-flex rounded-full h-3 w-3 bg-tech-blue"></span>
         </span>
         <span className="font-mono text-sm uppercase tracking-wider text-slate-700">
-          {attempt > 1 ? "Trying once more…" : "Asking Gemini…"}
+          {attempt > 1 ? "Trying once more…" : "Asking Grok…"}
         </span>
       </div>
       <p className="font-mono text-xs text-slate-500">
@@ -43,7 +43,7 @@ export default function AuditProgress({ targetUrl, targetKeyword, attempt = 1 }:
             : "This usually takes 15 to 30 seconds. Please keep this page open."}
         </p>
         {waiting && (
-          <p className="mt-2 font-sans text-xs text-slate-500">Still working. Gemini can be slow on the first answer.</p>
+          <p className="mt-2 font-sans text-xs text-slate-500">Still working. Grok can be slow on the first answer.</p>
         )}
       </div>
 

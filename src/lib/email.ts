@@ -50,7 +50,7 @@ export async function sendAuditReportEmail(to: string, name: string, company: st
       <p><strong>Summary:</strong> ${escapeHtml(result.diagnostic_summary)}</p>
       <p><strong>Mention check:</strong> ${escapeHtml(live?.aiVerdictSummary || "Not run")}</p>
       ${live?.queryPrompt ? `<p><strong>Question asked:</strong> ${escapeHtml(live.queryPrompt)}</p>` : ""}
-      ${live?.aiSynthesizedAnswer ? `<p><strong>Gemini answer:</strong></p><p style="white-space: pre-wrap;">${escapeHtml(live.aiSynthesizedAnswer.slice(0, 1500))}</p>` : ""}
+      ${live?.aiSynthesizedAnswer ? `<p><strong>Grok answer:</strong></p><p style="white-space: pre-wrap;">${escapeHtml(live.aiSynthesizedAnswer.slice(0, 1500))}</p>` : ""}
       ${gaps.length ? `<p><strong>Key gaps:</strong></p><ul>${gaps.map(g => `<li>${escapeHtml(g)}</li>`).join("")}</ul>` : ""}
       <p>Want a specialist to walk you through it? <a href="https://www.sentieratech.com/contact">Book a Complimentary Visibility Review</a>.</p>
       <p style="margin-top: 24px; font-size: 13px; color: #64748b;">Sentiera Technologies · Masdar City, Abu Dhabi</p>

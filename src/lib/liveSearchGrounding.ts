@@ -1,5 +1,5 @@
 import { LiveGroundingResult } from "@/types/aeo";
-import { GEMINI_MODEL, askGemini } from "@/lib/gemini";
+import { GROK_MODEL, askGrok } from "@/lib/gemini";
 
 const SKIP = new Set(["ltd", "limited", "llc", "inc", "company", "co", "the", "and", "for", "technologies", "technology", "group", "services"]);
 
@@ -56,7 +56,7 @@ export async function runLiveSearchGrounding(
   company?: string,
   location?: string
 ): Promise<LiveGroundingResult> {
-  const apiKey = apiKeyOverride || process.env.GEMINI_API_KEY;
+  const apiKey = apiKeyOverride || process.env.XAI_API_KEY;
   const targetHost = extractHostname(targetUrl);
   const topic = targetKeyword.trim();
   const place = location?.trim();
@@ -75,7 +75,7 @@ export async function runLiveSearchGrounding(
       targetUrlFound: false,
       targetBrandFound: false,
       competitorsCited: [],
-      aiVerdictSummary: "Mention check not run. Add a buyer topic to ask Gemini.",
+      aiVerdictSummary: "Mention check not run. Add a buyer topic to ask Grok.",
     };
   }
 
@@ -83,7 +83,7 @@ export async function runLiveSearchGrounding(
     return {
       executed: false,
       queryPrompt: buyerQuery,
-      aiSynthesizedAnswer: "Live grounding skipped (no Gemini API key configured).",
+      aiSynthesizedAnswer: "Live check skipped (no xAI API key configured).",
       groundingQueries: [],
       citedSources: [],
       brandVisibilityStatus: "OMITTED_FROM_AI_SHORTLIST",
@@ -98,10 +98,10 @@ export async function runLiveSearchGrounding(
     let usedSearch = true;
     let answer = "";
     try {
-      answer = await askGemini(buyerQuery, apiKey, true);
+      answer = await askGrok(buyerQuery, apiKey, true);
     } catch {
       usedSearch = false;
-      answer = await askGemini(buyerQuery, apiKey, false);
+      answer = await askGrok(buyerQuery, apiKey, false);
     }
     const tokens = company ? brandTokens(company) : [];
     const domainMatched = includesTerm(answer, targetHost);
@@ -121,7 +121,7 @@ export async function runLiveSearchGrounding(
       targetUrlFound: domainMatched,
       targetBrandFound: companyMatched || titleMatched,
       competitorsCited: others,
-      aiVerdictSummary: `One Gemini run. ${found ? "Mentioned." : "Not mentioned."} ${searchNote}`,
+      aiVerdictSummary: `One Grok run. ${found ? "Mentioned." : "Not mentioned."} ${searchNote}`,
     };
   } catch (err: unknown) {
     return {
@@ -134,7 +134,7 @@ export async function runLiveSearchGrounding(
       targetUrlFound: false,
       targetBrandFound: false,
       competitorsCited: [],
-      aiVerdictSummary: `Gemini check failed (${GEMINI_MODEL}): ${err instanceof Error ? err.message : "unknown error"}`,
+      aiVerdictSummary: `Grok check failed (${GROK_MODEL}): ${err instanceof Error ? err.message : "unknown error"}`,
     };
   }
 }

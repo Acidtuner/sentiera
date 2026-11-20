@@ -15,8 +15,8 @@ function mentionResult(url: string, keyword: string, mention: string): AEOResult
     is_invisible_to_ai: false,
     schema_markup_detected: false,
     diagnostic_summary: keyword
-      ? `Gemini was asked who is recommended for ${keyword}. This snapshot is that one answer. It is not a site score.`
-      : "No buyer topic was given, so Gemini was not asked.",
+      ? `Grok was asked who is recommended for ${keyword}. This snapshot is that one answer. It is not a site score.`
+      : "No buyer topic was given, so Grok was not asked.",
     critical_gaps: [],
     recommended_fixes: [],
     signalsUsed: [mention],

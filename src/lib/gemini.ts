@@ -1,42 +1,66 @@
-import { GoogleGenAI } from "@google/genai";
+export const GROK_MODEL = process.env.XAI_MODEL || "grok-4.7";
 
-export const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
-
-function textFromInteraction(interaction: {
+function textFromResponse(data: {
   output_text?: string;
-  steps?: Array<{ content?: unknown; text?: unknown; type?: string }>;
+  output?: Array<{ type?: string; content?: Array<{ type?: string; text?: string }> }>;
+  choices?: Array<{ message?: { content?: string } }>;
 }): string {
-  const direct = (interaction.output_text || "").trim();
-  if (direct) return direct;
-
+  if (data.output_text?.trim()) return data.output_text.trim();
   const parts: string[] = [];
-  for (const step of interaction.steps || []) {
-    if (typeof step.text === "string") parts.push(step.text);
-    const content = step.content;
-    if (typeof content === "string") parts.push(content);
-    if (Array.isArray(content)) {
-      for (const item of content) {
-        if (typeof item === "string") parts.push(item);
-        else if (item && typeof item === "object" && "text" in item && typeof item.text === "string") parts.push(item.text);
-      }
+  for (const item of data.output || []) {
+    for (const block of item.content || []) {
+      if (block.text) parts.push(block.text);
     }
   }
-  return parts.join("\n").trim();
+  if (parts.length) return parts.join("\n").trim();
+  return data.choices?.[0]?.message?.content?.trim() || "";
 }
 
-export async function askGemini(prompt: string, apiKey: string, useSearch = false): Promise<string> {
-  const ai = new GoogleGenAI({ apiKey });
-  const interaction = await ai.interactions.create(
-    {
-      model: GEMINI_MODEL,
-      input: prompt,
-      store: false,
-      generation_config: { thinking_level: "low" },
-      ...(useSearch ? { tools: [{ type: "google_search" as const }] } : {}),
-    },
-    { timeout: 20000 }
-  );
-  const text = textFromInteraction(interaction);
-  if (!text) throw new Error("Gemini returned an empty answer.");
-  return text;
+export async function askGrok(prompt: string, apiKey: string, useSearch = false): Promise<string> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 22000);
+  try {
+    if (useSearch) {
+      const res = await fetch("https://api.x.ai/v1/responses", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: GROK_MODEL,
+          input: prompt,
+          tools: [{ type: "web_search" }],
+          max_output_tokens: 800,
+        }),
+        signal: controller.signal,
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error?.message || `Grok search failed (${res.status})`);
+      const text = textFromResponse(data);
+      if (!text) throw new Error("Grok returned an empty answer.");
+      return text;
+    }
+
+    const res = await fetch("https://api.x.ai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: GROK_MODEL,
+        messages: [{ role: "user", content: prompt }],
+        max_tokens: 600,
+      }),
+      signal: controller.signal,
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error?.message || `Grok failed (${res.status})`);
+    const text = textFromResponse(data);
+    if (!text) throw new Error("Grok returned an empty answer.");
+    return text;
+  } finally {
+    clearTimeout(timer);
+  }
 }

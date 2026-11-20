@@ -66,7 +66,7 @@ export default function ReportDashboard({
           <p className={`mt-2 font-sans text-2xl font-bold ${mention === "Mentioned" ? "text-emerald-600" : mention === "Not mentioned" ? "text-accent" : "text-slate-500"}`}>
             {mention}
           </p>
-          <p className="mt-1 font-sans text-xs text-slate-500">Whether a live Gemini check named the brand or URL.</p>
+          <p className="mt-1 font-sans text-xs text-slate-500">Whether a live Grok check named the brand or URL.</p>
           {liveGrounding?.aiVerdictSummary && (
             <p className={`mt-2 font-sans text-xs ${liveGrounding.executed ? "text-slate-500" : "text-rose-600"}`}>{liveGrounding.aiVerdictSummary}</p>
           )}
@@ -118,7 +118,7 @@ export default function ReportDashboard({
           )}
           {liveGrounding?.executed && liveGrounding.aiSynthesizedAnswer && (
             <div className="mt-4 border-t border-hairline pt-4">
-              <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Gemini answer · one run</p>
+              <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Grok answer · one run</p>
               <p className="mt-2 whitespace-pre-wrap font-sans text-sm leading-relaxed text-slate-700">{liveGrounding.aiSynthesizedAnswer}</p>
             </div>
           )}

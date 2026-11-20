@@ -58,7 +58,7 @@ export default function ReportDashboard({
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <div className="border border-hairline bg-white p-4">
           <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Website readiness</p>
-          <p className="mt-2 font-sans text-4xl font-bold text-tech-blue">{result.overall_aeo_score}</p>
+          <p className="mt-2 font-sans text-4xl font-bold text-tech-blue">{result.overall_aeo_score > 0 ? result.overall_aeo_score : "—"}</p>
           <p className="mt-1 font-sans text-xs text-slate-500">Out of 100. A diagnostic indicator, not a ranking.</p>
         </div>
         <div className="border border-hairline bg-white p-4">

@@ -88,7 +88,7 @@ export default function AuditForm({ onSubmit, isLoading, showManual = false }: A
 
       <input
         type="text"
-        name="website"
+        name="company_url_check"
         value={honeypot}
         onChange={(e) => setHoneypot(e.target.value)}
         className="absolute opacity-0 pointer-events-none h-0 w-0"

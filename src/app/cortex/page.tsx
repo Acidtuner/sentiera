@@ -69,53 +69,61 @@ export default function CortexPage() {
       honeypot: formData.honeypot,
     };
 
-    const runOnce = async () => {
-      const res = await fetch("/api/aeo/audit", {
+    try {
+      setAttempt(1);
+      const start = await fetch("/api/aeo/jobs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const raw = await res.text();
-      try {
-        return { res, data: JSON.parse(raw) as AuditResponsePayload };
-      } catch {
-        throw new Error(
-          res.status === 504 || res.status === 502
-            ? "timeout"
-            : "The server returned an unexpected page instead of a result."
-        );
-      }
-    };
-
-    try {
-      setAttempt(1);
-      let result;
-      try {
-        result = await runOnce();
-      } catch (err) {
-        const message = err instanceof Error ? err.message : "";
-        if (message !== "timeout") throw err;
-        setAttempt(2);
-        result = await runOnce();
+      const started = await start.json();
+      if (!start.ok || !started.success || !started.id) {
+        throw new Error(started.error || "Could not start the check.");
       }
 
-      const { res, data } = result;
-      if (!res.ok || !data.success || !data.data) {
-        const message = data.error || "We could not complete the snapshot.";
-        if (/fetch any pages|could not read|blocked/i.test(message)) setShowManual(true);
-        throw new Error(message);
-      }
+      const id = started.id as string;
+      const runPart = (part: "grok" | "site") =>
+        fetch(`/api/aeo/jobs/${id}/${part}`, { method: "POST" }).catch(() => null);
+      void runPart("grok");
+      void runPart("site");
 
-      setShowManual(false);
-      setAuditResult(data.data);
-      setLiveGrounding(data.liveGrounding);
-      setScrapedData(data.scrapedData || null);
+      const startedAt = Date.now();
+      while (Date.now() - startedAt < 45000) {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        const statusRes = await fetch(`/api/aeo/jobs/${id}`);
+        const status = await statusRes.json();
+        const job = status.job;
+        if (!job) continue;
+
+        if (job.grok_result) setLiveGrounding(job.grok_result);
+        if (job.site_result?.analyzedPages) {
+          setScrapedData({
+            analyzedPages: job.site_result.analyzedPages,
+            advancedSignals: job.site_result.advancedSignals,
+          });
+        }
+        if (job.grok_result || job.site_result) {
+          setAuditResult({
+            overall_aeo_score: 0,
+            metrics: { ai_recommendation_rate: 0, entity_accuracy_health: 0, rag_readiness_score: 0 },
+            is_invisible_to_ai: false,
+            schema_markup_detected: Boolean(job.site_result?.schemaMarkupDetected),
+            diagnostic_summary: job.keyword
+              ? `Grok was asked who is recommended for ${job.keyword}. The site read is separate.`
+              : "No buyer topic was given, so Grok was not asked.",
+            critical_gaps: [],
+            recommended_fixes: [],
+            advancedSignals: job.site_result?.advancedSignals,
+          });
+        }
+
+        const grokDone = job.grok_status === "done" || job.grok_status === "failed";
+        const siteDone = job.site_status === "done" || job.site_status === "failed";
+        if (grokDone && siteDone) break;
+      }
     } catch (err: unknown) {
       console.error(err);
-      const message = err instanceof Error ? err.message : "An unexpected error occurred.";
-      setErrorMsg(message === "timeout"
-        ? "Gemini did not answer in time, even on a second attempt. Please try again in a moment."
-        : message);
+      setErrorMsg(err instanceof Error ? err.message : "An unexpected error occurred.");
     } finally {
       setIsLoading(false);
     }

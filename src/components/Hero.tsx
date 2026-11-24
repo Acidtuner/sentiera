@@ -19,7 +19,7 @@ export default function Hero() {
   return (
     <section className="relative overflow-hidden bg-white pt-24 pb-20 sm:pt-32 sm:pb-28 lg:pt-36 lg:pb-32 border-b border-hairline">
       <PrismaticLiquidGlassCard />
-      <div className="pointer-events-none absolute inset-0 z-[1] bg-white/55" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-white/25" aria-hidden="true" />
       <div className="pointer-events-none absolute inset-0 z-[1] opacity-30 [background-image:radial-gradient(#0066FF_0.75px,transparent_0.75px)] [background-size:32px_32px]" aria-hidden="true" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">

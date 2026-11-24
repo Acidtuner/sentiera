@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
+import PrismaticLiquidGlassCard from "@/components/PrismaticLiquidGlass";
 
 export default function Hero() {
   const containerVariants: Variants = {
@@ -17,16 +18,9 @@ export default function Hero() {
 
   return (
     <section className="relative overflow-hidden bg-white pt-24 pb-20 sm:pt-32 sm:pb-28 lg:pt-36 lg:pb-32 border-b border-hairline">
-      <div className="pointer-events-none absolute inset-0 z-0 opacity-40 [background-image:radial-gradient(#0066FF_0.75px,transparent_0.75px)] [background-size:32px_32px]" aria-hidden="true" />
-      <div
-        className="pointer-events-none absolute inset-0 z-0"
-        aria-hidden="true"
-        style={{
-          backgroundImage:
-            "radial-gradient(ellipse 55% 45% at 50% 35%, rgba(255,46,156,0.14), transparent 60%), radial-gradient(ellipse 40% 30% at 75% 20%, rgba(255,46,156,0.08), transparent 55%)",
-        }}
-      />
-      <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[640px] h-[360px] bg-accent/10 blur-[140px] rounded-full" aria-hidden="true" />
+      <PrismaticLiquidGlassCard />
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-white/55" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-0 z-[1] opacity-30 [background-image:radial-gradient(#0066FF_0.75px,transparent_0.75px)] [background-size:32px_32px]" aria-hidden="true" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
         <motion.div variants={containerVariants} initial="hidden" animate="visible" className="flex flex-col items-center text-center">

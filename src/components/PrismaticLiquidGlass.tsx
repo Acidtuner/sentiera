@@ -271,7 +271,7 @@ export function PrismaticLiquidGlassCard({
         gl.bindTexture(gl.TEXTURE_2D, mediaTex);
         gl.uniform1i(locs.u_mediaTexture, 2);
       }
-      if (locs.u_mediaEnabled) gl.uniform1f(locs.u_mediaEnabled, mediaLoaded ? 1.0 : (uniforms.u_mediaEnabled ?? 0.0));
+      if (locs.u_mediaEnabled) gl.uniform1f(locs.u_mediaEnabled, mediaLoaded ? 1 : 0);
       if (locs.u_mediaResolution) gl.uniform2f(locs.u_mediaResolution, mediaResolution[0], mediaResolution[1]);
 
       gl.drawArrays(gl.TRIANGLES, 0, 3);

@@ -44,10 +44,6 @@ function hexToRgb(hex: string): [number, number, number] {
 }
 
 export function PrismaticLiquidGlassCard({
-  badge = "",
-  title = "",
-  subtitle = "",
-  cta = "",
   logoSrc = "",
   imageSrc = "",
   colorA = "#006aea",
@@ -107,7 +103,7 @@ export function PrismaticLiquidGlassCard({
     gl.enableVertexAttribArray(0);
     gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
 
-    const uniforms: Record<string, any> = {
+    const uniforms: Record<string, number | [number, number, number]> = {
       u_glass_scale: 1.6,
       u_dispersion: 0.057,
       u_liquid_flow: 1.35,
@@ -152,7 +148,7 @@ export function PrismaticLiquidGlassCard({
       if (!locs[k]) locs[k] = gl.getUniformLocation(prog, k);
     });
 
-    const upload = (k: string, v: any) => {
+    const upload = (k: string, v: number | [number, number, number]) => {
       const loc = locs[k];
       if (!loc) return;
       if (Array.isArray(v)) gl.uniform3f(loc, v[0], v[1], v[2]);
@@ -210,7 +206,7 @@ export function PrismaticLiquidGlassCard({
     const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(updateSize) : null;
     if (ro) ro.observe(container);
 
-    let mouse = { x: 0, y: 0, tx: 0, ty: 0, down: 0 };
+    const mouse = { x: 0, y: 0, tx: 0, ty: 0, down: 0 };
     const onPointerMove = (e: PointerEvent) => {
       if (!interactive) return;
       const rect = container.getBoundingClientRect();

@@ -18,11 +18,19 @@ export default function Hero() {
 
   return (
     <section className="relative overflow-hidden bg-white pt-24 pb-20 sm:pt-32 sm:pb-28 lg:pt-36 lg:pb-32 border-b border-hairline">
-      <PrismaticLiquidGlassCard />
-      <div className="pointer-events-none absolute inset-0 z-[1] bg-white/25" aria-hidden="true" />
-      <div className="pointer-events-none absolute inset-0 z-[1] opacity-30 [background-image:radial-gradient(#0066FF_0.75px,transparent_0.75px)] [background-size:32px_32px]" aria-hidden="true" />
+      <PrismaticLiquidGlassCard className="z-0" />
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-white/10 sm:bg-white/25" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-0 z-[1] opacity-40 [background-image:radial-gradient(#0066FF_0.75px,transparent_0.75px)] [background-size:32px_32px]" aria-hidden="true" />
+      <div
+        className="pointer-events-none absolute inset-0 z-[1]"
+        aria-hidden="true"
+        style={{
+          backgroundImage:
+            "radial-gradient(ellipse 70% 50% at 50% 30%, rgba(255,46,156,0.22), transparent 62%), radial-gradient(ellipse 45% 35% at 80% 15%, rgba(0,106,234,0.16), transparent 55%)",
+        }}
+      />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 isolate">
         <motion.div variants={containerVariants} initial="hidden" animate="visible" className="flex flex-col items-center text-center">
           <motion.div variants={itemVariants} className="inline-flex items-center gap-2.5 border border-hairline bg-slate-50/80 px-3.5 py-1.5 backdrop-blur-xs mb-8">
             <span className="relative flex h-1.5 w-1.5">

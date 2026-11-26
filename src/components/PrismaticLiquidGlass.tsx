@@ -64,7 +64,10 @@ export function PrismaticLiquidGlassCard({
     if (!container || !canvas) return;
 
     const gl = canvas.getContext('webgl2', { antialias: false, powerPreference: 'high-performance' });
-    if (!gl) return;
+    if (!gl) {
+      canvas.style.display = 'none';
+      return;
+    }
 
     canvas.addEventListener('webglcontextlost', (e) => e.preventDefault(), false);
 
@@ -333,10 +336,11 @@ export function PrismaticLiquidGlassCard({
       style={{
         position: 'absolute',
         inset: 0,
+        zIndex: 0,
         width: '100%',
         height: '100%',
         overflow: 'hidden',
-        backgroundColor: colorC,
+        backgroundColor: 'transparent',
         pointerEvents: 'none',
         ...style
       }}

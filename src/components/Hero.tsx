@@ -49,7 +49,6 @@ export default function Hero() {
           </motion.p>
 
           <motion.div variants={itemVariants} className="mt-10 flex flex-col items-center gap-4">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">Cortex · free AI visibility snapshot</p>
             <Link href="/cortex" className="inline-flex items-center gap-2 bg-tech-blue px-8 py-4 font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-tech-button transition-all duration-200 hover:bg-tech-blue-600 hover:shadow-accent-glow">
               Get my free snapshot →
             </Link>

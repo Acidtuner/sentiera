@@ -92,6 +92,11 @@ export default function RootLayout({
       addressCountry: "AE",
     },
     areaServed: ["Abu Dhabi", "Dubai"],
+    sameAs: [
+      "https://www.linkedin.com/company/sentiera-technologies/",
+      "https://x.com/sentieratech",
+      "https://share.google/GRiPnkekqQ9Jt7gjv",
+    ],
     knowsAbout: [
       "AI agents",
       "Chatbots",
